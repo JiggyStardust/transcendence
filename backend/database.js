@@ -1,7 +1,7 @@
 import Database from 'better-sqlite3'
 
 // create or open db file
-const db = new Database('transcendence.db');
+const db = new Database('users.db');
 
 // create a users table 
 db.prepare(`
