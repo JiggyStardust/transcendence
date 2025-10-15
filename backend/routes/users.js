@@ -6,7 +6,7 @@ const JWT_SECRET = 'super_secret_key'; // need dotenv to store these in .env fil
 
 async function userRoutes(fastify, options) {
     // route - create new user
-    fastify.post('/signup', async (req, reply) => {
+    fastify.post('/signup', async (req, reply) => { // api endpoint POST - this wil move to the authentication section
         const { username, password } = req.body;
 
         if (!username || !password) {
@@ -22,10 +22,16 @@ async function userRoutes(fastify, options) {
                 reply.code(400).send({ error: 'Username already exists' });
             } else {
                 console.error(err);
-                reply.code(500).send({ error: 'Internal erver error' });
+                reply.code(500).send({ error: 'Internal server error' });
             }           
         }
     });
+
+    // POST: login
+    // GET: profile
+    // GET: friends
+    // GET: matches
+    // OPTIONAL: DELETE: whole profile - for GDPR compliance
 }
 
 export default userRoutes;
