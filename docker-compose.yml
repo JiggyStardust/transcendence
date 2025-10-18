@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: transcendence-frontend
     ports:
-      - "3306:3306"
+      - ${VITE_PORT}:${VITE_PORT}
     volumes:
       # it will mount source code for hot reload
       # changes to these files will be reflected immediately in the browser
@@ -22,6 +22,35 @@ services:
 
       # prevent overwriting node_modules from container
       - /app/node_modules
+    environment:
+      - VITE_PORT=${VITE_PORT}
+      - VITE_HOST=${VITE_HOST}
+      - VITE_BACKEND_INTERNAL_URL=${VITE_BACKEND_INTERNAL_URL}
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - transcendence-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: transcendence-backend
+    expose:
+      - "${BACKEND_PORT}"
+    volumes:
+      # mount source code for hot reload
+      - ./backend/app.js:/app/app.js
+      - ./backend/routes:/app/routes
+      - ./backend/plugins:/app/plugins
+      - ./backend/database:/app/database
+      - ./backend/package.json:/app/package.json
+      # prevent overwriting node_modules
+      - /app/node_modules
+    environment:
+      - PORT=${BACKEND_PORT}
+      - HOST=${BACKEND_HOST}
     restart: unless-stopped
     networks:
       - transcendence-network
