@@ -1,0 +1,26 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: transcendence-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      # it will mount source code for hot reload
+      # changes to these files will be reflected immediately in the browser
+      # @NOTE: in case package.json and some configs changes better to restart or even rebuild
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/index.html:/app/index.html
+      # @NOTE: might be needed tailwind config file:
+
+      # prevent overwriting node_modules from container
+      - /app/node_modules
+    restart: unless-stopped
+    networks:
+      - transcendence-network
+
+networks:
+  transcendence-network:
+    driver: bridge
