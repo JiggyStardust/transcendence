@@ -10,10 +10,10 @@ COPY . .
 # expose Vite dev server port
 # (alternative to run nginx server to accces site)
 # @NOTE: nginx might be needed to run in prod
-EXPOSE ${VITE_PORT}
+EXPOSE 3317
 
-HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-    CMD wget --quiet --tries=1 --spider http://localhost:${VITE_PORT} || exit 1
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=5 \
+    CMD wget --quiet --tries=1 --spider http://localhost:3317 || exit 1
 
 # run Vite dev server (will be available on http://localhost:VITE_PORT/)
 CMD ["npm", "run", "dev"]

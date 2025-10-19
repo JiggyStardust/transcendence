@@ -1,37 +1,4 @@
 services:
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: transcendence-frontend
-    ports:
-      - ${VITE_PORT}:${VITE_PORT}
-    volumes:
-      # it will mount source code for hot reload
-      # changes to these files will be reflected immediately in the browser
-      # @NOTE: in case package.json and some configs changes better to restart or even rebuild
-      - ./frontend/src:/app/src
-      - ./frontend/public:/app/public
-      - ./frontend/index.html:/app/index.html
-      - ./frontend/package.json:/app/package.json
-      - ./frontend/package-lock.json:/app/package-lock.json
-      - ./frontend/vite.config.ts:/app/vite.config.ts
-      - ./frontend/tsconfig.json:/app/tsconfig.json
-      - ./frontend/tsconfig.app.json:/app/tsconfig.app.json
-      - ./frontend/tsconfig.node.json:/app/tsconfig.node.json
-
-      # prevent overwriting node_modules from container
-      - /app/node_modules
-    environment:
-      - VITE_PORT=${VITE_PORT}
-      - VITE_HOST=${VITE_HOST}
-      - VITE_BACKEND_INTERNAL_URL=${VITE_BACKEND_INTERNAL_URL}
-    depends_on:
-      - backend
-    restart: unless-stopped
-    networks:
-      - transcendence-network
-
   backend:
     build:
       context: ./backend
@@ -40,14 +7,32 @@ services:
     expose:
       - "${BACKEND_PORT}"
     volumes:
-      # mount source code for hot reload
       - ./backend:/app
-      # prevent overwriting node_modules
       - /app/node_modules
     environment:
       - PORT=${BACKEND_PORT}
       - HOST=${BACKEND_HOST}
       - JWT_SECRET=${JWT_SECRET}
+    restart: unless-stopped
+    networks:
+      - transcendence-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: transcendence-frontend
+    ports:
+      - "${VITE_PORT}:${VITE_PORT}"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_PORT=${VITE_PORT}
+      - VITE_HOST=${VITE_HOST}
+      - VITE_BACKEND_INTERNAL_URL=${VITE_BACKEND_INTERNAL_URL}
+    depends_on:
+      - backend
     restart: unless-stopped
     networks:
       - transcendence-network

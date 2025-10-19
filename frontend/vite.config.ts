@@ -10,7 +10,6 @@ const getEnv = (key: string, defaultValue?: string): string => {
   return value;
 };
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {

@@ -1,10 +1,9 @@
-const fs = require("fs");
+const fs = require("node:fs");
 const path = require("node:path");
 const fastify = require("fastify")({ logger: true });
 const database = require("better-sqlite3");
 
 const dbPath = path.join(__dirname, "data", "database.db");
-fastify.log.info(dbPath);
 const db = new database(dbPath);
 
 // create table to track migration progress

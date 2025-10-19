@@ -13,7 +13,7 @@ const options = {};
 module.exports = async function (fastify, opts) {
   // Place here your custom code!
 
-  fastify.get("/hugs", async function (request, reply) {
+  fastify.get("/api/hugs", async function (request, reply) {
     return { message: fastify.someSupport() };
   });
 
