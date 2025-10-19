@@ -28,4 +28,10 @@ build/
 .vscode/
 .DS_Store
 
+# SQLite database files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
 # tests

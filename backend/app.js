@@ -3,6 +3,10 @@
 const path = require("node:path");
 const AutoLoad = require("@fastify/autoload");
 
+// @NOTE: migrate database before running server
+const runMigration = require("./database/migrate");
+runMigration();
+
 // Pass --options via CLI arguments in command to enable these options.
 const options = {};
 
