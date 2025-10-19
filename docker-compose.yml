@@ -47,6 +47,7 @@ services:
     environment:
       - PORT=${BACKEND_PORT}
       - HOST=${BACKEND_HOST}
+      - JWT_SECRET=${JWT_SECRET}
     restart: unless-stopped
     networks:
       - transcendence-network
