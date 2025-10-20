@@ -2,7 +2,7 @@
 -include .env
 export
 
-all: env-check run
+all: run
 
 env-check:
 	@if [ ! -f ".env" ]; then \
@@ -11,11 +11,11 @@ env-check:
 		exit 1; \
 	fi
 
-run-detach:
-	docker-compose -f docker-compose.yml up --build -detach
+run-detach: env-check
+	docker-compose -f docker-compose.yml up --build --detach
 	docker ps
 
-run:
+run: env-check
 	docker-compose -f docker-compose.yml up --build
 	docker ps
 
