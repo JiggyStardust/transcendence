@@ -25,4 +25,16 @@ export async function signup(req, reply) { // can delete from users.js
     }
 }
 
-// export async function login(req, reply)
+export async function login(req, reply) {
+    const { username, password } = req.body;
+    const user = db.prepare('SELECT * FROM users WHERE username = ?').get(username);
+    if (!user) return reply.code(400).send({ error: 'Invalid username or password' });
+
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) return reply.code(400).send({ error: 'Invaid username or password' });
+
+    const accessToken = generateAccessToken({ id: user.id, username: user.username });
+    const refreshToken = generateRefreshToken({ id: user.id });
+
+    reply.send({ accessToken, refreshToken });
+}
