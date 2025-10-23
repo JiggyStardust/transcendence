@@ -59,11 +59,20 @@ function createScene(engine, canvas) {
     // Move the sphere each frame
     scene.onBeforeRenderObservable.add(() => {
       const paddleSpeed = 0.07;
+      const sidePosition = 2.05;
 
-      if (inputMap["w"]) paddle1.position.z += paddleSpeed;
-      if (inputMap["s"]) paddle1.position.z -= paddleSpeed;
-      if (inputMap["ArrowUp"]) paddle2.position.z += paddleSpeed;
-      if (inputMap["ArrowDown"]) paddle2.position.z -= paddleSpeed;
+      if (inputMap["w"] && paddle1.position.z + paddleSpeed < sidePosition) {
+        paddle1.position.z += paddleSpeed;
+      }
+      if (inputMap["s"] && paddle1.position.z - paddleSpeed > -sidePosition) {
+        paddle1.position.z -= paddleSpeed;
+      }
+      if (inputMap["ArrowUp"] && paddle2.position.z + paddleSpeed < sidePosition) {
+        paddle2.position.z += paddleSpeed;
+      }
+      if (inputMap["ArrowDown"] && paddle2.position.z - paddleSpeed > -sidePosition) {
+        paddle2.position.z -= paddleSpeed;
+      }
     });
 
     return scene;
