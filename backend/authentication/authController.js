@@ -1,7 +1,7 @@
 // signup/login, returns JWT
 // these functions wil be called by users.js
 
-import db from '.../database.js';
+import db from '../database.js';
 import bcrypt from 'bcrypt';
 import { generateAccessToken, generateRefreshToken } from './authService.js'
 
@@ -31,7 +31,7 @@ export async function login(req, reply) {
     if (!user) return reply.code(400).send({ error: 'Invalid username or password' });
 
     const valid = await bcrypt.compare(password, user.password);
-    if (!valid) return reply.code(400).send({ error: 'Invaid username or password' });
+    if (!valid) return reply.code(400).send({ error: 'Invalid username or password' });
 
     const accessToken = generateAccessToken({ id: user.id, username: user.username });
     const refreshToken = generateRefreshToken({ id: user.id });
