@@ -1,0 +1,42 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: transcendence-backend
+    expose:
+      - "${BACKEND_PORT}"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      - PORT=${BACKEND_PORT}
+      - HOST=${BACKEND_HOST}
+      - JWT_SECRET=${JWT_SECRET}
+    restart: unless-stopped
+    networks:
+      - transcendence-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: transcendence-frontend
+    ports:
+      - "${VITE_PORT}:${VITE_PORT}"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_PORT=${VITE_PORT}
+      - VITE_HOST=${VITE_HOST}
+      - VITE_BACKEND_INTERNAL_URL=${VITE_BACKEND_INTERNAL_URL}
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - transcendence-network
+
+networks:
+  transcendence-network:
+    driver: bridge
