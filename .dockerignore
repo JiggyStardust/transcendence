@@ -1,0 +1,39 @@
+# git
+.git
+.gitignore
+
+# documentation
+*.md
+
+# environment files
+.env*
+
+# dependencies
+node_modules/
+
+# build outputs
+dist/
+build/
+
+# logs
+*.log
+
+# cache
+.cache/
+.npm/
+
+# editor files
+.vscode/
+.DS_Store
+
+# docker files
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# temporary files
+tmp/
+temp/
+
+# secrets
+secrets/
