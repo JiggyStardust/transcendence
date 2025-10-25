@@ -16,7 +16,7 @@ async function userRoutes(fastify, options) {
     })
     
     // friend list -=> this is to get the friendlist, we should also be able to add someone to friendlist
-    fastify.get('/friends', { prehandler: verifyToken }, async (req, reply) => {
+    fastify.get('/friends', { preHandler: verifyToken }, async (req, reply) => {
         const friends = db.prepare(`
             SELECT f.friends_id AS ID, u.username
             FROM friends f
@@ -27,7 +27,7 @@ async function userRoutes(fastify, options) {
     });
 
     // match history => for getting match history, but where should we add matches?
-    fastify.get('/matches', { prehandler: verifyToken }, async (req, reply) => {
+    fastify.get('/matches', { preHandler: verifyToken }, async (req, reply) => {
         const matches = db.prepare(`
             SELECT *
             FROM matches

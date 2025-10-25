@@ -13,7 +13,7 @@ export async function signup(req, reply) { // can delete from users.js
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         // parameterized queries keep us safe from SQL injections
-        db.prepare('INSERT INTO users (username, password) VALUES (?, ?)').run(username, password);
+        db.prepare('INSERT INTO users (username, password) VALUES (?, ?)').run(username, hashedPassword);
         reply.code(201).send({ message: 'User created successfully!' });
     } catch (err) {
         if (err.code === 'SQLITE_CONSTRAINT_UNIQUE') {
