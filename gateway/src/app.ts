@@ -6,11 +6,20 @@ import { appConfig } from "./config";
 
 export const env = appConfig;
 
+const keyPath = path.join("./certs", "localhost-key.pem");
+const certPath = path.join("./certs", "localhost.pem");
+
 export async function upServer() {
+  if (!fs.existsSync(keyPath) || !fs.existsSync(certPath)) {
+    throw new Error(
+      "HTTPS certificates not found. Please run the certificate generation step.",
+    );
+  }
+
   const server: FastifyInstance = fastify({
     https: {
-      key: fs.readFileSync(path.join("./certs", "localhost-key.pem")),
-      cert: fs.readFileSync(path.join("./certs", "localhost.pem")),
+      key: fs.readFileSync(keyPath),
+      cert: fs.readFileSync(certPath),
     },
     logger: {
       transport: {

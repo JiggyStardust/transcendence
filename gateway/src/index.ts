@@ -4,15 +4,15 @@ async function main() {
   const app = await upServer();
 
   const stop = async () => {
-    app.log.info("Shutting down...");
+    console.log("Graceful shutdown...");
     await app.close();
+    console.log("Gateway closed cleanly");
     process.exit(0);
   };
   process.on("SIGINT", stop);
   process.on("SIGTERM", stop);
 
   await app.listen({ host: env.HOST, port: env.PORT });
-  app.log.info(`Gateway listening on https://${env.HOST}:${env.PORT}`);
   console.log(`Gateway listening on https://${env.HOST}:${env.PORT}`);
 }
 
