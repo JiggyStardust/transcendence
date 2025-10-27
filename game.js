@@ -88,14 +88,18 @@ window.addEventListener('DOMContentLoaded', function () {
   let startingBallSpeed = 6;
   let ballSpeed = startingBallSpeed; // units per second
   let xx = 2;
-  let direction = new BABYLON.Vector3(xx, 0, 1).normalize(); // move diagonally (x and z)
+  let direction = new BABYLON.Vector3(xx, 0, 1).normalize();
 
   // Score
-
   let scoreP1 = 0;
   let scoreP2 = 0;
 
-  //Collision
+  // Collision Timer to prevent stuttering
+
+  let paddleTime = 5;
+  let paddleTimer = paddleTime;
+
+  // Collision
   let paddleCollisionX = 2.6;
   let scoreCollisionX = 3;
   let sideCollisionZ = 2.8;
@@ -111,17 +115,20 @@ window.addEventListener('DOMContentLoaded', function () {
     sphere.position.addInPlace(direction.scale(ballSpeed * deltaTime));
 
     // Bounce the ball
+    paddleTimer++;
     if (sphere.position.x > paddleCollisionX
             && paddle2.position.z < sphere.position.z + 0.75
-            && paddle2.position.z > sphere.position.z - 0.75) {
+            && paddle2.position.z > sphere.position.z - 0.75
+            && paddleTimer >= paddleTime) {
+      paddleTimer = 0;
       direction.x = -direction.x;
-      //direction.z = -direction.z;
     }
     else if (sphere.position.x < -paddleCollisionX
             && paddle1.position.z < sphere.position.z + 0.75
-            && paddle1.position.z > sphere.position.z - 0.75) {
+            && paddle1.position.z > sphere.position.z - 0.75
+            && paddleTimer >= paddleTime) {
+      paddleTimer = 0;
       direction.x = -direction.x;
-      //direction.z = -direction.z;
     }
     else if (sphere.position.z > sideCollisionZ) {
       direction.z = -direction.z;
@@ -129,7 +136,8 @@ window.addEventListener('DOMContentLoaded', function () {
     else if (sphere.position.z < -sideCollisionZ) {
       direction.z = -direction.z;
     }
-    else if (sphere.position.x > scoreCollisionX) {
+    
+    if (sphere.position.x > scoreCollisionX) {
       direction.x = -direction.x;
       sphere.position.x = 0;
       sphere.position.z = 0;
