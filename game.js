@@ -109,8 +109,8 @@ window.addEventListener('DOMContentLoaded', function () {
   // Movement parameters
   let startingBallSpeed = 4;
   let ballSpeed = startingBallSpeed;
-  let xx = 2;
-  let direction = new BABYLON.Vector3(xx, 0, 1).normalize();
+  let speedIncrease = 0.01;
+  let direction = new BABYLON.Vector3(ballSpeed, 0, 2).normalize();
 
   // Score
   let scoreP1 = 0;
@@ -120,11 +120,14 @@ window.addEventListener('DOMContentLoaded', function () {
 
   let paddleTime = 5;
   let paddleTimer = paddleTime;
+  let sideTime = 5;
+  let sideTimer = sideTime;
 
   // Collision
   let paddleCollisionX = 2.4;
   let scoreCollisionX = 2.6;
   let sideCollisionZ = 2.6;
+  let paddleSize = 1.5;
 
   // Get objects from scene
   const sphere = scene.getMeshByName("sphere");
@@ -138,36 +141,57 @@ window.addEventListener('DOMContentLoaded', function () {
 
     // Bounce the ball
     paddleTimer++;
-    if (sphere.position.x > paddleCollisionX
-            && paddle2.position.z < sphere.position.z + 0.75
-            && paddle2.position.z > sphere.position.z - 0.75
+    sideTimer++;
+    if (sphere.position.x < -paddleCollisionX
+            && paddle1.position.z < sphere.position.z + (paddleSize / 2)
+            && paddle1.position.z > sphere.position.z - (paddleSize / 2)
             && paddleTimer >= paddleTime) {
       paddleTimer = 0;
       direction.x = -direction.x;
+      direction.x += speedIncrease;
+      if (direction.z > 0) {
+        direction.z += speedIncrease / 2;
+      }
+      else {
+        direction.z -= speedIncrease / 2;
+      }
     }
-    else if (sphere.position.x < -paddleCollisionX
-            && paddle1.position.z < sphere.position.z + 0.75
-            && paddle1.position.z > sphere.position.z - 0.75
+    else if (sphere.position.x > paddleCollisionX
+            && paddle2.position.z < sphere.position.z + (paddleSize / 2)
+            && paddle2.position.z > sphere.position.z - (paddleSize / 2)
             && paddleTimer >= paddleTime) {
       paddleTimer = 0;
       direction.x = -direction.x;
+      direction.x -= speedIncrease;
+      if (direction.z > 0) {
+        direction.z += speedIncrease / 2;
+      }
+      else {
+        direction.z -= speedIncrease / 2;
+      }
     }
-    else if (sphere.position.z > sideCollisionZ) {
+    else if (sphere.position.z > sideCollisionZ && sideTimer >= sideTime) {
       direction.z = -direction.z;
+      sideTimer = 0;
     }
-    else if (sphere.position.z < -sideCollisionZ) {
+    else if (sphere.position.z < -sideCollisionZ && sideTimer >= sideTime) {
       direction.z = -direction.z;
+      sideTimer = 0;
     }
     else if (sphere.position.x > scoreCollisionX) {
       direction.x = -direction.x;
       sphere.position.x = 0;
       sphere.position.z = 0;
+      ballSpeed = startingBallSpeed;
+      direction = new BABYLON.Vector3(ballSpeed, 0, 2).normalize();
       scoreP1++;
     }
     else if (sphere.position.x < -scoreCollisionX) {
       direction.x = -direction.x;
       sphere.position.x = 0;
       sphere.position.z = 0;
+      ballSpeed = startingBallSpeed;
+      direction = new BABYLON.Vector3(ballSpeed, 0, 2).normalize();
       scoreP2++;
     }
 
