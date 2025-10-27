@@ -3,21 +3,24 @@ function createScene(engine, canvas) {
     // Init
     var scene = new BABYLON.Scene(engine);
 
-    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 6, -10), scene);
+    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 7, -6), scene);
     camera.setTarget(BABYLON.Vector3.Zero());
 
-    var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
-    light.intensity = 0.7;
+    var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0.7), scene);
+    light.intensity = 0.5;
 
     // Create materials
     var mPaddle = new BABYLON.StandardMaterial("mPaddle", scene);
-    mPaddle.diffuseColor = new BABYLON.Color3(255, 255, 255);
+    mPaddle.diffuseColor = new BABYLON.Color3(2, 2, 2);
+
+    var mWall = new BABYLON.StandardMaterial("mWall", scene);
+    mWall.diffuseColor = new BABYLON.Color3(0.3, 0.6, 0.4);
 
     var mGround = new BABYLON.StandardMaterial("mGround", scene);
     mGround.diffuseColor = new BABYLON.Color3(0, 0, 0);
 
     var mSphere = new BABYLON.StandardMaterial("mSphere", scene);
-    mSphere.diffuseColor = new BABYLON.Color3(255, 255, 255);
+    mSphere.diffuseColor = new BABYLON.Color3(1.8, 1.8, 1.8);
 
     // Create paddles
     var paddle1 = BABYLON.MeshBuilder.CreateBox("paddle1", {width: 0.2, height: 0.3, depth: 1.5}, scene);
@@ -25,9 +28,26 @@ function createScene(engine, canvas) {
     paddle1.position.z = 0;
     paddle1.material = mPaddle;
     var paddle2 = paddle1.clone("paddle2");
-    paddle1.position.x = -2.9;
-    paddle2.position.x = 2.9;
+    paddle1.position.x = -2.7;
+    paddle2.position.x = 2.7;
 
+    //Sidewalls
+
+    var wallTop = BABYLON.MeshBuilder.CreateBox("wallTop", {width: 6, height: 0.2, depth: 0.2}, scene);
+    wallTop.position.y = 0.1;
+    wallTop.position.x = 0;
+    wallTop.material = mWall;
+    var wallBottom = wallTop.clone("wallBottom");
+    wallTop.position.z = 2.9;
+    wallBottom.position.z = -2.9;
+
+    var wallLeft = BABYLON.MeshBuilder.CreateBox("wallTop", {width: 0.2, height: 0.2, depth: 6}, scene);
+    wallLeft.position.y = 0.1;
+    wallLeft.material = mWall;
+    var wallRight = wallLeft.clone("wallRight");
+    wallLeft.position.x = -2.9;
+    wallRight.position.x = 2.9;
+    
     // Create ground
     var ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 6, height: 6}, scene);
     ground.material = mGround;
@@ -38,7 +58,7 @@ function createScene(engine, canvas) {
     sphere.material = mSphere;
 
     // Create center line
-    var centerLine = BABYLON.MeshBuilder.CreateBox("centerLine", {width: 0.1, height: 0.1, depth: 6}, scene);
+    var centerLine = BABYLON.MeshBuilder.CreateBox("centerLine", {width: 0.1, height: 0.1, depth: 5.8}, scene);
     centerLine.position.y = 0.0;
     centerLine.position.z = 0;
     centerLine.material = mPaddle;
@@ -84,9 +104,9 @@ window.addEventListener('DOMContentLoaded', function () {
   var engine = new BABYLON.Engine(canvas, true);
   var scene = createScene(engine, canvas);
 
-  // --- Movement parameters ---
-  let startingBallSpeed = 6;
-  let ballSpeed = startingBallSpeed; // units per second
+  // Movement parameters
+  let startingBallSpeed = 4;
+  let ballSpeed = startingBallSpeed;
   let xx = 2;
   let direction = new BABYLON.Vector3(xx, 0, 1).normalize();
 
@@ -100,9 +120,9 @@ window.addEventListener('DOMContentLoaded', function () {
   let paddleTimer = paddleTime;
 
   // Collision
-  let paddleCollisionX = 2.6;
-  let scoreCollisionX = 3;
-  let sideCollisionZ = 2.8;
+  let paddleCollisionX = 2.4;
+  let scoreCollisionX = 2.6;
+  let sideCollisionZ = 2.6;
 
   // Get objects from scene
   const sphere = scene.getMeshByName("sphere");
