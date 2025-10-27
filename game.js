@@ -20,7 +20,9 @@ function createScene(engine, canvas) {
     mGround.diffuseColor = new BABYLON.Color3(0, 0, 0);
 
     var mSphere = new BABYLON.StandardMaterial("mSphere", scene);
-    mSphere.diffuseColor = new BABYLON.Color3(1.8, 1.8, 1.8);
+    mSphere.diffuseColor = new BABYLON.Color3(1, 1, 1);
+    mSphere.emissiveColor = new BABYLON.Color3(0.7, 0.7, 0.7);
+
 
     // Create paddles
     var paddle1 = BABYLON.MeshBuilder.CreateBox("paddle1", {width: 0.2, height: 0.3, depth: 1.5}, scene);
@@ -59,7 +61,7 @@ function createScene(engine, canvas) {
 
     // Create center line
     var centerLine = BABYLON.MeshBuilder.CreateBox("centerLine", {width: 0.1, height: 0.1, depth: 5.8}, scene);
-    centerLine.position.y = 0.0;
+    centerLine.position.y = -0.049;
     centerLine.position.z = 0;
     centerLine.material = mPaddle;
 
@@ -156,8 +158,7 @@ window.addEventListener('DOMContentLoaded', function () {
     else if (sphere.position.z < -sideCollisionZ) {
       direction.z = -direction.z;
     }
-    
-    if (sphere.position.x > scoreCollisionX) {
+    else if (sphere.position.x > scoreCollisionX) {
       direction.x = -direction.x;
       sphere.position.x = 0;
       sphere.position.z = 0;
