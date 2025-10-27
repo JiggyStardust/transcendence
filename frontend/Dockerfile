@@ -5,6 +5,7 @@ WORKDIR /app
 
 COPY package*.json ./
 RUN npm install
+
 COPY . .
 
 # expose Vite dev server port
