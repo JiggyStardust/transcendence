@@ -4,7 +4,14 @@ import { Button } from "../components/Button";
 
 export default function Landing() {
   return (
-	<div className="flex flex-col items-center justify-center min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300">
+    <div
+      className="flex flex-col items-center justify-center min-h-screen text-gray-900 dark:text-white transition-colors duration-500"
+      style={{
+        background: `linear-gradient(to bottom, var(--bg-start) 0%, var(--bg-end) var(--bg-shift))`,
+      }}
+    >  
+      {/* if want to make bg animated, add animated-bg to className above and enable it in  */}
+      {/* className="min-h-screen flex flex-col items-center justify-center transition-colors duration-500 animated-bg" */}
       <h1 className="text-5xl font-bold mb-6">Welcome to</h1>
       <Logo />
       <ThemeToggle />
@@ -13,10 +20,10 @@ export default function Landing() {
       </p>
 
       <div className="mt-6 space-x-4">
-        <Button to="/signup" variant="secondary">
+        <Button to="/signup" variant="primary">
           Sign Up
         </Button>
-        <Button to="/signin" variant="secondary">
+        <Button to="/signin" variant="primary">
           Sign In
         </Button>
       </div>
