@@ -1,16 +1,38 @@
 @import "tailwindcss";
 
-:root {
-    line-height: 1.5;
-    font-weight: 400;
-    color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
+/* A super bad example of animating background: */
+/* @keyframes gradientShift {
+  0% {
+    --bg-shift: 55%;
+  }
+  50% {
+    --bg-shift: 65%;
+  }
+  100% {
+    --bg-shift: 55%;
+  }
+}
 
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+.animated-bg {
+  animation: gradientShift 1s ease-in-out infinite;
+} */
+
+:root {
+    --bg-start: rgba(255, 238, 0, 0.38);
+    --bg-end: rgb(255, 67, 199);
+    --bg-shift: 60%;
+
+    --btn-bg: rgba(255, 111, 0, 0.95);
+    --btn-text: rgb(0, 0, 0);
+    --btn-hover: rgba(39, 2, 2, 0.224);
+    --btn-border-start: rgb(255, 71, 221);
+    --btn-border-end: rgba(248, 255, 53, 0.95);
+}
+
+.dark {
+    --bg-start: rgba(255, 32, 169, 0.95);
+    --bg-end: rgb(0, 0, 0);
+    --bg-shift: 40%;
 }
 
 a {
