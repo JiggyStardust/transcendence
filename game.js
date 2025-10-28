@@ -109,19 +109,11 @@ window.addEventListener('DOMContentLoaded', function () {
   // Movement parameters
   let startingBallSpeed = 4;
   let ballSpeed = startingBallSpeed;
-  let speedIncrease = 0.01;
   let direction = new BABYLON.Vector3(ballSpeed, 0, 2).normalize();
 
   // Score
   let scoreP1 = 0;
   let scoreP2 = 0;
-
-  // Collision Timer to prevent stuttering
-
-  let paddleTime = 5;
-  let paddleTimer = paddleTime;
-  let sideTime = 5;
-  let sideTimer = sideTime;
 
   // Collision
   let paddleCollisionX = 2.4;
@@ -140,43 +132,24 @@ window.addEventListener('DOMContentLoaded', function () {
     sphere.position.addInPlace(direction.scale(ballSpeed * deltaTime));
 
     // Bounce the ball
-    paddleTimer++;
-    sideTimer++;
     if (sphere.position.x < -paddleCollisionX
             && paddle1.position.z < sphere.position.z + (paddleSize / 2)
             && paddle1.position.z > sphere.position.z - (paddleSize / 2)
-            && paddleTimer >= paddleTime) {
-      paddleTimer = 0;
+            && direction.x < 0) {
       direction.x = -direction.x;
-      direction.x += speedIncrease;
-      if (direction.z > 0) {
-        direction.z += speedIncrease / 2;
-      }
-      else {
-        direction.z -= speedIncrease / 2;
-      }
     }
     else if (sphere.position.x > paddleCollisionX
             && paddle2.position.z < sphere.position.z + (paddleSize / 2)
             && paddle2.position.z > sphere.position.z - (paddleSize / 2)
-            && paddleTimer >= paddleTime) {
+            && direction.x > 0) {
       paddleTimer = 0;
       direction.x = -direction.x;
-      direction.x -= speedIncrease;
-      if (direction.z > 0) {
-        direction.z += speedIncrease / 2;
-      }
-      else {
-        direction.z -= speedIncrease / 2;
-      }
     }
-    else if (sphere.position.z > sideCollisionZ && sideTimer >= sideTime) {
+    else if (sphere.position.z > sideCollisionZ && direction.z > 0) {
       direction.z = -direction.z;
-      sideTimer = 0;
     }
-    else if (sphere.position.z < -sideCollisionZ && sideTimer >= sideTime) {
+    else if (sphere.position.z < -sideCollisionZ && direction.z < 0) {
       direction.z = -direction.z;
-      sideTimer = 0;
     }
     else if (sphere.position.x > scoreCollisionX) {
       direction.x = -direction.x;
