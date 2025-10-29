@@ -1,0 +1,25 @@
+{
+  "name": "db-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "Julia Persidskaia",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "migrate": "prisma migrate deploy",
+    "generate": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/adapter-better-sqlite3": "^6.18.0",
+    "@prisma/client": "^6.0.0",
+    "fastify": "^4.27.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "prisma": "^6.0.0",
+    "tsx": "^4.16.0",
+    "typescript": "^5.6.3"
+  }
+}
