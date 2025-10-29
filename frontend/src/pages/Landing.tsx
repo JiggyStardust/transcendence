@@ -14,9 +14,9 @@ export default function Landing() {
       {/* className="min-h-screen flex flex-col items-center justify-center transition-colors duration-500 animated-bg" */}
       <h1 className="text-5xl font-bold mb-6">Welcome to</h1>
       <Logo />
-      <ThemeToggle />
-      <p className="mt-4 text-lg text-center max-w-md">
-        An adaptation of the classic Atari game Pong. Sign up to create a player profile, or sign in if you already have one.
+      <p className="mt-8 text-lg text-center max-w-md">
+        <h2 className="text-2xl font-bold mb-7">An adaptation of the classic Atari game Pong.</h2>
+        <br></br><br></br> Sign up to create a player profile, or sign in if you already have one.
       </p>
 
       <div className="mt-6 space-x-4">
@@ -27,6 +27,7 @@ export default function Landing() {
           Sign In
         </Button>
       </div>
+      <ThemeToggle />
 
       <div className="mt-8">
         <img src="/images/game-screenshot.png" alt="A photo of our game" className="rounded-xl shadow-lg"/>
