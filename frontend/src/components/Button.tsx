@@ -16,33 +16,20 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  const baseStyles =
-    "px-26 py-2 rounded-[10px] font-[Chango] transition-colors duration-200 border-4 border-transparent"; // px = padding horizontal, py = padding vertical
-  const variants = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700",
-    secondary: "bg-white text-blue-700 hover:bg-gray-200",
-  };
-
   const handleClick = () => {
     if (to) navigate(to);
     else if (onClick) onClick();
   };
 
-  // Our styling comes from index.css
-
-    const style: React.CSSProperties = {
-    backgroundColor: "var(--btn-bg)",
-    color: "var(--btn-text)",
-    borderImage: "linear-gradient(to right, var(--btn-border-start), var(--btn-border-end)) 1",
-  };
-
   return (
-    <button
-      style={style}
-      className={baseStyles + " hover:bg-[var(--btn-hover)]"}
-      onClick={handleClick}
-    >
-      {children}
-    </button>
+<button
+  onClick={handleClick}
+  className="relative px-[26px] py-[8px] rounded-[10px] font-[Chango] text-[18px] text-[var(text)] bg-[var(--btn-bg)] hover:bg-[var(--btn-hover)] transition-all duration-300"
+>
+  <span
+    className="absolute inset-0 rounded-[10px] p-[2px] bg-gradient-to-r from-[var(--btn-border-start)] to-[var(--btn-border-end)] -z-10"
+  ></span>
+  <span className="relative z-10">{children}</span>
+</button>
   );
 };
