@@ -12,8 +12,8 @@ export default function Landing() {
     >  
       {/* if want to make bg animated, add animated-bg to className above and enable it in  */}
       {/* className="min-h-screen flex flex-col items-center justify-center transition-colors duration-500 animated-bg" */}
-      <h1 className="text-5xl font-bold mb-6">Welcome to</h1>
-      <Logo />
+      <h1 className="font-[Chango] text-5xl font-bold font-style: italic mb-6">Welcome to</h1>
+      <Logo size={9}/>
       <p className="mt-8 text-lg text-center max-w-md">
         <h2 className="text-2xl font-bold mb-7">An adaptation of the classic Atari game Pong.</h2>
         <br></br><br></br> Sign up to create a player profile, or sign in if you already have one.

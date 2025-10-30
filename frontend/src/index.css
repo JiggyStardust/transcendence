@@ -60,7 +60,7 @@ button {
     border-color: var(--btn-bd-col);
     background: linear-gradient(var(--btn-bg-start),var(--btn-bg-end));
     cursor: pointer;
-    transition: border-color 0.25s;
+    transition: 0.5s;
 }
 button:hover {
     background: var(--btn-hover);
