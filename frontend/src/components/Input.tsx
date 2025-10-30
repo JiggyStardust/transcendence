@@ -9,12 +9,12 @@ type InputProps = {
 export default function Input({id, label, type = "text"}: InputProps) {
 
 	return (
-		<div className="px-4">
-			<label>
+		<div className="flex flex-col m-2 px-4">
+			<label className="flex justify-left">
 				{label}
-				<input className="p-1 border border-black rounded-s"
-					type={type} id={id}/>
 			</label>
+			<input className="p-1 border border-white rounded-sm"
+				type={type} id={id}/>
 		</div>
 	)
 }
