@@ -1,14 +1,20 @@
-import { ThemeToggle } from "../components/ThemeToggle";
-import { Logo } from "../components/Logo";
+import { useState, useMemo } from "react";
+import Input from "../components/Input"
 
 export default function SignUp() {
-  return (
-<div className="flex flex-col items-center justify-center min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300">
-	  <Logo />
-	  <ThemeToggle />
-	  <p className="mt-4 text-lg text-center max-w-md">
-		This is where you SignUp!
-	  </p>
-	</div>
-  );
+
+	function handleSignUp() {
+		//API call here
+		console.log("Sign up API called");			//TEST
+	}
+
+	return (
+		<div>
+			<form action={handleSignUp}>
+				<Input label="Username:" id="username" type="text" />
+				<Input id="password" label="Password:" type="text"/>
+				<button type="submit">Sign up</button>
+			</form>
+		</div>
+	)
 }
