@@ -2,6 +2,7 @@
 .env*
 !.env.example
 secrets/*
+certs
 
 # dependencies
 node_modules/
