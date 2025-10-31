@@ -4,7 +4,7 @@ import { Button } from "../components/Button";
 
 export default function Landing() {
   return (
-<div className="flex flex-col items-center justify-center min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300">
+	<div className="flex flex-col items-center justify-center min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300">
       <h1 className="text-5xl font-bold mb-6">Welcome to</h1>
       <Logo />
       <ThemeToggle />
