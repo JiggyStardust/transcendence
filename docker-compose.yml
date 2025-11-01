@@ -5,13 +5,15 @@ services:
       context: ./gateway
       dockerfile: Dockerfile
     container_name: transcendence-gateway
-    ports: ["443:443"] #HTTPS only
+    ports: ["${GATEWAY_PORT}:${GATEWAY_PORT}"]
     volumes:
       - ./gateway/certs:/app/certs:ro
       - ./gateway/src:/app/src
       - /app/node_modules
     environment:
       - FRONTEND_URL=${FRONTEND_URL}
+      - PORT=${GATEWAY_PORT}
+      - HOST=${GATEWAY_HOST}
     depends_on: [frontend]
     restart: unless-stopped
     networks: [frontend-network]

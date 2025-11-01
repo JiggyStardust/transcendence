@@ -8,9 +8,7 @@ RUN apk add --no-cache curl && npm ci
 COPY tsconfig.json ./
 COPY src ./src
 
-EXPOSE 443
-
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=5 \
-    CMD curl -kfsS https://127.0.0.1:443 || exit 1
+    CMD curl -kfsS https://127.0.0.1:${PORT:-4443} || exit 1
 
 CMD ["npx", "tsx", "watch", "src/index.ts"]
