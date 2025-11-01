@@ -3,7 +3,7 @@ import { z } from "zod";
 
 const EnvSchema = z.object({
   HOST: z.string().default("0.0.0.0"),
-  PORT: z.coerce.number().default(443),
+  PORT: z.coerce.number().default(4443),
   FRONTEND_URL: z.string(),
 });
 
