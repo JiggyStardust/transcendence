@@ -37,7 +37,6 @@ clean: down
 
 fclean: clean
 	docker system prune -f
-	rm -rf .env backend/database/data/database.db gateway/certs
 
 re: clean all
 
