@@ -1,0 +1,84 @@
+name: rootless-compose
+on: [push, pull_request]
+
+jobs:
+  rootless:
+    runs-on: ubuntu-latest
+    env:
+      XDG_RUNTIME_DIR: /home/runner/.docker/run
+      DOCKER_HOST: unix:///home/runner/.docker/run/docker.sock
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start rootless Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y uidmap slirp4netns fuse-overlayfs dbus-user-session docker-ce-rootless-extras || true
+          command -v dockerd-rootless-setuptool.sh >/dev/null || (curl -fsSL https://get.docker.com | sh && sudo apt-get install -y docker-ce-rootless-extras)
+          sudo systemctl stop docker
+          dockerd-rootless-setuptool.sh install
+          mkdir -p "$XDG_RUNTIME_DIR"
+          ~/.local/bin/dockerd-rootless.sh --storage-driver=fuse-overlayfs >/tmp/dockerd.log 2>&1 &
+          for i in {1..60}; do docker version >/dev/null 2>&1 && break || sleep 0.5; done
+          docker version
+
+      - name: Write CI env files
+        run: |
+          # Expected FAIL: gateway on :443 (privileged)
+          cat > .env.ci.low <<'ENV'
+          GATEWAY_PORT=443
+          GATEWAY_HOST=0.0.0.0
+          FRONTEND_URL=https://localhost:443
+          BACKEND_PORT=8080
+          BACKEND_HOST=0.0.0.0
+          VITE_PORT=5173
+          VITE_HOST=0.0.0.0
+          VITE_ALLOWED_HOST_NAME=localhost
+          VITE_BACKEND_INTERNAL_URL=http://transcendence-backend:8080
+          JWT_SECRET=dev-fake-secret
+          ENV
+
+          # Expected PASS: high ports
+          cat > .env.ci.high <<'ENV'
+          GATEWAY_PORT=8443
+          GATEWAY_HOST=0.0.0.0
+          FRONTEND_URL=https://localhost:8443
+          BACKEND_PORT=18080
+          BACKEND_HOST=0.0.0.0
+          VITE_PORT=15173
+          VITE_HOST=0.0.0.0
+          VITE_ALLOWED_HOST_NAME=localhost
+          VITE_BACKEND_INTERNAL_URL=http://transcendence-backend:18080
+          JWT_SECRET=dev-fake-secret
+          ENV
+
+      - name: Compose up (should FAIL on :443)
+        run: |
+          set +e
+          docker compose --env-file .env.ci.low up -d --build 2>err.txt
+          rc=$?
+          if [ $rc -eq 0 ]; then
+            echo "❌ Unexpected success binding privileged port :443"
+            docker compose --env-file .env.ci.low logs gateway || true
+            docker compose --env-file .env.ci.low down -v || true
+            exit 1
+          fi
+          echo "✔ Expected failure when binding :443 (rootless)"
+          docker compose --env-file .env.ci.low down -v || true
+
+      - name: Compose up (high ports; should PASS)
+        run: |
+          docker compose --env-file .env.ci.high up -d --build
+          docker compose --env-file .env.ci.high ps
+          GATEWAY_PORT=$(awk -F= '/^GATEWAY_PORT=/{print $2}' .env.ci.high)
+          # wait for gateway
+          for i in {1..40}; do (bash -lc "echo > /dev/tcp/127.0.0.1/$GATEWAY_PORT") && break || sleep 0.5; done
+          # -k because you likely use self-signed certs in CI
+          curl -k -fsS "https://127.0.0.1:${GATEWAY_PORT}/" >/dev/null
+          echo "✔ Gateway reachable on :${GATEWAY_PORT}"
+
+      - name: Show brief logs & teardown
+        if: always()
+        run: |
+          docker compose --env-file .env.ci.high logs --tail=120 gateway || true
+          docker compose --env-file .env.ci.high down -v || true
