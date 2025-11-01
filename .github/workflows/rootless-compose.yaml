@@ -1,84 +1,65 @@
-name: rootless-compose
+name: rootless-podman
 on: [push, pull_request]
 
 jobs:
-  rootless:
+  test:
     runs-on: ubuntu-latest
-    env:
-      XDG_RUNTIME_DIR: /home/runner/.docker/run
-      DOCKER_HOST: unix:///home/runner/.docker/run/docker.sock
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Start rootless Docker
+      - name: Install Podman (rootless) + docker shim
         run: |
-          sudo apt-get update
-          sudo apt-get install -y uidmap slirp4netns fuse-overlayfs dbus-user-session docker-ce-rootless-extras || true
-          command -v dockerd-rootless-setuptool.sh >/dev/null || (curl -fsSL https://get.docker.com | sh && sudo apt-get install -y docker-ce-rootless-extras)
-          sudo systemctl stop docker
-          dockerd-rootless-setuptool.sh install
-          mkdir -p "$XDG_RUNTIME_DIR"
-          ~/.local/bin/dockerd-rootless.sh --storage-driver=fuse-overlayfs >/tmp/dockerd.log 2>&1 &
-          for i in {1..60}; do docker version >/dev/null 2>&1 && break || sleep 0.5; done
-          docker version
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq podman podman-docker uidmap slirp4netns fuse-overlayfs openssl curl
+          pip install --user podman-compose
+          echo "Podman compose version: $(podman-compose --version)"
+          echo "Docker (shim) version: $(docker --version)"
 
-      - name: Write CI env files
+      - name: Prepare environment
         run: |
-          # Expected FAIL: gateway on :443 (privileged)
-          cat > .env.ci.low <<'ENV'
-          GATEWAY_PORT=443
-          GATEWAY_HOST=0.0.0.0
-          FRONTEND_URL=https://localhost:443
-          BACKEND_PORT=8080
-          BACKEND_HOST=0.0.0.0
-          VITE_PORT=5173
-          VITE_HOST=0.0.0.0
-          VITE_ALLOWED_HOST_NAME=localhost
-          VITE_BACKEND_INTERNAL_URL=http://transcendence-backend:8080
-          JWT_SECRET=dev-fake-secret
-          ENV
+          mkdir -p ./gateway/certs
+          openssl req -x509 -newkey rsa:2048 -nodes \
+            -keyout ./gateway/certs/localhost-key.pem \
+            -out ./gateway/certs/localhost.pem \
+            -days 365 -subj "/CN=localhost"
 
-          # Expected PASS: high ports
-          cat > .env.ci.high <<'ENV'
-          GATEWAY_PORT=8443
-          GATEWAY_HOST=0.0.0.0
-          FRONTEND_URL=https://localhost:8443
-          BACKEND_PORT=18080
-          BACKEND_HOST=0.0.0.0
-          VITE_PORT=15173
-          VITE_HOST=0.0.0.0
-          VITE_ALLOWED_HOST_NAME=localhost
-          VITE_BACKEND_INTERNAL_URL=http://transcendence-backend:18080
-          JWT_SECRET=dev-fake-secret
-          ENV
-
-      - name: Compose up (should FAIL on :443)
+      - name: Run containers with :443 (should fail)
         run: |
-          set +e
-          docker compose --env-file .env.ci.low up -d --build 2>err.txt
-          rc=$?
-          if [ $rc -eq 0 ]; then
-            echo "❌ Unexpected success binding privileged port :443"
-            docker compose --env-file .env.ci.low logs gateway || true
-            docker compose --env-file .env.ci.low down -v || true
+          export PATH="$HOME/.local/bin:$PATH"
+          cp .env.example .env.443
+          sed -i 's/^GATEWAY_PORT=.*/GATEWAY_PORT=443/' .env.443
+
+          if podman-compose --env-file .env.443 up -d --build 2>err.txt; then
+            echo "[ ERROR ] Unexpected success: container bound to privileged port 443"
+            podman ps
+            podman-compose --env-file .env.443 down -v || true
             exit 1
+          else
+            echo "[ SUCCESS ] Expected failure when binding to port 443 (rootless Podman restriction)"
+            head -n 40 err.txt || true
+            podman-compose --env-file .env.443 down -v || true
           fi
-          echo "✔ Expected failure when binding :443 (rootless)"
-          docker compose --env-file .env.ci.low down -v || true
 
-      - name: Compose up (high ports; should PASS)
+      - name: Run containers with :8443 (should pass)
         run: |
-          docker compose --env-file .env.ci.high up -d --build
-          docker compose --env-file .env.ci.high ps
-          GATEWAY_PORT=$(awk -F= '/^GATEWAY_PORT=/{print $2}' .env.ci.high)
-          # wait for gateway
-          for i in {1..40}; do (bash -lc "echo > /dev/tcp/127.0.0.1/$GATEWAY_PORT") && break || sleep 0.5; done
-          # -k because you likely use self-signed certs in CI
-          curl -k -fsS "https://127.0.0.1:${GATEWAY_PORT}/" >/dev/null
-          echo "✔ Gateway reachable on :${GATEWAY_PORT}"
+          export PATH="$HOME/.local/bin:$PATH"
+          cp .env.example .env.8443
+          sed -i 's/^GATEWAY_PORT=.*/GATEWAY_PORT=8443/' .env.8443
 
-      - name: Show brief logs & teardown
+          podman-compose --env-file .env.8443 up -d --build
+          podman ps
+
+          for i in {1..40}; do
+            if curl -kfsS "https://127.0.0.1:8443" >/dev/null 2>&1; then
+              echo "[ SUCCESS ] Gateway reachable on 8443"
+              break
+            fi
+            sleep 0.5
+          done
+
+          podman-compose --env-file .env.8443 down -v || true
+
+      - name: Cleanup
         if: always()
-        run: |
-          docker compose --env-file .env.ci.high logs --tail=120 gateway || true
-          docker compose --env-file .env.ci.high down -v || true
+        run: podman down -v || true
