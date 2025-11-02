@@ -10,34 +10,39 @@ import {
   LogoutUserInternalDto,
 } from "./dto/user.dto";
 import { SetTokenInternalDto, RotateTokenInternalDto } from "./dto/token.dto";
-import { ApiTags } from "@nestjs/swagger";
+import { AuthResponseEntity } from "./entities/auth-response.entity";
+import { ApiTags, ApiCreatedResponse } from "@nestjs/swagger";
 // TODO: import { InternalGuard } from "../common/guards/internal.guard";
 
 @Controller("auth")
-@ApiTags("auth")
+@ApiTags("Auth api")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post("register")
   @HttpCode(201)
+  @ApiCreatedResponse({ type: AuthResponseEntity })
   register(@Body() dto: CreateUserInternalDto) {
     return this.authService.register(dto);
   }
 
   @Post("login")
   @HttpCode(200)
+  @ApiCreatedResponse({ type: AuthResponseEntity })
   login(@Body() dto: LoginUserInternalDto) {
     return this.authService.login(dto);
   }
 
   @Post("logout")
   @HttpCode(200)
+  @ApiCreatedResponse({ type: AuthResponseEntity })
   logout(@Body() dto: LogoutUserInternalDto) {
     return this.authService.logout(dto);
   }
 
   @Put("users/:username/set-token")
   // TODO: add @UseGuards
+  @ApiCreatedResponse({ type: AuthResponseEntity })
   setToken(
     @Param("username") username: string,
     @Body() dto: SetTokenInternalDto,
@@ -47,6 +52,7 @@ export class AuthController {
 
   @Put("users/:username/rotate-token")
   // TODO: add @UseGuards
+  @ApiCreatedResponse({ type: AuthResponseEntity })
   rotateToken(
     @Param("username") username: string,
     @Body() dto: RotateTokenInternalDto,
