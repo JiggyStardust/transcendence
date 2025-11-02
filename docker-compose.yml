@@ -52,6 +52,22 @@ services:
     restart: unless-stopped
     networks: [frontend-network, backend-network]
 
+  database:
+    build:
+      context: ./db-service
+      dockerfile: Dockerfile
+    container_name: transcendence-database
+    expose: ["${DATABASE_PORT}"]
+    volumes:
+      - ./db-service:/app
+      - /app/node_modules
+    environment:
+      - PORT=${DATABASE_PORT}
+      - HOST=${DATABASE_HOST}
+      - DATABASE_URL=${DATABASE_URL}
+    restart: unless-stopped
+    networks: [backend-network]
+
 networks:
   backend-network:
     driver: bridge
