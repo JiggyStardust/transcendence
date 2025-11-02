@@ -27,7 +27,7 @@ async function bootstrap() {
   await app.listen(process.env.PORT ?? 3000, process.env.HOST ?? "localhost");
   console.log(
     "Pong DB listen on",
-    `${process.env.HOST ?? "localhost"}:${process.env.PORT ?? "8888"}`,
+    `${process.env.HOST ?? "localhost"}:${process.env.PORT ?? "3000"}`,
   );
 }
 bootstrap();
