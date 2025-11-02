@@ -154,7 +154,7 @@ export class AuthService {
   }
 
   async logout(dto: LogoutUserInternalDto) {
-    const username = dto.username.trim().toLowerCase();
+    const username = dto.username.trim();
 
     const user = await this.prisma.user.findUnique({
       where: { username },

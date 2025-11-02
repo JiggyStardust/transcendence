@@ -4,7 +4,7 @@ Run (local): `npm run start`
 
 Base URL (local): `http://localhost:3000` -> in local setup will lead to the Swagger UI for docs and tests.
 
-Auth (in progress): current contract - none auth requared (internal service).
+Auth (in progress): current contract - none auth required (internal service).
 
 Content-Type: application/json
 
@@ -73,7 +73,7 @@ const payload = {
 
 const res = await app.inject({
   method: "POST",
-  url: `http://${process.env.DATABASE_HOST"}:${process.env.DATABASE_PORT}/auth/register`,
+  url: `http://${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/auth/register`,
   payload,
 });
 ```
@@ -123,7 +123,7 @@ const payload = {
 
 const res = await app.inject({
   method: "POST",
-  url: `http://${process.env.DATABASE_HOST"}:${process.env.DATABASE_PORT}/auth/login`,
+  url: `http://${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/auth/login`,
   payload,
 });
 ```
