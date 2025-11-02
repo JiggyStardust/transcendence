@@ -79,6 +79,25 @@ describe("Auth e2e (Fastify + Prisma in-memory)", () => {
     expect(res.json().user.username).toBe("alice");
   });
 
+  it("POST /auth/logout -> 200", async () => {
+    await prisma.user.create({
+      data: {
+        username: "alice",
+        displayName: "Alice",
+        passwordHash: await bcrypt.hash("secret", 10),
+      },
+    });
+
+    const res = await app.inject({
+      method: "POST",
+      url: "/auth/logout",
+      payload: { username: "alice" },
+    });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.json().user.username).toBe("alice");
+  });
+
   it("PUT /auth/users/:username/set-token -> 201", async () => {
     const user = await prisma.user.create({
       data: { username: "alice", displayName: "Alice", passwordHash: "h" },

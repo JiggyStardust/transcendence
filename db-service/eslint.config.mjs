@@ -1,3 +1,4 @@
+--no - warn - ignored;
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 import pluginN from "eslint-plugin-n";

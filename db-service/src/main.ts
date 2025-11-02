@@ -24,6 +24,10 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("db-api", app, document);
 
-  await app.listen(process.env.PORT ?? 8082, process.env.HOST ?? "0.0.0.0");
+  await app.listen(process.env.PORT ?? 3000, process.env.HOST ?? "localhost");
+  console.log(
+    "Pong DB listen on",
+    `${process.env.HOST ?? "localhost"}:${process.env.PORT ?? "8888"}`,
+  );
 }
 bootstrap();
