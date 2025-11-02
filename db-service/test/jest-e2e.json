@@ -1,9 +1,13 @@
 {
-  "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": ".",
+  "preset": "ts-jest",
   "testEnvironment": "node",
-  "testRegex": ".e2e-spec.ts$",
-  "transform": {
-    "^.+\\.(t|j)s$": "ts-jest"
-  }
+  "rootDir": "../",
+  "testMatch": ["<rootDir>/test/**/*.e2e-spec.ts"],
+  "globalSetup": "<rootDir>/test/global-setup.cjs",
+  "transform": { "^.+\\.ts$": "ts-jest" },
+  "moduleNameMapper": {
+    "^src/(.*)$": "<rootDir>/src/$1",
+    "^@/(.*)$": "<rootDir>/src/$1"
+  },
+  "moduleDirectories": ["node_modules", "<rootDir>/src"]
 }

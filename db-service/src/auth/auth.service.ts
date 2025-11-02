@@ -10,7 +10,7 @@ import {
   LogoutUserInternalDto,
 } from "./dto/user.dto";
 import { SetTokenInternalDto, RotateTokenInternalDto } from "./dto/token.dto";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from "../prisma/prisma.service";
 import { $Enums } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import bcrypt from "bcrypt";
@@ -36,7 +36,7 @@ export class AuthService {
         message: "User successfully created",
         user,
       };
-    } catch (e: any) {
+    } catch (e) {
       if (e instanceof PrismaClientKnownRequestError && e.code === "P2002") {
         throw new ConflictException("Username already taken");
       }

@@ -15,7 +15,7 @@ import { ApiTags, ApiCreatedResponse } from "@nestjs/swagger";
 // TODO: import { InternalGuard } from "../common/guards/internal.guard";
 
 @Controller("auth")
-@ApiTags("Auth api")
+@ApiTags("Auth API")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -41,6 +41,7 @@ export class AuthController {
   }
 
   @Put("users/:username/set-token")
+  @HttpCode(201)
   // TODO: add @UseGuards
   @ApiCreatedResponse({ type: AuthResponseEntity })
   setToken(
@@ -51,6 +52,7 @@ export class AuthController {
   }
 
   @Put("users/:username/rotate-token")
+  @HttpCode(201)
   // TODO: add @UseGuards
   @ApiCreatedResponse({ type: AuthResponseEntity })
   rotateToken(
