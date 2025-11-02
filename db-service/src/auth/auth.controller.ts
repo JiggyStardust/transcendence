@@ -1,29 +1,56 @@
-import { Controller, Get, Post, Put, Param, Body } from "@nestjs/common";
+// [INFO]:
+// Controllers are responsible for handling incoming requests and sending responses back to the client.
+// https://docs.nestjs.com/controllers
+
+import { Controller, Post, Put, Body, Param, HttpCode } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { CreateUserDto } from "./dto/create-user.dto";
-import { SetTokenInternalDto } from "./dto/set-token.dto";
+import {
+  CreateUserInternalDto,
+  LoginUserInternalDto,
+  LogoutUserInternalDto,
+} from "./dto/user.dto";
+import { SetTokenInternalDto, RotateTokenInternalDto } from "./dto/token.dto";
+import { ApiTags } from "@nestjs/swagger";
+// TODO: import { InternalGuard } from "../common/guards/internal.guard";
 
 @Controller("auth")
+@ApiTags("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Get(":username")
-  findUser(@Param("username") username: string) {
-    return this.authService.findUser(username);
+  @Post("register")
+  @HttpCode(201)
+  register(@Body() dto: CreateUserInternalDto) {
+    return this.authService.register(dto);
   }
 
-  @Get("hashpass/:username")
-  getHashedPassword(@Param("username") username: string) {
-    return this.authService.getHashedPassword(username);
+  @Post("login")
+  @HttpCode(200)
+  login(@Body() dto: LoginUserInternalDto) {
+    return this.authService.login(dto);
   }
 
-  @Post("create")
-  createUser(@Body() createUserDto: CreateUserDto) {
-    return this.authService.createUser(createUserDto);
+  @Post("logout")
+  @HttpCode(200)
+  logout(@Body() dto: LogoutUserInternalDto) {
+    return this.authService.logout(dto);
   }
 
-  @Put("set-token")
-  setToken(@Body() setTokenDto: SetTokenInternalDto) {
-    return this.authService.setToken(setTokenDto);
+  @Put("users/:username/set-token")
+  // TODO: add @UseGuards
+  setToken(
+    @Param("username") username: string,
+    @Body() dto: SetTokenInternalDto,
+  ) {
+    return this.authService.setToken({ ...dto, username });
+  }
+
+  @Put("users/:username/rotate-token")
+  // TODO: add @UseGuards
+  rotateToken(
+    @Param("username") username: string,
+    @Body() dto: RotateTokenInternalDto,
+  ) {
+    return this.authService.rotateToken({ ...dto, username });
   }
 }

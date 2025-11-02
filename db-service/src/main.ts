@@ -5,7 +5,7 @@ import {
   NestFastifyApplication,
 } from "@nestjs/platform-fastify";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
-// import { ValidationPipe } from "@nestjs/common";
+// TODO: import { ValidationPipe } from "@nestjs/common";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -13,13 +13,7 @@ async function bootstrap() {
     new FastifyAdapter({ logger: { level: "error" } }),
   );
 
-  // app.useGlobalPipes(
-  //   new ValidationPipe({
-  //     whitelist: true,
-  //     transform: true,
-  //     forbidNonWhitelisted: true,
-  //   }),
-  // );
+  // TODO app.useGlobalPipes();
 
   const config = new DocumentBuilder()
     .setTitle("Pong DB")
