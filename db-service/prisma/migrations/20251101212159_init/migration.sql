@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "login" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
     "displayName" TEXT NOT NULL,
     "passwordHash" TEXT NOT NULL,
     "isTwoFactorEnabled" BOOLEAN NOT NULL DEFAULT false,
@@ -80,7 +80,10 @@ CREATE TABLE "MatchParticipant" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_login_key" ON "User"("login");
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
+CREATE INDEX "User_username_idx" ON "User"("username");
 
 -- CreateIndex
 CREATE INDEX "RefreshToken_userId_idx" ON "RefreshToken"("userId");

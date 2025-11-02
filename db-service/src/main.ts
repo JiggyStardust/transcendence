@@ -1,26 +1,35 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "./app.module";
 import {
   FastifyAdapter,
   NestFastifyApplication,
-} from '@nestjs/platform-fastify';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+} from "@nestjs/platform-fastify";
+import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
+// import { ValidationPipe } from "@nestjs/common";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter({ logger: { level: 'error' } }),
+    new FastifyAdapter({ logger: { level: "error" } }),
   );
 
+  // app.useGlobalPipes(
+  //   new ValidationPipe({
+  //     whitelist: true,
+  //     transform: true,
+  //     forbidNonWhitelisted: true,
+  //   }),
+  // );
+
   const config = new DocumentBuilder()
-    .setTitle('Pong DB')
-    .setDescription('REST API documentation for Pong database.')
-    .setVersion('1.0')
+    .setTitle("Pong DB")
+    .setDescription("REST API documentation for Pong database.")
+    .setVersion("1.0")
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('db-api', app, document);
+  SwaggerModule.setup("db-api", app, document);
 
-  await app.listen(process.env.PORT ?? 8082, process.env.HOST ?? '0.0.0.0');
+  await app.listen(process.env.PORT ?? 8082, process.env.HOST ?? "0.0.0.0");
 }
 bootstrap();
