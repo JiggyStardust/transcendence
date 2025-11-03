@@ -10,6 +10,7 @@ export default defineConfig(({ mode }) => {
     server: {
       host: env.VITE_HOST ?? "0.0.0.0",
       port: parseInt(env.VITE_PORT ?? "3000"),
+      allowedHosts: [env.VITE_ALLOWED_HOST_NAME, "localhost"],
       proxy: {
         "/api": {
           target: env.VITE_BACKEND_INTERNAL_URL,
@@ -17,5 +18,5 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-  }
+  };
 });
