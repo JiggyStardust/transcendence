@@ -5,7 +5,7 @@ import { JWT_SECRET } from './config.js';
 
 export const verifyToken = (req, reply, done) => {
     const authHeader = req.headers.authorization;
-    if (!authHeader) return reply.code(401).send({ error: 'Missing authrization header' });
+    if (!authHeader) return reply.code(401).send({ error: 'Missing authorization header' });
     
     const token = authHeader.split(' ')[1];
     try {
