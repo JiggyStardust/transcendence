@@ -5,7 +5,7 @@ import { Button } from "../components/Button";
 export default function Landing() {
   return (
     <div
-      className="flex flex-col items-center justify-center min-h-screen text-gray-900 dark:text-white transition-colors duration-500"
+      className="flex flex-col items-center justify-center min-h-screen w-screen text-gray-900 dark:text-white transition-colors duration-500"
       style={{
         background: `linear-gradient(to bottom, var(--bg-start) 0%, var(--bg-end) var(--bg-shift))`,
       }}
