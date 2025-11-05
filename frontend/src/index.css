@@ -1,22 +1,5 @@
 @import "tailwindcss";
 
-/* A super bad example of animating background: */
-/* @keyframes gradientShift {
-  0% {
-    --bg-shift: 55%;
-  }
-  50% {
-    --bg-shift: 65%;
-  }
-  100% {
-    --bg-shift: 55%;
-  }
-}
-
-.animated-bg {
-  animation: gradientShift 1s ease-in-out infinite;
-} */
-
 :root {
     /* background color settings for lightmode */
     --bg-start: rgba(255, 238, 0, 0.38);
@@ -31,6 +14,14 @@
     --btn-hover: linear-gradient(rgba(170, 0, 139, 0.5),rgba(255, 141, 53, 0.95));
     --btn-hover-bd: rgb(255, 255, 255);
     --btn-hover-text: rgb(2, 247, 255);
+}
+
+.page-bg {
+  background: linear-gradient(
+    to bottom,
+    var(--bg-start) 0%,
+    var(--bg-end) var(--bg-shift)
+  );
 }
 
 .dark {
