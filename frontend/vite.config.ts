@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => {
       allowedHosts: [env.VITE_ALLOWED_HOST_NAME, "localhost"],
       proxy: {
         "/api": {
-          target: env.VITE_BACKEND_INTERNAL_URL,
+          target: env.VITE_LOCAL_BACKEND_URL,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ""),
         },

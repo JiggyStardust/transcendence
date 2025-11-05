@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Input from "../components/Input";
 import { Button} from "../components/Button";
+import { PROXY_URL } from "../constants"
 
 export default function SignUp() {
 
@@ -10,7 +11,7 @@ export default function SignUp() {
 
 	async function handleSignUp() {
     //API call here
-    const res = await fetch("/api/signup", {
+    const res = await fetch(PROXY_URL + "/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

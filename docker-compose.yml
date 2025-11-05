@@ -22,7 +22,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: transcendence-backend
-    expose: ["${BACKEND_PORT}"]
+    expose: ["${BACKEND_PORT}:${BACKEND_PORT}"]
     volumes:
       - ./backend:/app
       - /app/node_modules
