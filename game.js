@@ -20,13 +20,19 @@ async function createScene() {
   mPaddle.diffuseColor = new BABYLON.Color3(2, 2, 2);
 
   var mWall = new BABYLON.StandardMaterial("mWall", scene);
-  mWall.diffuseColor = new BABYLON.Color3(0.3, 0.6, 0.4);
+  mWall.diffuseColor = new BABYLON.Color3(0.6, 0.75, 0.75);
 
   var mGround = new BABYLON.StandardMaterial("mGround", scene);
   mGround.diffuseColor = new BABYLON.Color3(0, 0, 0);
 
-  var mScoreText = new BABYLON.StandardMaterial("mScoreText", scene);
-  mScoreText.diffuseColor = new BABYLON.Color3(5, 5, 5);
+  const mScoreText = new BABYLON.StandardMaterial("mScoreText", scene);
+  mScoreText.diffuseColor = new BABYLON.Color3(1.0, 0.75, 0.2); // warm amber-yellow
+  mScoreText.emissiveColor = new BABYLON.Color3(1.0, 0.6, 0.1); // glowing orange-yellow
+  mScoreText.specularColor = new BABYLON.Color3(0.2, 0.1, 0.0); // muted shine
+  mScoreText.alpha = 1.0;
+
+  var mScoreBoard = new BABYLON.StandardMaterial("mScoreText", scene);
+  mScoreBoard.diffuseColor = new BABYLON.Color3(0.6, 0.75, 0.75);
 
   var mSphere = new BABYLON.StandardMaterial("mSphere", scene);
   mSphere.diffuseColor = new BABYLON.Color3(1, 1, 1);
@@ -42,6 +48,36 @@ async function createScene() {
   var paddle2 = paddle1.clone("paddle2");
   paddle1.position.x = -2.7;
   paddle2.position.x = 2.7;
+
+  // Load font
+  const fontData = await (await fetch("Score_Board_Regular.json")).json();
+
+  // Score text
+  const array = ["0", "1", "2", "3", "4", "5", "6", "7"];
+  array.forEach((x) => {
+      const scoreTextLeft = BABYLON.MeshBuilder.CreateText(
+      "scoreTextLeft" + x,
+      x,
+      fontData,
+      {size: 1, resolution: 64,depth: 1},
+      scene
+    );
+    scoreTextLeft.material = mScoreText;
+    scoreTextLeft.rotation.x = 0.7;
+    scoreTextLeft.setEnabled(false);
+  
+    const scoreTextRight = scoreTextLeft.clone("scoreTextRight" + x);
+    
+    scoreTextLeft.position = new BABYLON.Vector3(-1, 0, 4);
+    scoreTextRight.position = new BABYLON.Vector3(1, 0, 4);
+  });
+
+  // ScoreBoard
+  var scoreBoard = BABYLON.MeshBuilder.CreateBox("scoreBoard", {width: 3.5, height: 1.5, depth: 0.3}, scene);
+  scoreBoard.position.y = 0.5;
+  scoreBoard.position.z = 4.2;
+  scoreBoard.material = mScoreBoard;
+  scoreBoard.rotation.x = 0.7;
 
   // Sidewalls
   var wallTop = BABYLON.MeshBuilder.CreateBox("wallTop", {width: 6, height: 0.2, depth: 0.2}, scene);
@@ -105,28 +141,7 @@ async function createScene() {
     }
   });
 
-  // Load font
-  const fontData = await (await fetch("Roboto_Regular.json")).json();
 
-  // Score text
-  const array = ["0", "1", "2", "3", "4", "5", "6", "7"];
-  array.forEach((x) => {
-      const scoreTextLeft = BABYLON.MeshBuilder.CreateText(
-      "scoreTextLeft" + x,
-      x,
-      fontData,
-      {size: 1, resolution: 64,depth: 1},
-      scene
-    );
-    scoreTextLeft.material = mScoreText;
-    scoreTextLeft.rotation.x = 0.7;
-    scoreTextLeft.setEnabled(false);
-  
-    const scoreTextRight = scoreTextLeft.clone("scoreTextRight" + x);
-    
-    scoreTextLeft.position = new BABYLON.Vector3(-1, 0, 4);
-    scoreTextRight.position = new BABYLON.Vector3(1, 0, 4);
-  });
 
   return scene;
 }
@@ -148,6 +163,9 @@ let scoreP1 = 0;
 let scoreP2 = 0;
 let maxScore = 7;
 
+//GameOver
+let gameOver = false; // DEBUG CHANGE BACK TO FALSE
+
 // Collision
 let paddleCollisionX = 2.4;
 let scoreCollisionX = 2.6;
@@ -166,8 +184,16 @@ const array = ["0", "1", "2", "3", "4", "5", "6", "7"];
 
 // Render loop
 engine.runRenderLoop(function () {
-  const deltaTime = engine.getDeltaTime() / 1000; // convert ms to seconds
-  sphere.position.addInPlace(direction.scale(ballSpeed * deltaTime));
+  // Get deltatime
+  const deltaTime = engine.getDeltaTime() / 1000;
+
+  // Check for GameOver
+  if (scoreP1 >= maxScore || scoreP2 >= maxScore)
+    gameOver = true;
+  
+  // Move sphere
+  if (!gameOver)
+    sphere.position.addInPlace(direction.scale(ballSpeed * deltaTime));
 
   // Update score text
   array.forEach((x) => {
