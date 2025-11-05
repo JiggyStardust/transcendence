@@ -1,5 +1,4 @@
 
-
 type InputProps = {
   id: string;
   label: string;
@@ -11,11 +10,11 @@ type InputProps = {
 export default function Input({id, label, type = "text", value, onChange}: InputProps) {
 
 	return (
-		<div className="flex flex-col m-2 px-4">
+		<div className="flex flex-col m-2 px-4  text-black dark:text-white">
 			<label className="flex justify-left">
 				{label}
 			</label>
-			<input className="p-1 border border-white rounded-sm"
+			<input className="p-1 border border-black dark:border-white rounded-sm"
 				type={type} id={id} value={value} onChange={onChange}/>
 		</div>
 	)

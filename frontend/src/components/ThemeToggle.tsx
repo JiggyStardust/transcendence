@@ -14,7 +14,7 @@ export const ThemeToggle: React.FC = () => {
   return (
     <button
       onClick={() => setDarkMode((prev) => !prev)}
-      className="mt-4 px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-black dark:text-white"
+      className="min-w-48 px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-black dark:text-white"
     >
       {darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
     </button>
