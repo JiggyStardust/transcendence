@@ -2,7 +2,7 @@ import { ThemeToggle } from "../components/ThemeToggle";
 import { Logo } from "../components/Logo"
 import { useState } from "react";
 import Input from "../components/Input";
-import { Button} from "../components/Button";
+import { Button } from "../components/Button";
 
 export default function SignUp() {
 	
