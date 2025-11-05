@@ -1,20 +1,21 @@
 services:
-  # HTTPS entrypoint; proxies frontend and backend microservices
-  gateway:
+  frontend:
     build:
-      context: ./gateway
+      context: ./frontend
       dockerfile: Dockerfile
-    container_name: transcendence-gateway
-    ports: ["443:443"] #HTTPS only
+    container_name: transcendence-frontend
+    ports: ["${VITE_PORT}:${VITE_PORT}"]
     volumes:
-      - ./gateway/certs:/app/certs:ro
-      - ./gateway/src:/app/src
+      - ./frontend:/app
       - /app/node_modules
     environment:
-      - FRONTEND_URL=${FRONTEND_URL}
-    depends_on: [frontend]
+      - VITE_PORT=${VITE_PORT}
+      - VITE_HOST=${VITE_HOST}
+      - VITE_ALLOWED_HOST_NAME=${VITE_ALLOWED_HOST_NAME}
+      - VITE_BACKEND_INTERNAL_URL=${DOCKER_BACKEND_URL}
+    depends_on: [backend]
     restart: unless-stopped
-    networks: [frontend-network]
+    networks: [transcendence-network]
 
   backend:
     build:
@@ -26,32 +27,12 @@ services:
       - ./backend:/app
       - /app/node_modules
     environment:
-      - PORT=${BACKEND_PORT}
-      - HOST=${BACKEND_HOST}
+      - BACKEND_PORT=${BACKEND_PORT}
+      - BACKEND_HOST=${BACKEND_HOST}
       - JWT_SECRET=${JWT_SECRET}
     restart: unless-stopped
-    networks: [backend-network]
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: transcendence-frontend
-    expose: ["${VITE_PORT}"]
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    environment:
-      - VITE_PORT=${VITE_PORT}
-      - VITE_HOST=${VITE_HOST}
-      - VITE_ALLOWED_HOST_NAME=${VITE_ALLOWED_HOST_NAME}
-      - VITE_BACKEND_INTERNAL_URL=${VITE_BACKEND_INTERNAL_URL}
-    depends_on: [backend]
-    restart: unless-stopped
-    networks: [frontend-network, backend-network]
+    networks: [transcendence-network]
 
 networks:
-  backend-network:
-    driver: bridge
-  frontend-network:
+  transcendence-network:
     driver: bridge

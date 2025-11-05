@@ -11,21 +11,11 @@ env-check:
 		exit 1; \
 	fi
 
-certs-check:
-	@if [ ! -d "./gateway/certs" ]; then \
-		echo "Creating self-signed HTTPS certificates for '${DOMAIN_NAME}'"; \
-		mkdir -p ./gateway/certs || exit 1; \
-		openssl req -x509 -newkey rsa:2048 -nodes \
-            -keyout ./gateway/certs/localhost-key.pem \
-            -out ./gateway/certs/localhost.pem \
-            -days 365 -subj "/CN=${DOMAIN_NAME}"; \
-	fi
-
-run-detach: env-check certs-check
+run-detach: env-check
 	docker-compose -f docker-compose.yml up --build --detach
 	docker ps
 
-run: env-check certs-check
+run: env-check
 	docker-compose -f docker-compose.yml up --build
 	docker ps
 
@@ -37,11 +27,10 @@ clean: down
 
 fclean: clean
 	docker system prune -f
-	rm -rf .env backend/database/data/database.db gateway/certs
 
 re: clean all
 
 logs:
 	docker-compose -f docker-compose.yml logs
 
-.PHONY: all env-check certs-check run-detach run down clean fclean re logs
+.PHONY: all env-check run-detach run down clean fclean re logs

@@ -9,12 +9,13 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), tailwindcss()],
     server: {
       host: env.VITE_HOST ?? "0.0.0.0",
-      port: parseInt(env.VITE_PORT ?? "3000"),
+      port: parseInt(env.VITE_PORT ?? "5173"),
       allowedHosts: [env.VITE_ALLOWED_HOST_NAME, "localhost"],
       proxy: {
         "/api": {
           target: env.VITE_BACKEND_INTERNAL_URL,
           changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ""),
         },
       },
     },

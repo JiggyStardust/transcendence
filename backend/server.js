@@ -3,6 +3,10 @@ import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import formbody from '@fastify/formbody';
 import userRoutes from './routes/users.js';
+import 'dotenv/config';
+
+const PORT = process.env.BACKEND_PORT || 4000;
+const HOST = process.env.BACKEND_HOST || "localhost";
 
 const fastify = Fastify({ logger: true });
 
@@ -21,8 +25,8 @@ fastify.get('/', async (request, reply) => {
 //run the server
 const start = async () => {
     try {
-        await fastify.listen({ port: 3000 });
-        console.log('Server running on http://localhost:3000');
+        fastify.listen({ host: HOST, port: PORT });
+        console.log('Server running on http://' + HOST + ":" + PORT);
     } catch (err) {
         fastify.log.error(err);
         process.exit(1);
