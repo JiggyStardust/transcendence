@@ -3,7 +3,7 @@ import { Logo } from "../components/Logo";
 
 export default function SignIn() {
   return (
-<div className="flex flex-col items-center justify-center min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300">
+<div className="page-bg flex flex-col items-center justify-center min-h-screen w-screen">
 	  <Logo />
 	  <ThemeToggle />
 	  <p className="mt-4 text-lg text-center max-w-md">
