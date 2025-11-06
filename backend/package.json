@@ -1,12 +1,12 @@
 {
   "name": "pingpong-backend",
   "version": "1.0.0",
-  "type": "module",
   "description": "",
   "main": "server.js",
+  "type": "module",
   "scripts": {
-    "dev": "node server.js",
-    "start": "node server.js",
+    "dev": "tsx watch server.ts",
+    "start": "tsx server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,11 +15,20 @@
   "dependencies": {
     "@fastify/cors": "^11.1.0",
     "@fastify/formbody": "^8.0.2",
-    "better-sqlite3": "^12.4.1",
-    "fastify": "^5.6.1",
-    "nodemon": "^3.1.10",
     "bcrypt": "^6.0.0",
+    "better-sqlite3": "^12.4.1",
     "dotenv": "^17.2.3",
-    "jsonwebtoken": "^9.0.0"
+    "fastify": "^5.6.1",
+    "jsonwebtoken": "^9.0.0",
+    "nodemon": "^3.1.10"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.10.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
   }
 }

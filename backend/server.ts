@@ -2,10 +2,10 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import formbody from '@fastify/formbody';
-import userRoutes from './routes/users.js';
+import userRoutes from './routes/users';
 import 'dotenv/config';
 
-const PORT = process.env.BACKEND_PORT || 4000;
+const PORT = parseInt(process.env.BACKEND_PORT ?? "4000");
 const HOST = process.env.BACKEND_HOST || "localhost";
 
 const fastify = Fastify({ logger: true });
