@@ -1,7 +1,7 @@
 // verify JWT on protected routes
 
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from './config.js';
+import { JWT_SECRET } from './config';
 import type { preHandlerHookHandler } from "fastify";
 
 // TODO: review and test this function before use

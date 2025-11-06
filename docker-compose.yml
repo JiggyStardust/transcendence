@@ -12,7 +12,7 @@ services:
       - VITE_PORT=${VITE_PORT}
       - VITE_HOST=${VITE_HOST}
       - VITE_ALLOWED_HOST_NAME=${VITE_ALLOWED_HOST_NAME}
-      - VITE_BACKEND_INTERNAL_URL=${DOCKER_BACKEND_URL}
+      - VITE_LOCAL_BACKEND_URL=${DOCKER_BACKEND_URL}
     depends_on: [backend]
     restart: unless-stopped
     networks: [transcendence-network]
