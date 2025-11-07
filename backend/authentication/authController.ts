@@ -1,7 +1,7 @@
 // signup/login, returns JWT
 // these functions wil be called by users.js
 
-import db from '../database';
+import { db } from '../prisma';
 import bcrypt from 'bcrypt';
 import { generateAccessToken, generateRefreshToken } from './authService'
 import type { FastifyReply, FastifyRequest } from "fastify";
@@ -11,43 +11,43 @@ interface IAuthRequestBody {
   password: string;
 }
 
-// Temporary
-interface IUserData {
-  id: number;
-  username: string,
-  password: string;
-}
-
 export async function signup(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
     const { username, password } = req.body;
+
     if (!username || !password) {
         return reply.code(400).send({error: 'Username and password are required' });
     }
+
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        // parameterized queries keep us safe from SQL injections
-        db.prepare('INSERT INTO users (username, password) VALUES (?, ?)').run(username, hashedPassword);
-        reply.code(201).send({ message: 'User created successfully!' });
-    } catch (err: any) {
-        if (err.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-            reply.code(400).send({ error: 'Username already exists' });
-        } else {
-            console.error(err);
-            reply.code(500).send({ error: 'Internal server error' });
+        const result = await db.createUser(username, hashedPassword);
+        if (!result.data) {
+          reply.code(409).send({ message: "User with this username already exists" });
         }
+        reply.code(201).send({ message: 'User created' });
+    } catch (err: any) {
+        console.error(err);
+        reply.code(500).send({ error: 'Internal server error' });
     }
 }
 
 export async function login(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
     const { username, password } = req.body;
-    const user = db.prepare('SELECT id, username, password FROM users WHERE username = ?').get(username) as IUserData;
-    if (!user) return reply.code(401).send({ error: 'Invalid username or password' });
+    // TODO: strong password validation
+    if (!username || !password) {
+        return reply.code(400).send({error: 'Username and password are required' });
+    }
 
-    const valid = await bcrypt.compare(password, user.password);
+    const result = await db.getUser(username);
+    if (!result.data) return reply.code(401).send({ error: 'Invalid username or password' });
+
+    const user = result.data;
+
+    const valid = await bcrypt.compare(password, user.passwordHash);
     if (!valid) return reply.code(401).send({ error: 'Invalid username or password' });
 
     const accessToken = generateAccessToken({ id: user.id, username: user.username });
     const refreshToken = generateRefreshToken({ id: user.id });
-
+    // TODO: store refresh token as deterministic hash (SHA256)
     reply.send({ accessToken, refreshToken });
 }

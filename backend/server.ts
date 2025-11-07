@@ -4,11 +4,12 @@ import cors from '@fastify/cors';
 import formbody from '@fastify/formbody';
 import userRoutes from './routes/users';
 import 'dotenv/config';
+import { db } from "./prisma"
 
 const PORT = parseInt(process.env.BACKEND_PORT ?? "4000");
 const HOST = process.env.BACKEND_HOST || "localhost";
 
-const fastify = Fastify({ logger: true });
+const fastify = Fastify({ logger: {level: "error"} });
 
 // register middleware
 fastify.register(cors, { origin: true });
@@ -33,4 +34,12 @@ const start = async () => {
     }
 };
 
-start();
+start()
+  .then(async () => {
+    await db.$disconnect()
+  })
+  .catch(async (e) => {
+    console.error(e)
+    await db.$disconnect()
+    process.exit(1)
+  });
