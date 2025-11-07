@@ -4,7 +4,18 @@
 import db from '../database';
 import bcrypt from 'bcrypt';
 import { generateAccessToken, generateRefreshToken } from './authService'
-import type { FastifyReply, FastifyRequest } from "fastify";
+import type { FastifyReply, FastifyRequest } from 'fastify';
+import { generate2FASecret, verify2FAToken } from './authService';
+import 'fastify';
+
+declare module 'fastify' {
+    interface FastifyRequest {
+        user?:  {
+            id: number;
+            username: string;
+        };
+    }
+}
 
 interface IAuthRequestBody {
   username: string;
@@ -17,6 +28,31 @@ interface IUserData {
   username: string,
   password: string;
 }
+
+// enable2FA
+// verify2FSetup
+// verify2FALogin
+
+export async function enable2FA(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
+    const userID = req.user?.id;
+    const username = req.user?.username;
+
+    if (!userID || !username) {
+        return reply.code(401).send({ error: 'Unauthorized' });
+    }
+
+    try {
+        const { qr } = await generate2FASecret(username, userID);
+        reply.send({ qr });
+    } catch (err) {
+        console.error(err);
+        reply.code(500).send({ error: 'Failed to enable 2FA' });
+    }
+}
+
+//export async function verifySetup2FA(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
+  //  const userID  req.user?.id
+//}
 
 export async function signup(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
     const { username, password } = req.body;
