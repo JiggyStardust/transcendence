@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "nodemailer": "^7.0.10"
+    "nodemailer": "^7.0.10",
+    "speakeasy": "^2.0.0"
   }
 }
