@@ -1,0 +1,4 @@
+-add half ball length to collision on either sidee
+-start ball on hitting spacebar or 
+-both players hit both of their buttons like ninentdo switch style
+-fix accidental scoring when messing with inspector or right clicking etc
