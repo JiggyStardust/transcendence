@@ -1,5 +1,5 @@
 import type { PrismaClient } from "@prisma/client";
-import type { INewUserData, DbResult} from "../types";
+import type { IUserData, DbResult} from "../types";
 import {err, ok} from "../types";
 
 /**
@@ -12,7 +12,7 @@ import {err, ok} from "../types";
 export const getUser = async (
   prisma: PrismaClient,
   username: string,
-): Promise<DbResult<INewUserData>> => {
+): Promise<DbResult<IUserData>> => {
   try {
     const user = await prisma.user.findUniqueOrThrow({
       where: { username },
@@ -24,7 +24,7 @@ export const getUser = async (
       },
     });
 
-    return ok(user);
+    return ok(user as IUserData);
   } catch (error) {
     console.error("db.getUser: Error creating user:", error ?? "Unknown error");
     return err("NOT_FOUND");

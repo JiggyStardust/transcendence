@@ -31,7 +31,7 @@ export const createUser = async (
       },
     });
 
-    return ok(user);
+    return ok(user as INewUserData);
   } catch (e) {
     console.error(
       "db.createUser: Error creating user:",

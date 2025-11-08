@@ -25,6 +25,3 @@ export type DbResult<T> = DbOk<T> | DbErr;
 
 export const ok = <T>(data: T): DbOk<T> => ({ ok: true, data });
 export const err = (message: string): DbErr => ({ ok: false, data: message });
-
-export const isOk = <T>(r: DbResult<T>): r is DbOk<T> => r.ok;
-export const isErr = <T>(r: DbResult<T>): r is DbErr => !r.ok;
