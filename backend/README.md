@@ -1,4 +1,4 @@
-# Pong Backeng
+# Pong Backend
 Backend API for a multiplayer Pong game — built with Fastify, Prisma, and TypeScript.
 
 Handles user authentication, game and user profile management.

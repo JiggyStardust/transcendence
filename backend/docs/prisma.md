@@ -4,13 +4,17 @@ This project uses **Prisma ORM** with an **extended Prisma client** to keep data
 
 ---
 
+### Database structure
+
+<img width="1358" height="721" alt="Image" src="https://github.com/user-attachments/assets/69ff6f64-467c-407c-bdd8-e06151b5991b" />
+
 ### Prisma Studio
 
-Run comand `npx prisma studio` to inspect data using Prisma ui interface.
+Run command `npx prisma studio` to inspect data using Prisma ui interface.
 
 ### Unified return format
 
-All database operations return a consistent shape:
+All custome database operations return a consistent shape:
 
 ```ts
 {

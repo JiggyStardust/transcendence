@@ -24,7 +24,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: transcendence-backend
-    expose: ["${BACKEND_PORT}:${BACKEND_PORT}"]
+    expose: ["${BACKEND_PORT}"]
     volumes:
       - ./backend/src:/app/src
       - ./backend/prisma:/app/prisma

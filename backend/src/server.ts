@@ -15,7 +15,7 @@ const fastify = Fastify({ logger: { level: "error" } });
 fastify.register(cors, { origin: true });
 fastify.register(formbody);
 
-// register custome plugins
+// register custom plugins
 fastify.register(databasePlugin);
 
 // register route module

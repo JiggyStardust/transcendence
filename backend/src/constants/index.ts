@@ -1,7 +1,7 @@
-/* JW_SECRET, ACCESS_EXPIRATION etc
+/* JWT_SECRET, ACCESS_EXPIRATION etc
         - these values control how the programme creates and validated login tokens
-        - JWT secrets ia s ecret key used to sign in to JSON we token (jwt)
-        - access tokens are short-lived, refresh tokens are long-lived and both ae signed with secret keys
+        - JWT secrets is s ecret key used to sign in to JSON we token (jwt)
+        - access tokens are short-lived, refresh tokens are long-lived and both are signed with secret keys
 
 */
 
@@ -21,7 +21,7 @@ function requireEnvVar(value: string | undefined, name: string): string {
   return value;
 }
 
-// Validate format of given accsess limits
+// Validate format of given access limits
 function checkAccessLimit(value: string | undefined): SignOptions["expiresIn"] | undefined {
   if (!value) return undefined;
   return /^\d+$/.test(value) ? Number(value) : (value as SignOptions["expiresIn"]);

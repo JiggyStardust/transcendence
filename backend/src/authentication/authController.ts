@@ -26,14 +26,14 @@ export async function signup(
     const hashedPassword = await bcrypt.hash(password, 10);
     const result = await req.server.db.createUser(username, hashedPassword);
     if (!result.ok) {
-      reply
+      return reply
         .code(409)
         .send({ message: "User with this username already exists" });
     }
-    reply.code(201).send({ message: "User created" });
+    return reply.code(201).send({ message: "User created" });
   } catch (err: any) {
     console.error(err);
-    reply.code(500).send({ error: "Internal server error" });
+    return reply.code(500).send({ error: "Internal server error" });
   }
 }
 
