@@ -2,13 +2,12 @@
   "name": "pingpong-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
   "type": "module",
   "scripts": {
     "predev": "npm i && npx prisma migrate dev",
-    "dev": "tsx watch server.ts",
+    "dev": "tsx watch src/server.ts",
     "prestart": "npm ci && npx prisma migrate deploy",
-    "start": "tsx server.ts",
+    "start": "tsx src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

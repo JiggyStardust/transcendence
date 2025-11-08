@@ -9,7 +9,7 @@ generator client {
 // https://www.prisma.io/docs/orm/overview/databases/sqlite
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_PRISMA_URL")
+  url      = "file:./data/pong.db"
 }
 
 // from docs: Data model: Defines your application models
