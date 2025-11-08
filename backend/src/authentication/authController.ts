@@ -25,7 +25,7 @@ export async function signup(
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const result = await req.server.db.createUser(username, hashedPassword);
-    if (!result.data) {
+    if (!result.ok) {
       reply
         .code(409)
         .send({ message: "User with this username already exists" });
@@ -50,7 +50,7 @@ export async function login(
   }
 
   const result = await req.server.db.getUser(username);
-  if (!result.data)
+  if (!result.ok)
     return reply.code(401).send({ error: "Invalid username or password" });
 
   const user = result.data;

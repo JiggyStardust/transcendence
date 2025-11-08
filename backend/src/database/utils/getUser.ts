@@ -1,10 +1,18 @@
 import type { PrismaClient } from "@prisma/client";
-import type { IPrismaReturn, IUserData } from "../types";
+import type { INewUserData, DbResult} from "../types";
+import {err, ok} from "../types";
 
+/**
+ * Retrieve a user by username.
+ *
+ * @param prisma - Prisma client instance
+ * @param username - Target username
+ * @returns DbResult with user data or error "NOT_FOUND"
+ */
 export const getUser = async (
   prisma: PrismaClient,
   username: string,
-): Promise<IPrismaReturn<IUserData>> => {
+): Promise<DbResult<INewUserData>> => {
   try {
     const user = await prisma.user.findUniqueOrThrow({
       where: { username },
@@ -16,9 +24,9 @@ export const getUser = async (
       },
     });
 
-    return { data: user };
+    return ok(user);
   } catch (error) {
     console.error("db.getUser: Error creating user:", error ?? "Unknown error");
-    return { data: undefined };
+    return err("NOT_FOUND");
   }
 };

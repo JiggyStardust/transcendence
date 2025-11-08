@@ -30,3 +30,8 @@ Handles user registration and login, issuing JWT access and refresh tokens.
   "password": "secret123"
 }
 ```
+
+**Implementation details**
+
+- Located in `src/authentication/*`.
+- Uses extended Prisma client available as `req.server.db`.

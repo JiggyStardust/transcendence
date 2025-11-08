@@ -1,12 +1,22 @@
 import type { PrismaClient } from "@prisma/client";
-import type { IPrismaReturn, INewUserData } from "../types";
+import type { INewUserData, DbResult} from "../types";
+import {err, ok} from "../types";
 
+/**
+ * Create a new user.
+ *
+ * @param prisma - Prisma client instance
+ * @param username - Unique username
+ * @param passwordHash - Hashed password
+ * @param displayName - Optional display name (defaults to username)
+ * @returns DbResult with created user data or error "USERNAME_TAKEN"
+ */
 export const createUser = async (
   prisma: PrismaClient,
   username: string,
   passwordHash: string,
   displayName?: string,
-): Promise<IPrismaReturn<INewUserData>> => {
+): Promise<DbResult<INewUserData>> => {
   try {
     const user = await prisma.user.create({
       data: {
@@ -21,12 +31,12 @@ export const createUser = async (
       },
     });
 
-    return { data: user };
-  } catch (error) {
+    return ok(user);
+  } catch (e) {
     console.error(
       "db.createUser: Error creating user:",
-      error ?? "Unknown error",
+      e ?? "Unknown error",
     );
-    return { data: undefined };
+    return err("USERNAME_TAKEN");
   }
 };
