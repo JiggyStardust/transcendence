@@ -2,9 +2,9 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import formbody from "@fastify/formbody";
+import databasePlugin from "./plugin/database";
 import userRoutes from "./routes/users";
 import "dotenv/config";
-import { db } from "./database";
 
 const PORT = parseInt(process.env.BACKEND_PORT ?? "4000");
 const HOST = process.env.BACKEND_HOST || "localhost";
@@ -14,6 +14,9 @@ const fastify = Fastify({ logger: { level: "error" } });
 // register middleware
 fastify.register(cors, { origin: true });
 fastify.register(formbody);
+
+// register custome plugins
+fastify.register(databasePlugin);
 
 // register route module
 fastify.register(userRoutes);
@@ -34,12 +37,4 @@ const start = async () => {
   }
 };
 
-start()
-  .then(async () => {
-    await db.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await db.$disconnect();
-    process.exit(1);
-  });
+start();

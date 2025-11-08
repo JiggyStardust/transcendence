@@ -1,7 +1,6 @@
 // signup/login, returns JWT
 // these functions wil be called by users.js
 
-import { db } from "../database";
 import bcrypt from "bcrypt";
 import { generateAccessToken, generateRefreshToken } from "./authService";
 import type { FastifyReply, FastifyRequest } from "fastify";
@@ -25,7 +24,7 @@ export async function signup(
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const result = await db.createUser(username, hashedPassword);
+    const result = await req.server.db.createUser(username, hashedPassword);
     if (!result.data) {
       reply
         .code(409)
@@ -50,7 +49,7 @@ export async function login(
       .send({ error: "Username and password are required" });
   }
 
-  const result = await db.getUser(username);
+  const result = await req.server.db.getUser(username);
   if (!result.data)
     return reply.code(401).send({ error: "Invalid username or password" });
 
