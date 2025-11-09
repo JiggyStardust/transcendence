@@ -1,10 +1,7 @@
 name: Check Docker Setup
 run-name: ${{ github.actor }} is testing docker setup
 
-on:
-  push:
-  pull_request:
-    branches: [main]
+on: pull_request
 
 jobs:
   docker-setup:
