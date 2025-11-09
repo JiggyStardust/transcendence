@@ -57,6 +57,10 @@ jobs:
           docker logs "$CID" || true
           exit 1
 
+      - name: Probe frontend over host port
+        if: always()
+        run: curl -fsS "http://localhost:${VITE_PORT}"
+
       - name: Call /health from inside the backend container
         run: docker compose exec -T backend sh -c 'curl -fsS "http://localhost:${BACKEND_PORT:-8000}/health"'
 

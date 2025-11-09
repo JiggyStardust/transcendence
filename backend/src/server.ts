@@ -26,6 +26,10 @@ fastify.get("/", async (request, reply) => {
   return { message: "Hello PingPong!" };
 });
 
+fastify.get("/health", async (request, reply) => {
+  return { ok: true };
+});
+
 //run the server
 const start = async () => {
   try {
