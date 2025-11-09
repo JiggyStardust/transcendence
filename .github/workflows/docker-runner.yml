@@ -60,6 +60,9 @@ jobs:
       - name: Call /health from inside the backend container
         run: docker compose exec -T backend sh -c 'curl -fsS "http://localhost:$BACKEND_PORT/health"'
 
+      - name: Check curl availability
+        run: curl --version
+
       - name: Probe frontend over host port
         run: sh -c 'curl -fsS "http://localhost:$VITE_PORT"'
 
