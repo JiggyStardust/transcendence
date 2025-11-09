@@ -30,3 +30,29 @@ GET /users/check-username
 ```bash
 GET /check-username?username=alice
 ```
+
+**Response**
+
+1. Success: `200 OK`
+   Examples:
+   - Available body: `{"available": true}`
+   - Taken body: `{"available": false}`
+
+2. Error: `400 Bad Request`
+   Occurs if:
+   - `username` is missing.
+   - `username` fails prevalidation
+   - Extra query parameters are provided.
+     Example:
+   ```json
+   {
+     "statusCode": 400,
+     "error": "Bad Request",
+     "message": "querystring should have required property 'username'"
+   }
+   ```
+
+**Usage Notes:**
+
+- Use this endpoint to validate username availability in real time before submitting registration.
+- Always debounce frontend calls (e.g., 300–500 ms) to reduce amount of calls.
