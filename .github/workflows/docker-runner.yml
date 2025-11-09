@@ -1,0 +1,67 @@
+name: Check Docker Setup
+run-name: ${{ github.actor }} is testing docker setup
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+
+jobs:
+  docker-setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create .env
+        run: cp .env.example .env
+
+      - name: Load needed vars from .env into job env
+        run: |
+          set -a
+          source .env
+          set +a
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Check Docker version
+        run: docker --version
+
+      - name: Check Docker Compose version
+        run: docker compose version
+
+      - name: Build and start containers
+        run: docker compose up -d --build
+
+      - name: Check running containers
+        run: docker compose ps
+
+      - name: Wait for backend to be healthy
+        run: |
+          set -e
+          CID=$(docker compose ps -q backend)
+          for i in {1..30}; do
+            STATUS=$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' "$CID")
+            echo "backend health: $STATUS"
+            if [ "$STATUS" = "healthy" ]; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Backend did not become healthy in time"
+          docker compose ps
+          docker logs "$CID" || true
+          exit 1
+
+      - name: Call /health from inside the backend container
+        run: docker compose exec -T backend sh -c 'curl -fsS "http://localhost:${BACKEND_PORT:-8000}/health"'
+
+      - name: Probe frontend over host port
+        if: always()
+        run: curl -fsS "http://localhost:${VITE_PORT}"
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v
