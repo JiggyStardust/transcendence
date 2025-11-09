@@ -80,6 +80,9 @@ jobs:
       - name: Call /api/health from inside the frontend container
         run: docker compose exec -T frontend sh -c 'curl -fsS "http://localhost:$VITE_PORT/api/health"'
 
+      - name: Call api/health frontend over host
+        run: curl -fsS "http://localhost:$VITE_PORT/api/health"
+
       - name: Tear down
         if: always()
         run: docker compose down -v
