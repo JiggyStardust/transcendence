@@ -133,6 +133,8 @@ export async function createScene(game) {
     if (inputMap["ArrowDown"] && game.paddle2.position.z - paddleSpeed > -sidePosition) {
       game.paddle2.position.z -= paddleSpeed;
     }
+    if (inputMap["p"] && (game.state == "start" || game.state == "restart"))
+      game.state = "playing";
   });
 
   // Attach objects

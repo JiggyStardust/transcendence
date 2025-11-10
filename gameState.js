@@ -10,6 +10,8 @@ export const gameState = {
 	scoreTextLeft: null,
 	scoreTextRight: null,
 
+	state: "start",
+
 	score: {
 		p1: 0,
 		p2: 0,
