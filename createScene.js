@@ -46,7 +46,7 @@ export async function createScene(engine) {
   paddle2.position.x = 2.7;
 
   // Load font
-  const fontData = await (await fetch("Score_Board_Regular.json")).json();
+  const fontData = await (await fetch("assets/Score_Board_Regular.json")).json();
 
   // Score text
   const array = ["0", "1", "2", "3", "4", "5", "6", "7"];

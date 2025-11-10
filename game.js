@@ -23,8 +23,6 @@ let scoreP1 = 0;
 let scoreP2 = 0;
 let maxScore = 700;
 
-//GameOver
-let gameOver = false; // DEBUG CHANGE BACK TO FALSE
 
 // Collision
 let paddleCollisionX = 2.4;
@@ -44,13 +42,8 @@ engine.runRenderLoop(function () {
   // Get deltatime
   const deltaTime = engine.getDeltaTime() / 1000;
 
-  // Check for GameOver
-  if (scoreP1 >= maxScore || scoreP2 >= maxScore)
-    gameOver = true;
-
   // Move sphere
-  if (!gameOver)
-    sphere.position.addInPlace(direction.scale(Movement.ballSpeed * deltaTime));
+  sphere.position.addInPlace(direction.scale(Movement.ballSpeed * deltaTime));
 
   // Update score text
   array.forEach((x) => {
@@ -66,7 +59,6 @@ engine.runRenderLoop(function () {
     else
       scoreTextRight.setEnabled(false);
   });
-
 
   // Bounce the ball
 
