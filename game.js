@@ -1,14 +1,12 @@
 
+import {gameState as game} from "./gameState.js";
 import {createScene} from "./createScene.js";
 import {applyCollision} from "./applyCollision.js";
 import {move} from "./move.js";
-import {gameState as game} from "./gameState.js";
 
 game.canvas = document.getElementById('renderCanvas');
 game.engine = new BABYLON.Engine(game.canvas, true);
-
-// Create scene
-game.scene = await createScene(game.engine);
+await createScene(game);
 
 // Get objects from scene
 game.sphere = game.scene.getMeshByName("sphere");
@@ -63,5 +61,5 @@ game.engine.runRenderLoop(function () {
 
 // Window Resize
 window.addEventListener("resize", () => {
-  engine.resize();
+  game.engine.resize();
 });

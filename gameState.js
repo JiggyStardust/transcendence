@@ -6,5 +6,6 @@ export const gameState = {
 	camera: null,
 	sphere: null,
 	paddle1: null,
-	paddle2: null
+	paddle2: null,
+	scoreBoard: null
 };
