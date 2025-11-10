@@ -1,18 +1,18 @@
 
-export async function applyCollision(sphere, move, paddle1, paddle2) {
+export async function applyCollision(game, move) {
   // Paddle1
-  if (sphere.position.x < -move.paddleCollisionX
-          && paddle1.position.z < sphere.position.z + (move.paddleCollisionSize)
-          && paddle1.position.z > sphere.position.z - (move.paddleCollisionSize)
+  if (game.sphere.position.x < -move.paddleCollisionX
+          && game.paddle1.position.z < game.sphere.position.z + (move.paddleCollisionSize)
+          && game.paddle1.position.z > game.sphere.position.z - (move.paddleCollisionSize)
           && move.direction.x < 0) {
     if (move.ballSpeed < move.maxBallSpeed)
       move.ballSpeed += move.ballSpeedIncrement;
-    if (paddle1.position.z < sphere.position.z + (move.paddleSize / 6)
-          && paddle1.position.z > sphere.position.z - (move.paddleSize / 6)) {
+    if (game.paddle1.position.z < game.sphere.position.z + (move.paddleSize / 6)
+          && game.paddle1.position.z > game.sphere.position.z - (move.paddleSize / 6)) {
       console.log("middle");
       move.direction.x = -move.direction.x;
     }
-    else if (paddle1.position.z < sphere.position.z){
+    else if (game.paddle1.position.z < game.sphere.position.z){
       console.log("top");
       // Sphere moving up
       if (move.direction.z > 0) {
@@ -62,18 +62,18 @@ export async function applyCollision(sphere, move, paddle1, paddle2) {
     console.log(move.direction.x + " " + move.direction.z);
   }
   // Paddle2
-  else if (sphere.position.x > move.paddleCollisionX
-          && paddle2.position.z < sphere.position.z + (move.paddleCollisionSize)
-          && paddle2.position.z > sphere.position.z - (move.paddleCollisionSize)
+  else if (game.sphere.position.x > move.paddleCollisionX
+          && game.paddle2.position.z < game.sphere.position.z + (move.paddleCollisionSize)
+          && game.paddle2.position.z > game.sphere.position.z - (move.paddleCollisionSize)
           && move.direction.x > 0) {
     if (move.ballSpeed < move.maxBallSpeed)
       move.ballSpeed += move.ballSpeedIncrement;
-    if (paddle2.position.z < sphere.position.z + (move.paddleSize / 6)
-          && paddle2.position.z > sphere.position.z - (move.paddleSize / 6)) {
+    if (game.paddle2.position.z < game.sphere.position.z + (move.paddleSize / 6)
+          && game.paddle2.position.z > game.sphere.position.z - (move.paddleSize / 6)) {
       console.log("middle");
       move.direction.x = -move.direction.x;
     }
-    else if (paddle2.position.z < sphere.position.z){
+    else if (game.paddle2.position.z < game.sphere.position.z){
       console.log("top");
       // Down
       if (move.direction.z > 0) {
@@ -124,25 +124,25 @@ export async function applyCollision(sphere, move, paddle1, paddle2) {
     
   }
   // Sides
-  else if (sphere.position.z > move.sideCollisionZ && move.direction.z > 0) {
+  else if (game.sphere.position.z > move.sideCollisionZ && move.direction.z > 0) {
     move.direction.z = -move.direction.z;
   }
-  else if (sphere.position.z < -move.sideCollisionZ && move.direction.z < 0) {
+  else if (game.sphere.position.z < -move.sideCollisionZ && move.direction.z < 0) {
     move.direction.z = -move.direction.z;
   }
   // Scoring
-  else if (sphere.position.x > move.scoreCollisionX) {
+  else if (game.sphere.position.x > move.scoreCollisionX) {
     move.direction.x = -move.direction.x;
-    sphere.position.x = move.xStartingPosition;
-    sphere.position.z = move.zStartingPosition;
+    game.sphere.position.x = move.xStartingPosition;
+    game.sphere.position.z = move.zStartingPosition;
     move.ballSpeed = move.startingBallSpeed;
     move.direction = new BABYLON.Vector3(move.xStartingAngle, 0, move.zStartingAngle);
     scoreP1++;
   }
-  else if (sphere.position.x < -move.scoreCollisionX) {
+  else if (game.sphere.position.x < -move.scoreCollisionX) {
     move.direction.x = -move.direction.x;
-    sphere.position.x = move.xStartingPosition;
-    sphere.position.z = move.zStartingPosition;
+    game.sphere.position.x = move.xStartingPosition;
+    game.sphere.position.z = move.zStartingPosition;
     move.ballSpeed = move.startingBallSpeed;
     move.direction = new BABYLON.Vector3(move.xStartingAngle, 0, move.zStartingAngle);
     scoreP2++;
