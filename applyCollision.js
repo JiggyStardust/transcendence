@@ -125,28 +125,22 @@ export async function applyCollision(game) {
   }
 
   // Side Collision
-  else if (game.sphere.position.z > game.move.sideCollisionZ && game.move.direction.z > 0) {
+  else if (game.sphere.position.z > game.move.sideCollisionZ
+            && game.move.direction.z > 0) {
     game.move.direction.z = -game.move.direction.z;
   }
-  else if (game.sphere.position.z < -game.move.sideCollisionZ && game.move.direction.z < 0) {
+  else if (game.sphere.position.z < -game.move.sideCollisionZ
+            && game.move.direction.z < 0) {
     game.move.direction.z = -game.move.direction.z;
   }
 
   // Scoring Collision
   else if (game.sphere.position.x > game.move.scoreCollisionX) {
-    game.move.direction.x = -game.move.direction.x;
-    game.sphere.position.x = game.move.xStartingPosition;
-    game.sphere.position.z = game.move.zStartingPosition;
-    game.move.ballSpeed = game.move.startingBallSpeed;
-    game.move.direction = new BABYLON.Vector3(game.move.xStartingAngle, 0, game.move.zStartingAngle);
+    game.state = "pointScored";
     game.score.p1++;
   }
   else if (game.sphere.position.x < -game.move.scoreCollisionX) {
-    game.move.direction.x = -game.move.direction.x;
-    game.sphere.position.x = game.move.xStartingPosition;
-    game.sphere.position.z = game.move.zStartingPosition;
-    game.move.ballSpeed = game.move.startingBallSpeed;
-    game.move.direction = new BABYLON.Vector3(game.move.xStartingAngle, 0, game.move.zStartingAngle);
+    game.state = "pointScored";
     game.score.p2++;
   }
   return;
