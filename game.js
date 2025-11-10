@@ -2,21 +2,22 @@
 import {createScene} from "./createScene.js";
 import {applyCollision} from "./applyCollision.js";
 import {move} from "./move.js";
+import {gameState as game} from "./gameState.js";
 
-const canvas = document.getElementById('renderCanvas');
-const engine = new BABYLON.Engine(canvas, true);
+game.canvas = document.getElementById('renderCanvas');
+game.engine = new BABYLON.Engine(game.canvas, true);
 
 // Create scene
-const scene = await createScene(engine);
+game.scene = await createScene(game.engine);
 
 // Get objects from scene
-const sphere = scene.getMeshByName("sphere");
-const paddle1 = scene.getMeshByName("paddle1");
-const paddle2 = scene.getMeshByName("paddle2");
+game.sphere = game.scene.getMeshByName("sphere");
+game.paddle1 = game.scene.getMeshByName("paddle1");
+game.paddle2 = game.scene.getMeshByName("paddle2");
 
 // Init Sphere Position and Direction
-sphere.position.x = move.xStartingPosition;
-sphere.position.z = move.zStartingPosition;
+game.sphere.position.x = move.xStartingPosition;
+game.sphere.position.z = move.zStartingPosition;
 
 // Score
 let scoreP1 = 0;
@@ -24,23 +25,23 @@ let scoreP2 = 0;
 let maxScore = 700;
 
 // Score text
-const scoreTextLeft = scene.getMeshByName("scoreTextLeft" + scoreP1);
+const scoreTextLeft = game.scene.getMeshByName("scoreTextLeft" + scoreP1);
 scoreTextLeft.position = new BABYLON.Vector3(-1, 0, 4);
 scoreTextLeft.rotation.x = 0.7;
 const array = ["0", "1", "2", "3", "4", "5", "6", "7"];
 
 // Render loop
-engine.runRenderLoop(function () {
+game.engine.runRenderLoop(function () {
   // Get deltatime
-  const deltaTime = engine.getDeltaTime() / 1000;
+  const deltaTime = game.engine.getDeltaTime() / 1000;
 
   // Move sphere
-  sphere.position.addInPlace(move.direction.scale(move.ballSpeed * deltaTime));
+  game.sphere.position.addInPlace(move.direction.scale(move.ballSpeed * deltaTime));
 
   // Update score text
   array.forEach((x) => {
-    const scoreTextLeft = scene.getMeshByName("scoreTextLeft" + x);
-    const scoreTextRight = scene.getMeshByName("scoreTextRight" + x);
+    const scoreTextLeft = game.scene.getMeshByName("scoreTextLeft" + x);
+    const scoreTextRight = game.scene.getMeshByName("scoreTextRight" + x);
 
     if (scoreP1 == x)
       scoreTextLeft.setEnabled(true);
@@ -53,11 +54,11 @@ engine.runRenderLoop(function () {
   });
 
   // Apply Collision
-  applyCollision(sphere, move, paddle1, paddle2);
+  applyCollision(game.sphere, move, game.paddle1, game.paddle2);
 
 
   // Render scene
-  scene.render();
+  game.scene.render();
 });
 
 // Window Resize
