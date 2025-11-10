@@ -195,6 +195,8 @@ let paddleCollisionX = 2.4;
 let scoreCollisionX = 2.6;
 let sideCollisionZ = 2.6;
 let paddleSize = 1.5;
+let paddleCollisionSize = 0.95;
+
 
 
 // Score text
@@ -238,8 +240,8 @@ engine.runRenderLoop(function () {
 
   // Paddle1
   if (sphere.position.x < -paddleCollisionX
-          && paddle1.position.z < sphere.position.z + (paddleSize / 2)
-          && paddle1.position.z > sphere.position.z - (paddleSize / 2)
+          && paddle1.position.z < sphere.position.z + (paddleCollisionSize)
+          && paddle1.position.z > sphere.position.z - (paddleCollisionSize)
           && direction.x < 0) {
     if (ballSpeed < maxBallSpeed)
       ballSpeed += ballSpeedIncrement;
@@ -299,8 +301,8 @@ engine.runRenderLoop(function () {
   }
   // Paddle2
   else if (sphere.position.x > paddleCollisionX
-          && paddle2.position.z < sphere.position.z + (paddleSize / 2)
-          && paddle2.position.z > sphere.position.z - (paddleSize / 2)
+          && paddle2.position.z < sphere.position.z + (paddleCollisionSize)
+          && paddle2.position.z > sphere.position.z - (paddleCollisionSize)
           && direction.x > 0) {
     if (ballSpeed < maxBallSpeed)
       ballSpeed += ballSpeedIncrement;
