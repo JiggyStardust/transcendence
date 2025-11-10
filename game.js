@@ -4,14 +4,10 @@ import {createScene} from "./createScene.js";
 import {applyCollision} from "./applyCollision.js";
 import {move} from "./move.js";
 
+// Init
 game.canvas = document.getElementById('renderCanvas');
 game.engine = new BABYLON.Engine(game.canvas, true);
 await createScene(game);
-
-// Get objects from scene
-game.sphere = game.scene.getMeshByName("sphere");
-game.paddle1 = game.scene.getMeshByName("paddle1");
-game.paddle2 = game.scene.getMeshByName("paddle2");
 
 // Init Sphere Position and Direction
 game.sphere.position.x = move.xStartingPosition;
@@ -51,11 +47,7 @@ game.engine.runRenderLoop(function () {
       scoreTextRight.setEnabled(false);
   });
 
-  // Apply Collision
-  applyCollision(game.sphere, move, game.paddle1, game.paddle2);
-
-
-  // Render scene
+  applyCollision(game, move);
   game.scene.render();
 });
 

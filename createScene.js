@@ -136,4 +136,9 @@ export async function createScene(game) {
       game.paddle2.position.z -= paddleSpeed;
     }
   });
+
+  // Attach objects
+  game.sphere = game.scene.getMeshByName("sphere");
+  game.paddle1 = game.scene.getMeshByName("paddle1");
+  game.paddle2 = game.scene.getMeshByName("paddle2");
 }
