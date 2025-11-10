@@ -7,12 +7,15 @@ import { generateAccessToken, generateRefreshToken } from './authService'
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { generate2FASecret, verify2FAToken } from './authService';
 import 'fastify';
+import speakeasy, {GeneratedSecret} from 'speakeasy';
+import { JWT_SECRET } from './config'
 
 declare module 'fastify' {
     interface FastifyRequest {
         user?:  {
             id: number;
             username: string;
+            twofa_secret?: string;
         };
     }
 }
@@ -20,6 +23,7 @@ declare module 'fastify' {
 interface IAuthRequestBody {
   username: string;
   password: string;
+  token: string;
 }
 
 // Temporary
@@ -27,11 +31,9 @@ interface IUserData {
   id: number;
   username: string,
   password: string;
+  twofa_secret?: string;
+  twofa_enabled?: number;
 }
-
-// enable2FA
-// verify2FSetup
-// verify2FALogin
 
 export async function enable2FA(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
     const userID = req.user?.id;
@@ -50,9 +52,37 @@ export async function enable2FA(req: FastifyRequest<{ Body: IAuthRequestBody }>,
     }
 }
 
-//export async function verifySetup2FA(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
-  //  const userID  req.user?.id
-//}
+export async function verify2FASetup(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
+    const userID = req.user?.id;
+    const { token } = req.body;
+
+    if (!userID) return reply.code(401).send({ error: 'Unauthorized' });
+
+    const user = db.prepare<IUserData>('SELECT twofa_secret FROM users WHERE id = ?').get(userID);
+
+    const verified = verify2FAToken(user?.twofa_secret, token);
+    if (!verified) return reply.code(400).send({ error: 'Invalid code' });
+
+    db.prepare('UPDATE users SET twofa_enabled = 1 WHERE id = ?').run(userID);
+    reply.send({ success: true });
+}
+
+export async function verify2FALogin(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
+    const { username, token } = req.body;
+    const user = db.prepare('SELECT * FROM users WHERE username = ?').get(username);
+
+    const verified = speakeasy.totp.verify({
+        secret: user?.twofa_secret,
+        encoding: 'base32',
+        token
+    });
+
+    if (!verified) return reply.code(401).send({ error: 'Invalid 2FA code' });
+    const jwtToken = jwt.sign({ id: user?.id, username: user?.username },
+        JWT_SECRET, { expiresIn: '1h' });
+    
+    reply.send({ token: jwtToken });
+}
 
 export async function signup(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
     const { username, password } = req.body;

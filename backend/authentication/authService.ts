@@ -2,7 +2,7 @@
 
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { JWT_SECRET, JWT_REFRESH_SECRET, ACCESS_EXPIRATION, REFRESH_EXPIRATION } from './config';
-import speakeasy, {GeneratedSecret} from 'speakeasy';
+import speakeasy, { GeneratedSecret } from 'speakeasy';
 import qrcode from 'qrcode';
 import db from '../database';
 
