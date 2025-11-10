@@ -1,6 +1,5 @@
 
 CURRENT
--modulerize the paddle sphere collision logic
 -add game states
 	-stateStart
 	-statePlaying

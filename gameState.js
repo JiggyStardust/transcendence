@@ -10,9 +10,11 @@ export const gameState = {
 	scoreTextLeft: null,
 	scoreTextRight: null,
 
-	scoreP1: 0,
-	scoreP2: 0,
-	maxScore: 7,
+	score: {
+		p1: 0,
+		p2: 0,
+		max: 7
+	},
 
 	move: {
 		vxSmallAngle: 2,

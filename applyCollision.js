@@ -137,7 +137,7 @@ export async function applyCollision(game) {
     game.sphere.position.z = game.move.zStartingPosition;
     game.move.ballSpeed = game.move.startingBallSpeed;
     game.move.direction = new BABYLON.Vector3(game.move.xStartingAngle, 0, game.move.zStartingAngle);
-    game.scoreP1++;
+    game.score.p1++;
   }
   else if (game.sphere.position.x < -game.move.scoreCollisionX) {
     game.move.direction.x = -game.move.direction.x;
@@ -145,7 +145,7 @@ export async function applyCollision(game) {
     game.sphere.position.z = game.move.zStartingPosition;
     game.move.ballSpeed = game.move.startingBallSpeed;
     game.move.direction = new BABYLON.Vector3(game.move.xStartingAngle, 0, game.move.zStartingAngle);
-    game.scoreP2++;
+    game.score.p2++;
   }
   return;
 }
