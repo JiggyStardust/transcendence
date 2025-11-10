@@ -1,150 +1,150 @@
 
-export async function applyCollision(game, move) {
-  // Paddle1
-  if (game.sphere.position.x < -move.paddleCollisionX
-          && game.paddle1.position.z < game.sphere.position.z + (move.paddleCollisionSize)
-          && game.paddle1.position.z > game.sphere.position.z - (move.paddleCollisionSize)
-          && move.direction.x < 0) {
-    if (move.ballSpeed < move.maxBallSpeed)
-      move.ballSpeed += move.ballSpeedIncrement;
-    if (game.paddle1.position.z < game.sphere.position.z + (move.paddleSize / 6)
-          && game.paddle1.position.z > game.sphere.position.z - (move.paddleSize / 6)) {
-      console.log("middle");
-      move.direction.x = -move.direction.x;
+export async function applyCollision(game) {
+  // Paddle1 Collision
+  if (game.sphere.position.x < -game.move.paddleCollisionX
+          && game.paddle1.position.z < game.sphere.position.z + (game.move.paddleCollisionSize)
+          && game.paddle1.position.z > game.sphere.position.z - (game.move.paddleCollisionSize)
+          && game.move.direction.x < 0) {
+    if (game.move.ballSpeed < game.move.maxBallSpeed)
+      game.move.ballSpeed += game.move.ballSpeedIncrement;
+    if (game.paddle1.position.z < game.sphere.position.z + (game.move.paddleSize / 6)
+          && game.paddle1.position.z > game.sphere.position.z - (game.move.paddleSize / 6)) {
+      // Middle of paddle
+      game.move.direction.x = -game.move.direction.x;
     }
     else if (game.paddle1.position.z < game.sphere.position.z){
-      console.log("top");
+      // Top of paddle
       // Sphere moving up
-      if (move.direction.z > 0) {
-        move.direction.x = move.vxLargeAngle;
-        move.direction.z = move.vzLargeAngle;
+      if (game.move.direction.z > 0) {
+        game.move.direction.x = game.move.vxLargeAngle;
+        game.move.direction.z = game.move.vzLargeAngle;
       }
       // Sphere moving down
-      else if (move.direction.z < 0) {
+      else if (game.move.direction.z < 0) {
         // SmallAngle
-        if (move.direction.x == move.vxSmallAngle) {
-          move.direction.x = move.vxStraightAngle;
-          move.direction.z = move.vzStraightAngle;
+        if (game.move.direction.x == game.move.vxSmallAngle) {
+          game.move.direction.x = game.move.vxStraightAngle;
+          game.move.direction.z = game.move.vzStraightAngle;
         }
         // LargeAngle
         else {
-          move.direction.x = move.vxSmallAngle;
-          move.direction.z = -move.vzSmallAngle;
+          game.move.direction.x = game.move.vxSmallAngle;
+          game.move.direction.z = -game.move.vzSmallAngle;
         }
       }
       // Sphere moving straight
       else {
-        move.direction.x = move.vxSmallAngle;
-        move.direction.z = move.vzSmallAngle;
+        game.move.direction.x = game.move.vxSmallAngle;
+        game.move.direction.z = game.move.vzSmallAngle;
       }
     }
     else {
-      console.log("bottom");
-      if (move.direction.z > 0) {
-        if (move.direction.x == move.vxLargeAngle) {
-          move.direction.x = move.vxSmallAngle;
-          move.direction.z = move.vzSmallAngle;
+      // Bottom of paddle
+      if (game.move.direction.z > 0) {
+        if (game.move.direction.x == game.move.vxLargeAngle) {
+          game.move.direction.x = game.move.vxSmallAngle;
+          game.move.direction.z = game.move.vzSmallAngle;
         }
         else {
-          move.direction.x = move.vxStraightAngle;
-          move.direction.z = move.vzStraightAngle;
+          game.move.direction.x = game.move.vxStraightAngle;
+          game.move.direction.z = game.move.vzStraightAngle;
         }
       }
-      else if (move.direction.z < 0) {
-        move.direction.x = move.vxLargeAngle;
-        move.direction.z = -move.vzLargeAngle;
+      else if (game.move.direction.z < 0) {
+        game.move.direction.x = game.move.vxLargeAngle;
+        game.move.direction.z = -game.move.vzLargeAngle;
       }
       else {
-        move.direction.x = move.vxSmallAngle;
-        move.direction.z = -move.vzSmallAngle;
+        game.move.direction.x = game.move.vxSmallAngle;
+        game.move.direction.z = -game.move.vzSmallAngle;
       }
     }
-    console.log(move.direction.x + " " + move.direction.z);
   }
-  // Paddle2
-  else if (game.sphere.position.x > move.paddleCollisionX
-          && game.paddle2.position.z < game.sphere.position.z + (move.paddleCollisionSize)
-          && game.paddle2.position.z > game.sphere.position.z - (move.paddleCollisionSize)
-          && move.direction.x > 0) {
-    if (move.ballSpeed < move.maxBallSpeed)
-      move.ballSpeed += move.ballSpeedIncrement;
-    if (game.paddle2.position.z < game.sphere.position.z + (move.paddleSize / 6)
-          && game.paddle2.position.z > game.sphere.position.z - (move.paddleSize / 6)) {
-      console.log("middle");
-      move.direction.x = -move.direction.x;
+  // Paddle2 Collision
+  else if (game.sphere.position.x > game.move.paddleCollisionX
+          && game.paddle2.position.z < game.sphere.position.z + (game.move.paddleCollisionSize)
+          && game.paddle2.position.z > game.sphere.position.z - (game.move.paddleCollisionSize)
+          && game.move.direction.x > 0) {
+    if (game.move.ballSpeed < game.move.maxBallSpeed)
+      game.move.ballSpeed += game.move.ballSpeedIncrement;
+    if (game.paddle2.position.z < game.sphere.position.z + (game.move.paddleSize / 6)
+          && game.paddle2.position.z > game.sphere.position.z - (game.move.paddleSize / 6)) {
+      // Middle of paddle
+      game.move.direction.x = -game.move.direction.x;
     }
     else if (game.paddle2.position.z < game.sphere.position.z){
-      console.log("top");
-      // Down
-      if (move.direction.z > 0) {
-        move.direction.x = -move.vxLargeAngle;
-        move.direction.z = move.vzLargeAngle;
+      // Top of paddle
+      // Sphere moving down
+      if (game.move.direction.z > 0) {
+        game.move.direction.x = -game.move.vxLargeAngle;
+        game.move.direction.z = game.move.vzLargeAngle;
       }
-      // Up
-      else if (move.direction.z < 0) {
-        if (move.direction.x == move.vxSmallAngle) {
-          move.direction.x = -move.vxStraightAngle;
-          move.direction.z = move.vzStraightAngle;
+      // Sphere moving up
+      else if (game.move.direction.z < 0) {
+        if (game.move.direction.x == game.move.vxSmallAngle) {
+          game.move.direction.x = -game.move.vxStraightAngle;
+          game.move.direction.z = game.move.vzStraightAngle;
         }
         else {
-          move.direction.x = -move.vxSmallAngle;
-          move.direction.z = -move.vzSmallAngle;
+          game.move.direction.x = -game.move.vxSmallAngle;
+          game.move.direction.z = -game.move.vzSmallAngle;
         }
       }
-      // Mid
+      // Sphere moving straight
       else {
-        move.direction.x = -move.vxSmallAngle;
-        move.direction.z = move.vzSmallAngle;
+        game.move.direction.x = -game.move.vxSmallAngle;
+        game.move.direction.z = game.move.vzSmallAngle;
       }
     }
     else {
-      console.log("bottom");
-      // Up
-      if (move.direction.z > 0) {
-        if (move.direction.x == move.vxLargeAngle) {
-          move.direction.x = -move.vxSmallAngle;
-          move.direction.z = move.vzSmallAngle;
+      // Bottom of paddle
+      // Sphere moving up
+      if (game.move.direction.z > 0) {
+        if (game.move.direction.x == game.move.vxLargeAngle) {
+          game.move.direction.x = -game.move.vxSmallAngle;
+          game.move.direction.z = game.move.vzSmallAngle;
         }
         else {
-          move.direction.x = -move.vxStraightAngle;
-          move.direction.z = move.vzStraightAngle;
+          game.move.direction.x = -game.move.vxStraightAngle;
+          game.move.direction.z = game.move.vzStraightAngle;
         }
       }
-      // Down
-      else if (move.direction.z < 0) {
-        move.direction.x = -move.vxLargeAngle;
-        move.direction.z = -move.vzLargeAngle;
+      // Sphere moving down
+      else if (game.move.direction.z < 0) {
+        game.move.direction.x = -game.move.vxLargeAngle;
+        game.move.direction.z = -game.move.vzLargeAngle;
       }
-      // Mid
+      // Sphere moving straight
       else {
-        move.direction.x = -move.vxSmallAngle;
-        move.direction.z = -move.vzSmallAngle;
+        game.move.direction.x = -game.move.vxSmallAngle;
+        game.move.direction.z = -game.move.vzSmallAngle;
       }
     }
-    
   }
-  // Sides
-  else if (game.sphere.position.z > move.sideCollisionZ && move.direction.z > 0) {
-    move.direction.z = -move.direction.z;
+
+  // Side Collision
+  else if (game.sphere.position.z > game.move.sideCollisionZ && game.move.direction.z > 0) {
+    game.move.direction.z = -game.move.direction.z;
   }
-  else if (game.sphere.position.z < -move.sideCollisionZ && move.direction.z < 0) {
-    move.direction.z = -move.direction.z;
+  else if (game.sphere.position.z < -game.move.sideCollisionZ && game.move.direction.z < 0) {
+    game.move.direction.z = -game.move.direction.z;
   }
-  // Scoring
-  else if (game.sphere.position.x > move.scoreCollisionX) {
-    move.direction.x = -move.direction.x;
-    game.sphere.position.x = move.xStartingPosition;
-    game.sphere.position.z = move.zStartingPosition;
-    move.ballSpeed = move.startingBallSpeed;
-    move.direction = new BABYLON.Vector3(move.xStartingAngle, 0, move.zStartingAngle);
+
+  // Scoring Collision
+  else if (game.sphere.position.x > game.move.scoreCollisionX) {
+    game.move.direction.x = -game.move.direction.x;
+    game.sphere.position.x = game.move.xStartingPosition;
+    game.sphere.position.z = game.move.zStartingPosition;
+    game.move.ballSpeed = game.move.startingBallSpeed;
+    game.move.direction = new BABYLON.Vector3(game.move.xStartingAngle, 0, game.move.zStartingAngle);
     game.scoreP1++;
   }
-  else if (game.sphere.position.x < -move.scoreCollisionX) {
-    move.direction.x = -move.direction.x;
-    game.sphere.position.x = move.xStartingPosition;
-    game.sphere.position.z = move.zStartingPosition;
-    move.ballSpeed = move.startingBallSpeed;
-    move.direction = new BABYLON.Vector3(move.xStartingAngle, 0, move.zStartingAngle);
+  else if (game.sphere.position.x < -game.move.scoreCollisionX) {
+    game.move.direction.x = -game.move.direction.x;
+    game.sphere.position.x = game.move.xStartingPosition;
+    game.sphere.position.z = game.move.zStartingPosition;
+    game.move.ballSpeed = game.move.startingBallSpeed;
+    game.move.direction = new BABYLON.Vector3(game.move.xStartingAngle, 0, game.move.zStartingAngle);
     game.scoreP2++;
   }
   return;
