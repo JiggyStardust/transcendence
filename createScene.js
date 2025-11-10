@@ -34,8 +34,6 @@ export async function createScene(game) {
   mSphere.diffuseColor = new BABYLON.Color3(1, 1, 1);
   mSphere.emissiveColor = new BABYLON.Color3(0.7, 0.7, 0.7);
 
-  // Create Meshes
-
   // Paddles
   game.paddle1 = BABYLON.MeshBuilder.CreateBox("paddle1", {width: 0.2, height: 0.3, depth: 1.5}, game.scene);
   game.paddle1.position.y = 0.125;
