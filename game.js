@@ -3,6 +3,8 @@ import {createScene} from "./createScene.js";
 import {moveSphere} from "./moveSphere.js";
 import {updateScoreText} from "./updateScoreText.js";
 import {applyCollision} from "./applyCollision.js";
+import {pointScored} from "./pointScored.js";
+import {resetBoard} from "./resetBoard.js";
 
 // Init
 game.canvas = document.getElementById('renderCanvas');
@@ -14,6 +16,8 @@ game.engine.runRenderLoop(function () {
   applyCollision(game);
   moveSphere(game);
   updateScoreText(game);
+  pointScored(game);
+  resetBoard(game);
   game.scene.render();
 });
 

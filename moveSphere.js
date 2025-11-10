@@ -1,5 +1,5 @@
 export async function moveSphere(game) {
-  if (game.state != "playing")
+  if (game.state != "playing" && game.state != "pointScored")
     return;
 
   const deltaTime = game.engine.getDeltaTime() / 1000;

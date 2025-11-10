@@ -120,21 +120,23 @@ export async function createScene(game) {
   game.scene.onBeforeRenderObservable.add(() => {
     const paddleSpeed = 0.17;
     const sidePosition = 2.05;
-
-    if (inputMap["w"] && game.paddle1.position.z + paddleSpeed < sidePosition) {
-      game.paddle1.position.z += paddleSpeed;
+    if (game.state != "scoredPoint") {
+      if (inputMap["w"] && game.paddle1.position.z + paddleSpeed < sidePosition) {
+        game.paddle1.position.z += paddleSpeed;
+      }
+      if (inputMap["s"] && game.paddle1.position.z - paddleSpeed > -sidePosition) {
+        game.paddle1.position.z -= paddleSpeed;
+      }
+      if (inputMap["ArrowUp"] && game.paddle2.position.z + paddleSpeed < sidePosition) {
+        game.paddle2.position.z += paddleSpeed;
+      }
+      if (inputMap["ArrowDown"] && game.paddle2.position.z - paddleSpeed > -sidePosition) {
+        game.paddle2.position.z -= paddleSpeed;
+      }
     }
-    if (inputMap["s"] && game.paddle1.position.z - paddleSpeed > -sidePosition) {
-      game.paddle1.position.z -= paddleSpeed;
-    }
-    if (inputMap["ArrowUp"] && game.paddle2.position.z + paddleSpeed < sidePosition) {
-      game.paddle2.position.z += paddleSpeed;
-    }
-    if (inputMap["ArrowDown"] && game.paddle2.position.z - paddleSpeed > -sidePosition) {
-      game.paddle2.position.z -= paddleSpeed;
-    }
-    if (inputMap["p"] && (game.state == "start" || game.state == "restart"))
+    if (inputMap["p"] && (game.state == "start" || game.state == "resetBoard"))
       game.state = "playing";
+      game.move.ballSpeed = game.move.startingBallSpeed;
   });
 
   // Attach objects
