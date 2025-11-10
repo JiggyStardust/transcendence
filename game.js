@@ -1,5 +1,6 @@
 
 import {createScene} from "./createScene.js";
+import {Movement} from "./movement.js";
 
 const canvas = document.getElementById('renderCanvas');
 const engine = new BABYLON.Engine(canvas, true);
@@ -12,29 +13,10 @@ const sphere = scene.getMeshByName("sphere");
 const paddle1 = scene.getMeshByName("paddle1");
 const paddle2 = scene.getMeshByName("paddle2");
 
-// Movement parameters
-let vxSmall = 2;
-let vxLarge = 1.581;
-let vxStraight = 2.236;
-let vzSmall = 1;
-let vzLarge = 1.581;
-let vzStraight = 0;
-
-let xStartingAngle = vxStraight;
-let zStartingAngle = vzStraight;
-
-let xStartingPosition = 0;
-let zStartingPosition = 0;
-
-let startingBallSpeed = 2.5;
-let ballSpeed = startingBallSpeed;
-let ballSpeedIncrement = 0.08;
-let maxBallSpeed = 5;
-
 // Init Sphere Position and Direction
-let direction = new BABYLON.Vector3(xStartingAngle, 0, zStartingAngle);
-sphere.position.x = xStartingPosition;
-sphere.position.z = zStartingPosition;
+let direction = new BABYLON.Vector3(Movement.xStartingAngle, 0, Movement.zStartingAngle);
+sphere.position.x = Movement.xStartingPosition;
+sphere.position.z = Movement.zStartingPosition;
 
 // Score
 let scoreP1 = 0;
@@ -68,7 +50,7 @@ engine.runRenderLoop(function () {
 
   // Move sphere
   if (!gameOver)
-    sphere.position.addInPlace(direction.scale(ballSpeed * deltaTime));
+    sphere.position.addInPlace(direction.scale(Movement.ballSpeed * deltaTime));
 
   // Update score text
   array.forEach((x) => {
@@ -93,8 +75,8 @@ engine.runRenderLoop(function () {
           && paddle1.position.z < sphere.position.z + (paddleCollisionSize)
           && paddle1.position.z > sphere.position.z - (paddleCollisionSize)
           && direction.x < 0) {
-    if (ballSpeed < maxBallSpeed)
-      ballSpeed += ballSpeedIncrement;
+    if (Movement.ballSpeed < Movement.maxBallSpeed)
+      Movement.ballSpeed += Movement.ballSpeedIncrement;
     if (paddle1.position.z < sphere.position.z + (paddleSize / 6)
           && paddle1.position.z > sphere.position.z - (paddleSize / 6)) {
       console.log("middle");
@@ -104,47 +86,47 @@ engine.runRenderLoop(function () {
       console.log("top");
       // Sphere moving up
       if (direction.z > 0) {
-        direction.x = vxLarge;
-        direction.z = vzLarge;
+        direction.x = Movement.vxLarge;
+        direction.z = Movement.vzLarge;
       }
       // Sphere moving down
       else if (direction.z < 0) {
         // SmallAngle
-        if (direction.x == vxSmall) {
-          direction.x = vxStraight;
-          direction.z = vzStraight;
+        if (direction.x == Movement.vxSmall) {
+          direction.x = Movement.vxStraight;
+          direction.z = Movement.vzStraight;
         }
         // LargeAngle
         else {
-          direction.x = vxSmall;
-          direction.z = -vzSmall;
+          direction.x = Movement.vxSmall;
+          direction.z = -Movement.vzSmall;
         }
       }
       // Sphere moving straight
       else {
-        direction.x = vxSmall;
-        direction.z = vzSmall;
+        direction.x = Movement.vxSmall;
+        direction.z = Movement.vzSmall;
       }
     }
     else {
       console.log("bottom");
       if (direction.z > 0) {
-        if (direction.x == vxLarge) {
-          direction.x = vxSmall;
-          direction.z = vzSmall;
+        if (direction.x == Movement.vxLarge) {
+          direction.x = Movement.vxSmall;
+          direction.z = Movement.vzSmall;
         }
         else {
-          direction.x = vxStraight;
-          direction.z = vzStraight;
+          direction.x = Movement.vxStraight;
+          direction.z = Movement.vzStraight;
         }
       }
       else if (direction.z < 0) {
-        direction.x = vxLarge;
-        direction.z = -vzLarge;
+        direction.x = Movement.vxLarge;
+        direction.z = -Movement.vzLarge;
       }
       else {
-        direction.x = vxSmall;
-        direction.z = -vzSmall;
+        direction.x = Movement.vxSmall;
+        direction.z = -Movement.vzSmall;
       }
     }
     console.log(direction.x + " " + direction.z);
@@ -154,8 +136,8 @@ engine.runRenderLoop(function () {
           && paddle2.position.z < sphere.position.z + (paddleCollisionSize)
           && paddle2.position.z > sphere.position.z - (paddleCollisionSize)
           && direction.x > 0) {
-    if (ballSpeed < maxBallSpeed)
-      ballSpeed += ballSpeedIncrement;
+    if (Movement.ballSpeed < Movement.maxBallSpeed)
+      Movement.ballSpeed += Movement.ballSpeedIncrement;
     if (paddle2.position.z < sphere.position.z + (paddleSize / 6)
           && paddle2.position.z > sphere.position.z - (paddleSize / 6)) {
       console.log("middle");
@@ -165,48 +147,48 @@ engine.runRenderLoop(function () {
       console.log("top");
       // Down
       if (direction.z > 0) {
-        direction.x = -vxLarge;
-        direction.z = vzLarge;
+        direction.x = -Movement.vxLarge;
+        direction.z = Movement.vzLarge;
       }
       // Up
       else if (direction.z < 0) {
-        if (direction.x == vxSmall) {
-          direction.x = -vxStraight;
-          direction.z = vzStraight;
+        if (direction.x == Movement.vxSmall) {
+          direction.x = -Movement.vxStraight;
+          direction.z = Movement.vzStraight;
         }
         else {
-          direction.x = -vxSmall;
-          direction.z = -vzSmall;
+          direction.x = -Movement.vxSmall;
+          direction.z = -Movement.vzSmall;
         }
       }
       // Mid
       else {
-        direction.x = -vxSmall;
-        direction.z = vzSmall;
+        direction.x = -Movement.vxSmall;
+        direction.z = Movement.vzSmall;
       }
     }
     else {
       console.log("bottom");
       // Up
       if (direction.z > 0) {
-        if (direction.x == vxLarge) {
-          direction.x = -vxSmall;
-          direction.z = vzSmall;
+        if (direction.x == Movement.vxLarge) {
+          direction.x = -Movement.vxSmall;
+          direction.z = Movement.vzSmall;
         }
         else {
-          direction.x = -vxStraight;
-          direction.z = vzStraight;
+          direction.x = -Movement.vxStraight;
+          direction.z = Movement.vzStraight;
         }
       }
       // Down
       else if (direction.z < 0) {
-        direction.x = -vxLarge;
-        direction.z = -vzLarge;
+        direction.x = -Movement.vxLarge;
+        direction.z = -Movement.vzLarge;
       }
       // Mid
       else {
-        direction.x = -vxSmall;
-        direction.z = -vzSmall;
+        direction.x = -Movement.vxSmall;
+        direction.z = -Movement.vzSmall;
       }
     }
     
@@ -221,18 +203,18 @@ engine.runRenderLoop(function () {
   // Scoring
   else if (sphere.position.x > scoreCollisionX) {
     direction.x = -direction.x;
-    sphere.position.x = xStartingPosition;
-    sphere.position.z = zStartingPosition;
-    ballSpeed = startingBallSpeed;
-    direction = new BABYLON.Vector3(xStartingAngle, 0, zStartingAngle);
+    sphere.position.x = Movement.xStartingPosition;
+    sphere.position.z = Movement.zStartingPosition;
+    Movement.ballSpeed = Movement.startingBallSpeed;
+    direction = new BABYLON.Vector3(Movement.xStartingAngle, 0, Movement.zStartingAngle);
     scoreP1++;
   }
   else if (sphere.position.x < -scoreCollisionX) {
     direction.x = -direction.x;
-    sphere.position.x = xStartingPosition;
-    sphere.position.z = zStartingPosition;
-    ballSpeed = startingBallSpeed;
-    direction = new BABYLON.Vector3(xStartingAngle, 0, zStartingAngle);
+    sphere.position.x = Movement.xStartingPosition;
+    sphere.position.z = Movement.zStartingPosition;
+    Movement.ballSpeed = Movement.startingBallSpeed;
+    direction = new BABYLON.Vector3(Movement.xStartingAngle, 0, Movement.zStartingAngle);
     scoreP2++;
   }
 
