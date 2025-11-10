@@ -23,3 +23,9 @@ curl -X POST http://localhost:4000/login \
 
 curl http://localhost:4000/matches \
   -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>"
+
+# Check if username available
+
+NB: change VALUE to actual username
+
+curl -X GET http://localhost:4000/users/check-username?username=VALUE
