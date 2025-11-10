@@ -10,14 +10,10 @@ game.canvas = document.getElementById('renderCanvas');
 game.engine = new BABYLON.Engine(game.canvas, true);
 await createScene(game);
 
-// Init Sphere Position and Direction
-game.sphere.position.x = move.xStartingPosition;
-game.sphere.position.z = move.zStartingPosition;
-
 // Render loop
 game.engine.runRenderLoop(function () {
-  applyCollision(game, move);
-  moveSphere(game, move);
+  applyCollision(game, game.move);
+  moveSphere(game, game.move);
   updateScoreText(game);
   game.scene.render();
 });
