@@ -2,7 +2,7 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import formbody from '@fastify/formbody';
-import userRoutes from './routes/users';
+import userRoutes from './routes/users.ts';
 import 'dotenv/config';
 
 const PORT = parseInt(process.env.BACKEND_PORT ?? "4000");

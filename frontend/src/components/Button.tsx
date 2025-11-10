@@ -21,11 +21,8 @@ export const Button = ({
   };
 
   return (
-<button
-  onClick={handleClick}
-  className="relative px-[26px] py-[8px] font-[Chango] text-[18px]"
->
-  <span className="relative z-10">{children}</span>
-</button>
+	<button onClick={handleClick} className="btn">
+		<span className="relative z-10">{children}</span>
+	</button>
   );
 };

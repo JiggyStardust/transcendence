@@ -1,6 +1,3 @@
-import { useState } from "react";
-import "./App.css";
-import BabylonTest from "./game/test_game";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
 import SignIn from "./pages/SignIn";

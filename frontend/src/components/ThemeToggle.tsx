@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-export const ThemeToggle: React.FC = () => {
-  const [darkMode, setDarkMode] = useState(false);
+export const ThemeToggle: React.FC = () => { 
+  const [darkMode, setDarkMode] = useState(localStorage.theme === "dark" || window.matchMedia("(prefers-color-scheme: dark)").matches ? true : false);
 
   useEffect(() => {
     if (darkMode) {
@@ -12,10 +12,7 @@ export const ThemeToggle: React.FC = () => {
   }, [darkMode]);
 
   return (
-    <button
-      onClick={() => setDarkMode((prev) => !prev)}
-      className="mt-4 px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-black dark:text-white"
-    >
+    <button onClick={() => setDarkMode((prev) => !prev)} className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700">
       {darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
     </button>
   );
