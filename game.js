@@ -1,3 +1,11 @@
+const state = Object.freeze({
+	start: 0,
+	playing: 1,
+	pointScored: 2,
+	reset: 3,
+	gameOver: 4
+});
+
 export const game = {
 	engine: null,
 	canvas: null,
@@ -10,12 +18,20 @@ export const game = {
 	scoreTextLeft: null,
 	scoreTextRight: null,
 
-	state: "start",
+  state: state,
+	currentState: state.start,
+	paddleInput: true,
+  startGameInput: true,
 
 	score: {
 		p1: 0,
 		p2: 0,
 		max: 7
+	},
+
+	pointScored: {
+		interval: 2,
+		timer: 0,
 	},
 
 	move: {
