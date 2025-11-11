@@ -134,7 +134,7 @@ export async function createScene(game) {
         game.paddle2.position.z -= paddleSpeed;
       }
     }
-    if (inputMap["p"]  && (game.currentState == game.state.start
+    if (inputMap[" "]  && (game.currentState == game.state.start
         || game.currentState == game.state.reset)) {
       game.move.ballSpeed = game.move.startingBallSpeed;
       game.currentState = game.state.playing;
