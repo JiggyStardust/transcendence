@@ -20,8 +20,6 @@ export const game = {
 
   state: state,
 	currentState: state.start,
-	paddleInput: true,
-  startGameInput: true,
 
 	score: {
 		p1: 0,

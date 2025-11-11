@@ -14,22 +14,17 @@ await createScene(game);
 game.engine.runRenderLoop(function () {
   switch(game.currentState) {
     case game.state.start:
-      console.log("state: start");
       break;
     case game.state.playing:
-      console.log("state: playing");
       applyCollision(game);
       moveSphere(game);
       break;
     case game.state.pointScored:
-      console.log("state: pointScored");
       pointScored(game);
       break;
     case game.state.reset:
-      console.log("state: reset");
       break;
     case game.state.gameOver:
-      console.log("state: gameOver");
       break;
     }
   updateScoreText(game);
