@@ -1,27 +1,43 @@
-import {gameState as game} from "./gameState.js";
-import {createScene} from "./createScene.js";
-import {moveSphere} from "./moveSphere.js";
-import {updateScoreText} from "./updateScoreText.js";
-import {applyCollision} from "./applyCollision.js";
-import {pointScored} from "./pointScored.js";
-import {resetBoard} from "./resetBoard.js";
+export const game = {
+	engine: null,
+	canvas: null,
+	scene: null,
+	camera: null,
+	sphere: null,
+	paddle1: null,
+	paddle2: null,
+	scoreBoard: null,
+	scoreTextLeft: null,
+	scoreTextRight: null,
 
-// Init
-game.canvas = document.getElementById('renderCanvas');
-game.engine = new BABYLON.Engine(game.canvas, true);
-await createScene(game);
+	state: "start",
 
-// Render loop
-game.engine.runRenderLoop(function () {
-  applyCollision(game);
-  moveSphere(game);
-  updateScoreText(game);
-  pointScored(game);
-  resetBoard(game);
-  game.scene.render();
-});
+	score: {
+		p1: 0,
+		p2: 0,
+		max: 7
+	},
 
-// Window Resize
-window.addEventListener("resize", () => {
-  game.engine.resize();
-});
+	move: {
+		vxSmallAngle: 2,
+		vxLargeAngle: 1.581,
+		vxStraightAngle: 2.236,
+		vzSmallAngle: 1,
+		vzLargeAngle: 1.581,
+		vzStraightAngle: 0,
+		xStartingAngle: 2.236,
+		zStartingAngle: 0,
+		xStartingPosition: 0,
+		zStartingPosition: 0,
+		paddleCollisionX: 2.4,
+		scoreCollisionX: 2.6,
+		sideCollisionZ: 2.6,
+		paddleSize: 1.5,
+		paddleCollisionSize: 0.95,
+		startingBallSpeed: 2.5,
+		ballSpeed: 2.5,
+		ballSpeedIncrement: 0.08,
+		maxBallSpeed: 5,
+		direction: new BABYLON.Vector3(2.236, 0, 0)
+	}
+};

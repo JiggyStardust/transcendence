@@ -13,3 +13,14 @@ CHANGE
 
 MAYBE
 -fix accidental scoring when messing with inspector or right clicking etc
+
+
+ThemeToggle
+	-Set default dark class
+	-Set default dark button
+	-Set default lightMode
+	
+	-Check for mouse click
+		-Toggle lightMode dark to light or light to dark
+		-Set class based on lightMode
+		-Set button based on lightMode
