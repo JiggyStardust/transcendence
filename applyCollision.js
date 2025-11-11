@@ -1,7 +1,5 @@
 
 export async function applyCollision(game) {
-  if (game.state != "playing")
-    return;
   // Paddle1 Collision
   if (game.sphere.position.x < -game.move.paddleCollisionX
           && game.paddle1.position.z < game.sphere.position.z + (game.move.paddleCollisionSize)
@@ -136,11 +134,11 @@ export async function applyCollision(game) {
 
   // Scoring Collision
   else if (game.sphere.position.x > game.move.scoreCollisionX) {
-    game.state = "pointScored";
+    game.currentState = game.state.pointScored;
     game.score.p1++;
   }
   else if (game.sphere.position.x < -game.move.scoreCollisionX) {
-    game.state = "pointScored";
+    game.currentState = game.state.pointScored;
     game.score.p2++;
   }
   return;
