@@ -53,27 +53,9 @@ export async function createScene(game) {
   const fontArial = await (await fetch("assets/Arial_Regular.json")).json();
   const fontScoreBoard = await (await fetch("assets/Score_Board_Regular.json")).json();
 
-
-
-  // Countdown text
-  const array2 = ["1", "2", "3"];
-  array2.forEach((x) => {
-      const countdownText = BABYLON.MeshBuilder.CreateText(
-      "countdownText" + x,
-      x,
-      fontArial,
-      {size: 1, resolution: 64,depth: 0.2},
-      game.scene
-    );
-    countdownText.material = mRedText;
-    countdownText.rotation.x = 0.0;
-    countdownText.rotation.z = 0.0;
-    countdownText.setEnabled(false);
-    countdownText.position = new BABYLON.Vector3(0, 0, 1);
-  });
-
+  
   // Gameover text
-    game.gameOverText = BABYLON.MeshBuilder.CreateText(
+  game.gameOverText = BABYLON.MeshBuilder.CreateText(
     "gameOverText",
     "GAMEOVER",
     fontArial,
@@ -81,12 +63,32 @@ export async function createScene(game) {
     game.scene
   );
   game.gameOverText.material = mRedText;
-  game.gameOverText.rotation.x = 0.0;
-  game.gameOverText.rotation.y = 0.0;
-  game.gameOverText.rotation.z = 0.0;
   game.gameOverText.setEnabled(false);
   game.gameOverText.position = new BABYLON.Vector3(0, 1, 1);
 
+  // Scoreboard and text positions
+
+  var boardVec = new BABYLON.Vector3(0, 1.25, 2.95);
+  var countVec =  new BABYLON.Vector3(0, boardVec.y, 2.95);
+  var scoreLeftVec = new BABYLON.Vector3(-1, boardVec.y - 0.6, 2.95);
+  var scoreRightVec = new BABYLON.Vector3(1, boardVec.y - 0.6, 2.95);
+
+  // Countdown text
+  const array2 = ["1", "2", "3"];
+  array2.forEach((x) => {
+      const countdownText = BABYLON.MeshBuilder.CreateText(
+      "countdownText" + x,
+      x,
+      fontScoreBoard,
+      {size: 0.5, resolution: 64,depth: 0.5},
+      game.scene
+    );
+    countdownText.material = mRedText;
+    countdownText.rotation.x = 0.0;
+    countdownText.rotation.z = 0.0;
+    countdownText.setEnabled(false);
+    countdownText.position = countVec;
+  });
 
   game.countdownText1 = game.scene.getMeshByName("countdownText1");
   game.countdownText2 = game.scene.getMeshByName("countdownText2");
@@ -108,13 +110,13 @@ export async function createScene(game) {
   
     const scoreTextRight = scoreTextLeft.clone("scoreTextRight" + x);
     
-    scoreTextLeft.position = new BABYLON.Vector3(-1, 0.55, 2.95);
-    scoreTextRight.position = new BABYLON.Vector3(1, 0.55, 2.95);
+    scoreTextLeft.position = scoreLeftVec;
+    scoreTextRight.position = scoreRightVec;
   });
 
   // ScoreBoard
-  const scoreBoard = BABYLON.MeshBuilder.CreateBox("scoreBoard", {width: 3.5, height: 2, depth: 0.3}, game.scene);
-  scoreBoard.position = new BABYLON.Vector3(0, 0.8, 2.95);
+  const scoreBoard = BABYLON.MeshBuilder.CreateBox("scoreBoard", {width: 3.5, height: 1.75, depth: 0.3}, game.scene);
+  scoreBoard.position = boardVec;
   scoreBoard.material = mScoreBoard;
 
 
