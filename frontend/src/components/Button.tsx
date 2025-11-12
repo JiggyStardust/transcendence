@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 const buttonStyles = cva("font-bold", {
   variants: {
     variant: {
-      primary: "bg-cyan-600 dark:bg-cyan-700 hover:bg-cyan-500 dark:hover:bg-cyan-600 border-pink-900 dark:border-pink-400",
-      secondary: "bg-cyan-700 dark:bg-cyan-800 hover:bg-cyan-600 dark:hover:bg-cyan-700 border-pink-800 dark:border-pink-500"
+      primary: "bg-cyan-600 dark:bg-slate-700 hover:bg-cyan-500 dark:hover:bg-cyan-600 border-pink-900 dark:border-pink-400",
+      secondary: "bg-cyan-700 dark:bg-slate-800 hover:bg-cyan-600 dark:hover:bg-cyan-700 border-pink-800 dark:border-pink-500"
     },
     size: {
       sm: "text-sm py-1 px-2 rounded-sm border-[0.5px] shadow-md shadow-cyan-400/60 dark:shadow-pink-600/60",
@@ -42,9 +42,9 @@ export const Button = ({ to, onClick, children, variant = "primary", size = "md"
 
   const handleClick = () => {
     if (to) {
-		navigate(to);
+	  navigate(to);
 	} else if (onClick) {
-		onClick();
+	  onClick();
 	}
   };
 
