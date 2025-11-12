@@ -22,16 +22,22 @@ export async function createScene(game) {
   mGround.diffuseColor = new BABYLON.Color3(0, 0, 0);
 
   const mScoreText = new BABYLON.StandardMaterial("mScoreText", game.scene);
-  mScoreText.diffuseColor = new BABYLON.Color3(1.0, 0.75, 0.2);
-  mScoreText.emissiveColor = new BABYLON.Color3(1.0, 0.6, 0.1);
+  mScoreText.diffuseColor = new BABYLON.Color3(1.0, 0.8, 0.2);
+  mScoreText.emissiveColor = new BABYLON.Color3(1.0, 0.62, 0.1);
   mScoreText.specularColor = new BABYLON.Color3(0.2, 0.1, 0.0);
   mScoreText.alpha = 1.0;
 
   const mRedText = new BABYLON.StandardMaterial("mRedText", game.scene);
   mRedText.diffuseColor = new BABYLON.Color3(1.0, 0.1, 0.1);
-  mRedText.emissiveColor = new BABYLON.Color3(0.75, 0.1, 0.0);
+  mRedText.emissiveColor = new BABYLON.Color3(0.75, 0.13, 0.0);
   mRedText.specularColor = new BABYLON.Color3(0.3, 0.1, 0.1);
   mRedText.alpha = 1.0;
+
+  const mWhiteText = new BABYLON.StandardMaterial("mWhiteText", game.scene);
+  mWhiteText.diffuseColor = new BABYLON.Color3(1.0, 1.0, 1.0);
+  mWhiteText.emissiveColor = new BABYLON.Color3(0.75, 0.75, 0.75);
+  mWhiteText.specularColor = new BABYLON.Color3(0.3, 0.3, 0.3);
+  mWhiteText.alpha = 1.0;
 
   var mScoreBoard = new BABYLON.StandardMaterial("mScoreText", game.scene);
   mScoreBoard.diffuseColor = new BABYLON.Color3(0.6, 0.75, 0.75);
@@ -52,8 +58,9 @@ export async function createScene(game) {
   // Load font
   const fontArial = await (await fetch("assets/Arial_Regular.json")).json();
   const fontScoreBoard = await (await fetch("assets/Score_Board_Regular.json")).json();
+  const fontImpact = await (await fetch("assets/Impact_Regular.json")).json();
 
-  
+
   // Gameover text
   game.gameOverText = BABYLON.MeshBuilder.CreateText(
     "gameOverText",
@@ -67,11 +74,12 @@ export async function createScene(game) {
   game.gameOverText.position = new BABYLON.Vector3(0, 1, 1);
 
   // Scoreboard and text positions
-
   var boardVec = new BABYLON.Vector3(0, 1.25, 2.95);
   var countVec =  new BABYLON.Vector3(0, boardVec.y, 2.95);
   var scoreLeftVec = new BABYLON.Vector3(-1, boardVec.y - 0.6, 2.95);
   var scoreRightVec = new BABYLON.Vector3(1, boardVec.y - 0.6, 2.95);
+  var p1Vec = new BABYLON.Vector3(-1, boardVec.y + 0.5, 2.899);
+  var p2Vec = new BABYLON.Vector3(1, boardVec.y + 0.5, 2.899);
 
   // Countdown text
   const array2 = ["1", "2", "3"];
@@ -84,8 +92,6 @@ export async function createScene(game) {
       game.scene
     );
     countdownText.material = mRedText;
-    countdownText.rotation.x = 0.0;
-    countdownText.rotation.z = 0.0;
     countdownText.setEnabled(false);
     countdownText.position = countVec;
   });
@@ -93,6 +99,30 @@ export async function createScene(game) {
   game.countdownText1 = game.scene.getMeshByName("countdownText1");
   game.countdownText2 = game.scene.getMeshByName("countdownText2");
   game.countdownText3 = game.scene.getMeshByName("countdownText3");
+
+  // Player name text
+  game.p1NameText = BABYLON.MeshBuilder.CreateText(
+    "p1NameText",
+    "HOME",
+    fontImpact,
+    {size: 0.18, resolution: 64,depth: 0.2},
+    game.scene
+  );
+  game.p1NameText.material = mWhiteText;
+  game.p1NameText.setEnabled(true);
+  game.p1NameText.position = p1Vec;
+
+  game.p2NameText = BABYLON.MeshBuilder.CreateText(
+    "p2NameText",
+    "AWAY",
+    fontImpact,
+    {size: 0.18, resolution: 64,depth: 0.2},
+    game.scene
+  );
+  game.p2NameText.material = mWhiteText;
+  game.p2NameText.setEnabled(true);
+  game.p2NameText.position = p2Vec;
+
 
   // Score text
   const array = ["0", "1", "2", "3", "4", "5", "6", "7"];
