@@ -21,6 +21,8 @@ export const game = {
 	countdownText2: null,
 	countdownText3: null,
 	gameOverText: null,
+	p1NameText: null,
+	p2NameText: null,
 
   state: state,
 	currentState: state.start,
