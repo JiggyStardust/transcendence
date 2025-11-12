@@ -27,6 +27,12 @@ export async function createScene(game) {
   mScoreText.specularColor = new BABYLON.Color3(0.2, 0.1, 0.0); // muted shine
   mScoreText.alpha = 1.0;
 
+  const mCountdownText = new BABYLON.StandardMaterial("mCountdownText", game.scene);
+  mCountdownText.diffuseColor = new BABYLON.Color3(1.0, 0.1, 0.1);   // bright red
+  mCountdownText.emissiveColor = new BABYLON.Color3(0.75, 0.1, 0.0);  // glowing red
+  mCountdownText.specularColor = new BABYLON.Color3(0.3, 0.1, 0.1);  // subtle red shine
+  mCountdownText.alpha = 1.0;
+
   var mScoreBoard = new BABYLON.StandardMaterial("mScoreText", game.scene);
   mScoreBoard.diffuseColor = new BABYLON.Color3(0.6, 0.75, 0.75);
 
@@ -44,7 +50,8 @@ export async function createScene(game) {
   game.paddle2.position.x = 2.7;
 
   // Load font
-  const fontData = await (await fetch("assets/Score_Board_Regular.json")).json();
+  const fontArial = await (await fetch("assets/Arial_Regular.json")).json();
+  const fontScoreBoard = await (await fetch("assets/Score_Board_Regular.json")).json();
 
   // Score text
   const array = ["0", "1", "2", "3", "4", "5", "6", "7"];
@@ -52,7 +59,7 @@ export async function createScene(game) {
       const scoreTextLeft = BABYLON.MeshBuilder.CreateText(
       "scoreTextLeft" + x,
       x,
-      fontData,
+      fontScoreBoard,
       {size: 1, resolution: 64,depth: 1},
       game.scene
     );
@@ -65,6 +72,27 @@ export async function createScene(game) {
     scoreTextLeft.position = new BABYLON.Vector3(-1, 0, 4);
     scoreTextRight.position = new BABYLON.Vector3(1, 0, 4);
   });
+
+  // Countdown text
+  const array2 = ["1", "2", "3"];
+  array2.forEach((x) => {
+      const countdownText = BABYLON.MeshBuilder.CreateText(
+      "countdownText" + x,
+      x,
+      fontArial,
+      {size: 1, resolution: 64,depth: 0.2},
+      game.scene
+    );
+    countdownText.material = mCountdownText;
+    countdownText.rotation.x = 0.0;
+    countdownText.rotation.z = 0.0;
+    countdownText.setEnabled(false);
+    countdownText.position = new BABYLON.Vector3(0, 0, 1);
+  });
+
+  game.countdownText1 = game.scene.getMeshByName("countdownText1");
+  game.countdownText2 = game.scene.getMeshByName("countdownText2");
+  game.countdownText3 = game.scene.getMeshByName("countdownText3");
 
   // ScoreBoard
   var scoreBoard = BABYLON.MeshBuilder.CreateBox("scoreBoard", {width: 3.5, height: 1.5, depth: 0.3}, game.scene);
@@ -133,12 +161,6 @@ export async function createScene(game) {
       if (inputMap["ArrowDown"] && game.paddle2.position.z - paddleSpeed > -sidePosition) {
         game.paddle2.position.z -= paddleSpeed;
       }
-    }
-    if (inputMap[" "]  && (game.currentState == game.state.start
-        || game.currentState == game.state.reset)) {
-      game.move.ballSpeed = game.move.startingBallSpeed;
-      game.currentState = game.state.playing;
-      console.log("input = p");
     }
   });
 
