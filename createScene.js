@@ -22,16 +22,16 @@ export async function createScene(game) {
   mGround.diffuseColor = new BABYLON.Color3(0, 0, 0);
 
   const mScoreText = new BABYLON.StandardMaterial("mScoreText", game.scene);
-  mScoreText.diffuseColor = new BABYLON.Color3(1.0, 0.75, 0.2); // warm amber-yellow
-  mScoreText.emissiveColor = new BABYLON.Color3(1.0, 0.6, 0.1); // glowing orange-yellow
-  mScoreText.specularColor = new BABYLON.Color3(0.2, 0.1, 0.0); // muted shine
+  mScoreText.diffuseColor = new BABYLON.Color3(1.0, 0.75, 0.2);
+  mScoreText.emissiveColor = new BABYLON.Color3(1.0, 0.6, 0.1);
+  mScoreText.specularColor = new BABYLON.Color3(0.2, 0.1, 0.0);
   mScoreText.alpha = 1.0;
 
-  const mCountdownText = new BABYLON.StandardMaterial("mCountdownText", game.scene);
-  mCountdownText.diffuseColor = new BABYLON.Color3(1.0, 0.1, 0.1);   // bright red
-  mCountdownText.emissiveColor = new BABYLON.Color3(0.75, 0.1, 0.0);  // glowing red
-  mCountdownText.specularColor = new BABYLON.Color3(0.3, 0.1, 0.1);  // subtle red shine
-  mCountdownText.alpha = 1.0;
+  const mRedText = new BABYLON.StandardMaterial("mRedText", game.scene);
+  mRedText.diffuseColor = new BABYLON.Color3(1.0, 0.1, 0.1);
+  mRedText.emissiveColor = new BABYLON.Color3(0.75, 0.1, 0.0);
+  mRedText.specularColor = new BABYLON.Color3(0.3, 0.1, 0.1);
+  mRedText.alpha = 1.0;
 
   var mScoreBoard = new BABYLON.StandardMaterial("mScoreText", game.scene);
   mScoreBoard.diffuseColor = new BABYLON.Color3(0.6, 0.75, 0.75);
@@ -53,25 +53,7 @@ export async function createScene(game) {
   const fontArial = await (await fetch("assets/Arial_Regular.json")).json();
   const fontScoreBoard = await (await fetch("assets/Score_Board_Regular.json")).json();
 
-  // Score text
-  const array = ["0", "1", "2", "3", "4", "5", "6", "7"];
-  array.forEach((x) => {
-      const scoreTextLeft = BABYLON.MeshBuilder.CreateText(
-      "scoreTextLeft" + x,
-      x,
-      fontScoreBoard,
-      {size: 1, resolution: 64,depth: 1},
-      game.scene
-    );
-    scoreTextLeft.material = mScoreText;
-    scoreTextLeft.rotation.x = 0.7;
-    scoreTextLeft.setEnabled(false);
-  
-    const scoreTextRight = scoreTextLeft.clone("scoreTextRight" + x);
-    
-    scoreTextLeft.position = new BABYLON.Vector3(-1, 0, 4);
-    scoreTextRight.position = new BABYLON.Vector3(1, 0, 4);
-  });
+
 
   // Countdown text
   const array2 = ["1", "2", "3"];
@@ -83,23 +65,58 @@ export async function createScene(game) {
       {size: 1, resolution: 64,depth: 0.2},
       game.scene
     );
-    countdownText.material = mCountdownText;
+    countdownText.material = mRedText;
     countdownText.rotation.x = 0.0;
     countdownText.rotation.z = 0.0;
     countdownText.setEnabled(false);
     countdownText.position = new BABYLON.Vector3(0, 0, 1);
   });
 
+  // Gameover text
+    game.gameOverText = BABYLON.MeshBuilder.CreateText(
+    "gameOverText",
+    "GAMEOVER",
+    fontArial,
+    {size: 1, resolution: 64,depth: 0.2},
+    game.scene
+  );
+  game.gameOverText.material = mRedText;
+  game.gameOverText.rotation.x = 0.0;
+  game.gameOverText.rotation.y = 0.0;
+  game.gameOverText.rotation.z = 0.0;
+  game.gameOverText.setEnabled(false);
+  game.gameOverText.position = new BABYLON.Vector3(0, 1, 1);
+
+
   game.countdownText1 = game.scene.getMeshByName("countdownText1");
   game.countdownText2 = game.scene.getMeshByName("countdownText2");
   game.countdownText3 = game.scene.getMeshByName("countdownText3");
 
+  // Score text
+  const array = ["0", "1", "2", "3", "4", "5", "6", "7"];
+  array.forEach((x) => {
+      const scoreTextLeft = BABYLON.MeshBuilder.CreateText(
+      "scoreTextLeft" + x,
+      x,
+      fontScoreBoard,
+      {size: 1, resolution: 64,depth: 0.5},
+      game.scene
+    );
+    scoreTextLeft.material = mScoreText;
+    scoreTextLeft.rotation.x = 0;
+    scoreTextLeft.setEnabled(false);
+  
+    const scoreTextRight = scoreTextLeft.clone("scoreTextRight" + x);
+    
+    scoreTextLeft.position = new BABYLON.Vector3(-1, 0.55, 2.95);
+    scoreTextRight.position = new BABYLON.Vector3(1, 0.55, 2.95);
+  });
+
   // ScoreBoard
-  var scoreBoard = BABYLON.MeshBuilder.CreateBox("scoreBoard", {width: 3.5, height: 1.5, depth: 0.3}, game.scene);
-  scoreBoard.position.y = 0.5;
-  scoreBoard.position.z = 4.2;
+  const scoreBoard = BABYLON.MeshBuilder.CreateBox("scoreBoard", {width: 3.5, height: 2, depth: 0.3}, game.scene);
+  scoreBoard.position = new BABYLON.Vector3(0, 0.8, 2.95);
   scoreBoard.material = mScoreBoard;
-  scoreBoard.rotation.x = 0.7;
+
 
   // Sidewalls
   var wallTop = BABYLON.MeshBuilder.CreateBox("wallTop", {width: 6, height: 0.2, depth: 0.2}, game.scene);
