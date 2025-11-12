@@ -7,7 +7,7 @@ import { generateAccessToken, generateRefreshToken } from './authService'
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { generate2FASecret, verify2FAToken } from './authService';
 import 'fastify';
-import speakeasy, {GeneratedSecret} from 'speakeasy';
+import speakeasy, { GeneratedSecret } from 'speakeasy';
 import { JWT_SECRET } from './config'
 
 declare module 'fastify' {
@@ -35,6 +35,7 @@ interface IUserData {
   twofa_enabled?: number;
 }
 
+// generates qr code
 export async function enable2FA(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
     const userID = req.user?.id;
     const username = req.user?.username;
@@ -52,6 +53,7 @@ export async function enable2FA(req: FastifyRequest<{ Body: IAuthRequestBody }>,
     }
 }
 
+// confirms the setup - user sends a 6-digit token from the app
 export async function verify2FASetup(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
     const userID = req.user?.id;
     const { token } = req.body;
@@ -67,6 +69,7 @@ export async function verify2FASetup(req: FastifyRequest<{ Body: IAuthRequestBod
     reply.send({ success: true });
 }
 
+// verifies the 2FA code durng login before issuing JWT
 export async function verify2FALogin(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
     const { username, token } = req.body;
     const user = db.prepare('SELECT * FROM users WHERE username = ?').get(username);
