@@ -1,4 +1,4 @@
-import { signup, login } from '../authentication/authController.js';
+import { signup, login } from '../authentication/authController.ts';
 import type { FastifyPluginAsync } from "fastify";
 
 const userRoutes: FastifyPluginAsync = async (fastify): Promise<void> => {
