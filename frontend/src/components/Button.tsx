@@ -10,7 +10,7 @@ const buttonStyles = cva("font-bold", {
     size: {
       sm: "text-sm py-1 px-2 rounded-sm border-[0.5px] shadow-md shadow-cyan-400/60 dark:shadow-pink-600/60",
       md: "text-base py-2 px-4 rounded-md border-[0.5px] shadow-lg shadow-cyan-400/60 dark:shadow-pink-500/60",
-	  lg: "text-2xl py-2 px-4 rounded-lg border-[1px] shadow-lg shadow-cyan-400/60 dark:shadow-pink-500/60"
+	    lg: "text-2xl py-2 px-4 rounded-lg border-[1px] shadow-lg shadow-cyan-400/60 dark:shadow-pink-500/60"
     },
     disabled: {
       false: null,
@@ -42,15 +42,15 @@ export const Button = ({ to, onClick, children, variant = "primary", size = "md"
 
   const handleClick = () => {
     if (to) {
-	  navigate(to);
-	} else if (onClick) {
-	  onClick();
-	}
+	    navigate(to);
+  	} else if (onClick) {
+  	  onClick();
+  	}
   };
 
   return (
-	<button onClick={handleClick} className={buttonStyles({ variant, size, disabled })}>
-		<p className="bg-linear-to-t from-pink-600 to-yellow-300 dark:from-pink-500 dark:to-yellow-500 bg-clip-text text-transparent">
+	<button onClick={handleClick} className={buttonStyles({ variant, size, disabled }) + " cursor-pointer "}>
+		<p className="bg-linear-to-b from-pink-700 to-yellow-300 dark:from-pink-500 dark:to-yellow-500 bg-clip-text text-transparent">
 			{children}
 		</p>
 	</button>
