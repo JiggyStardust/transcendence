@@ -17,6 +17,9 @@ export const game = {
 	scoreBoard: null,
 	scoreTextLeft: null,
 	scoreTextRight: null,
+	countdownText1: null,
+	countdownText2: null,
+	countdownText3: null,
 
   state: state,
 	currentState: state.start,
@@ -29,7 +32,12 @@ export const game = {
 
 	pointScored: {
 		interval: 2,
-		timer: 0,
+		timer: 0
+	},
+
+	countdown: {
+		interval: 3,
+		timer: 3
 	},
 
 	move: {
