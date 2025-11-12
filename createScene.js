@@ -60,7 +60,6 @@ export async function createScene(game) {
   const fontScoreBoard = await (await fetch("assets/Score_Board_Regular.json")).json();
   const fontImpact = await (await fetch("assets/Impact_Regular.json")).json();
 
-
   // Gameover text
   game.gameOverText = BABYLON.MeshBuilder.CreateText(
     "gameOverText",
@@ -80,6 +79,9 @@ export async function createScene(game) {
   var scoreRightVec = new BABYLON.Vector3(1, boardVec.y - 0.6, 2.95);
   var p1Vec = new BABYLON.Vector3(-1, boardVec.y + 0.5, 2.899);
   var p2Vec = new BABYLON.Vector3(1, boardVec.y + 0.5, 2.899);
+  var leg1Vec = new BABYLON.Vector3(-1, 0.5, 2.85);
+  var leg2Vec = new BABYLON.Vector3(1, 0.5, 2.85);
+
 
   // Countdown text
   const array2 = ["1", "2", "3"];
@@ -148,6 +150,15 @@ export async function createScene(game) {
   const scoreBoard = BABYLON.MeshBuilder.CreateBox("scoreBoard", {width: 3.5, height: 1.75, depth: 0.3}, game.scene);
   scoreBoard.position = boardVec;
   scoreBoard.material = mScoreBoard;
+
+  // Legs
+  const leg1 = BABYLON.MeshBuilder.CreateBox("leg1", {width: 0.13, height: 0.5, depth: 0.13}, game.scene);
+  leg1.position = leg1Vec;
+  leg1.material = mScoreBoard;
+
+  const leg2 = BABYLON.MeshBuilder.CreateBox("leg2", {width: 0.13, height: 0.5, depth: 0.13}, game.scene);
+  leg2.position = leg2Vec;
+  leg2.material = mScoreBoard;
 
 
   // Sidewalls
