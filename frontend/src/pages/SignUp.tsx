@@ -1,16 +1,34 @@
 import { useState } from "react";
 import Input from "../components/Input";
 import { Button} from "../components/Button";
+import { PROXY_URL } from "../constants"
 
 export default function SignUp() {
-	
+
 	const [information, setInformation] = useState("");
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 
-	function handleSignUp() {
-		//API call here
-		console.log("Sign up API called");			//TEST
+	async function handleSignUp() {
+    //API call here
+    const res = await fetch(PROXY_URL + "/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({username,password})
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.log(data);
+      return;
+    }
+
+    setInformation("Wow!!!!");
+
+    console.log("Sign up API called");            //TEST
 	}
 
 	function usernameInUse() {
