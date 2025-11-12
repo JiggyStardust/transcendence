@@ -7,6 +7,11 @@ export async function countdown(game) {
   game.countdownText2.setEnabled(false);
   game.countdownText3.setEnabled(false);
 
+  game.camera.position.z = game.currentCameraZ;
+  if (game.currentCameraZ > -6)
+    game.currentCameraZ -= deltaTime * 3;
+  //game.camera.setTarget(BABYLON.Vector3.Zero());
+
   if (game.countdown.timer > 2) {
     game.countdownText3.setEnabled(true);
   }

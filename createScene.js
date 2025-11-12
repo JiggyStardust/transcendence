@@ -4,7 +4,7 @@ export async function createScene(game) {
   game.scene = new BABYLON.Scene(game.engine);
 
   // Create Camera
-  game.camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 7, -6), game.scene);
+  game.camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, game.startingCameraY, -6), game.scene);
   game.camera.setTarget(BABYLON.Vector3.Zero());
 
   // Create Light

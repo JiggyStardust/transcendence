@@ -23,6 +23,8 @@ export const game = {
 	gameOverText: null,
 	p1NameText: null,
 	p2NameText: null,
+	startingCameraY: 7,
+	currentCameraZ: 2,
 
   state: state,
 	currentState: state.start,
