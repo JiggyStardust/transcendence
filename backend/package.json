@@ -2,11 +2,12 @@
   "name": "pingpong-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch server.ts",
-    "start": "tsx server.ts",
+    "predev": "npm i && npx prisma migrate dev",
+    "dev": "tsx watch src/server.ts",
+    "prestart": "npm ci && npx prisma migrate deploy",
+    "start": "tsx src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,10 +16,12 @@
   "dependencies": {
     "@fastify/cors": "^11.1.0",
     "@fastify/formbody": "^8.0.2",
+    "@prisma/client": "^6.19.0",
     "bcrypt": "^6.0.0",
     "better-sqlite3": "^12.4.1",
     "dotenv": "^17.2.3",
     "fastify": "^5.6.1",
+    "fastify-plugin": "^5.1.0",
     "jsonwebtoken": "^9.0.0",
     "nodemon": "^3.1.10"
   },
@@ -27,6 +30,7 @@
     "@types/better-sqlite3": "^7.6.13",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.10.0",
+    "prisma": "^6.19.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"

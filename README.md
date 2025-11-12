@@ -34,12 +34,14 @@ cp .env backend/.env
 2. Open terminal to run backend:
 ```bash
 cd backend
+npm i
 npm run dev
 ```
 
 3. Open new terminal to run frontend:
 ```bash
 cd frontend
+npm i
 npm run dev
 ```
 

@@ -13,8 +13,9 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "checkJs": false,
+    "declaration": true,
     "baseUrl": ".",
     "paths": { "*": ["./src/*", "*"] }
   },
-  "include": ["./**/*.ts"]
+  "include": ["src"]
 }
