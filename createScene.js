@@ -60,23 +60,12 @@ export async function createScene(game) {
   const fontScoreBoard = await (await fetch("assets/Score_Board_Regular.json")).json();
   const fontImpact = await (await fetch("assets/Impact_Regular.json")).json();
 
-  // Gameover text
-  game.gameOverText = BABYLON.MeshBuilder.CreateText(
-    "gameOverText",
-    "GAMEOVER",
-    fontArial,
-    {size: 1, resolution: 64,depth: 0.2},
-    game.scene
-  );
-  game.gameOverText.material = mRedText;
-  game.gameOverText.setEnabled(false);
-  game.gameOverText.position = new BABYLON.Vector3(0, 1, 1);
-
+  
   // Scoreboard and text positions
   var boardVec = new BABYLON.Vector3(0, 1.25, 2.95);
   var countVec =  new BABYLON.Vector3(0, boardVec.y, 2.95);
-  var scoreLeftVec = new BABYLON.Vector3(-1, boardVec.y - 0.6, 2.95);
-  var scoreRightVec = new BABYLON.Vector3(1, boardVec.y - 0.6, 2.95);
+  var scoreLeftVec = new BABYLON.Vector3(-1, boardVec.y - 0.5, 2.95);
+  var scoreRightVec = new BABYLON.Vector3(1, boardVec.y - 0.5, 2.95);
   var p1Vec = new BABYLON.Vector3(-1, boardVec.y + 0.5, 2.899);
   var p2Vec = new BABYLON.Vector3(1, boardVec.y + 0.5, 2.899);
   var leg1Vec = new BABYLON.Vector3(-1, 0.5, 2.85);
@@ -84,7 +73,20 @@ export async function createScene(game) {
   var arrowVec =  new BABYLON.Vector3(0, boardVec.y - 0.5, 2.95);
   var arrowRightVec =  new BABYLON.Vector3(0.18, arrowVec.y - 0.14, 2.95);
   var arrowLeftVec =  new BABYLON.Vector3(-0.18, arrowVec.y - 0.14, 2.95);
-
+  var gameOverVec =  new BABYLON.Vector3(0, boardVec.y - 0.2, 2.95);
+  
+  
+  // Gameover text
+  game.gameOverText = BABYLON.MeshBuilder.CreateText(
+    "gameOverText",
+    "FINAL",
+    fontScoreBoard,
+    {size: 0.3, resolution: 64,depth: 0.5},
+    game.scene
+  );
+  game.gameOverText.material = mRedText;
+  game.gameOverText.setEnabled(false);
+  game.gameOverText.position = gameOverVec;
 
   // Arrow text
   game.arrowLineText = BABYLON.MeshBuilder.CreateText(
@@ -170,7 +172,7 @@ export async function createScene(game) {
       "scoreTextLeft" + x,
       x,
       fontScoreBoard,
-      {size: 1, resolution: 64,depth: 0.5},
+      {size: 0.9, resolution: 64,depth: 0.5},
       game.scene
     );
     scoreTextLeft.material = mScoreText;
