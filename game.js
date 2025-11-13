@@ -15,11 +15,14 @@ export const game = {
 	paddle1: null,
 	paddle2: null,
 	scoreBoard: null,
-	scoreTextLeft: null,
-	scoreTextRight: null,
+	scoreLeftText: null,
+	scoreRightText: null,
 	countdownText1: null,
 	countdownText2: null,
 	countdownText3: null,
+	arrowLineText: null,
+	arrowRightText: null,
+	arrowLeftText: null,
 	gameOverText: null,
 	p1NameText: null,
 	p2NameText: null,
@@ -39,9 +42,10 @@ export const game = {
 		timer: 0
 	},
 
-	countdown: {
+	reset: {
 		interval: 3,
-		timer: 3
+		timer: 3,
+		complete: false
 	},
 
 	move: {

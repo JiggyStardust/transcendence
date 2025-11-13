@@ -81,7 +81,44 @@ export async function createScene(game) {
   var p2Vec = new BABYLON.Vector3(1, boardVec.y + 0.5, 2.899);
   var leg1Vec = new BABYLON.Vector3(-1, 0.5, 2.85);
   var leg2Vec = new BABYLON.Vector3(1, 0.5, 2.85);
+  var arrowVec =  new BABYLON.Vector3(0, boardVec.y - 0.5, 2.95);
+  var arrowRightVec =  new BABYLON.Vector3(0.18, arrowVec.y - 0.14, 2.95);
+  var arrowLeftVec =  new BABYLON.Vector3(-0.18, arrowVec.y - 0.14, 2.95);
 
+
+  // Arrow text
+  game.arrowLineText = BABYLON.MeshBuilder.CreateText(
+  "arrowLineText",
+  "_",
+  fontScoreBoard,
+  {size: 0.5, resolution: 64, depth: 0.5, letterSpacing: 0},
+  game.scene
+  );
+  game.arrowLineText.material = mRedText;
+  game.arrowLineText.setEnabled(false);
+  game.arrowLineText.position = arrowVec;
+
+  game.arrowRightText = BABYLON.MeshBuilder.CreateText(
+  "arrowRightText",
+  ">",
+  fontScoreBoard,
+  {size: 0.5, resolution: 64, depth: 0.5, letterSpacing: 0},
+  game.scene
+  );
+  game.arrowRightText.material = mRedText;
+  game.arrowRightText.setEnabled(false);
+  game.arrowRightText.position = arrowRightVec;
+
+  game.arrowLeftText = BABYLON.MeshBuilder.CreateText(
+  "arrowLeftText",
+  "<",
+  fontScoreBoard,
+  {size: 0.5, resolution: 64, depth: 0.5, letterSpacing: 0},
+  game.scene
+  );
+  game.arrowLeftText.material = mRedText;
+  game.arrowLeftText.setEnabled(false);
+  game.arrowLeftText.position = arrowLeftVec;
 
   // Countdown text
   const array2 = ["1", "2", "3"];
