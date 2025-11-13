@@ -25,8 +25,7 @@ export const game = {
 	p2NameText: null,
 	startingCameraY: 7,
 	currentCameraZ: 2,
-
-  state: state,
+  	state: state,
 	currentState: state.start,
 
 	score: {
