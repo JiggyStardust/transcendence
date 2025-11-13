@@ -64,6 +64,7 @@ export const game = {
 		ballSpeed: 2.5,
 		ballSpeedIncrement: 0.08,
 		maxBallSpeed: 5,
-		direction: new BABYLON.Vector3(2.236, 0, 0)
+		toggleDirection: 1,
+		direction: new BABYLON.Vector3(-2.236, 0, 0)
 	}
 };

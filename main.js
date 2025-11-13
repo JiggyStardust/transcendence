@@ -2,7 +2,7 @@ import {game} from "./game.js";
 import {createScene} from "./createScene.js";
 import {moveSphere} from "./moveSphere.js";
 import {updateScoreText} from "./updateScoreText.js";
-import {countdown} from "./countdown.js";
+import {reset} from "./reset.js";
 import {applyCollision} from "./applyCollision.js";
 import {pointScored} from "./pointScored.js";
 
@@ -16,7 +16,7 @@ game.engine.runRenderLoop(function () {
   //game.currentState = game.state.start //REMOVE
   switch(game.currentState) {
     case game.state.start:
-      countdown(game);
+      reset(game);
       break;
     case game.state.playing:
       applyCollision(game);
@@ -26,7 +26,7 @@ game.engine.runRenderLoop(function () {
       pointScored(game);
       break;
     case game.state.reset:
-      countdown(game);
+      reset(game);
       break;
     case game.state.gameOver:
       break;
