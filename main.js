@@ -3,6 +3,7 @@ import {createScene} from "./createScene.js";
 import {moveSphere} from "./moveSphere.js";
 import {updateScoreText} from "./updateScoreText.js";
 import {reset} from "./reset.js";
+import {gameOver} from "./gameOver.js";
 import {applyCollision} from "./applyCollision.js";
 import {pointScored} from "./pointScored.js";
 
@@ -29,6 +30,7 @@ game.engine.runRenderLoop(function () {
       reset(game);
       break;
     case game.state.gameOver:
+      gameOver(game);
       break;
     }
   updateScoreText(game);
