@@ -16,8 +16,8 @@ fastify.register(cors, { origin: true });
 fastify.register(formbody);
 
 // register route module - keeping them organized
-fastify.register(userRoutes, { prefix: '/users'});
-fastify.register(authRoutes, { prefix: '/auth'});
+fastify.register(userRoutes);
+fastify.register(authRoutes);
 
 // declare a basic route
 fastify.get('/', async (request, reply) => {
@@ -28,7 +28,7 @@ fastify.get('/', async (request, reply) => {
 const start = async () => {
     try {
         fastify.listen({ host: HOST, port: PORT });
-        console.log('Server running on http://' + HOST + ":" + PORT);
+        console.log('Server running on' + HOST + ":" + PORT);
     } catch (err) {
         fastify.log.error(err);
         process.exit(1);

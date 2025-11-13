@@ -41,7 +41,7 @@ export async function enable2FA(req: FastifyRequest<{ Body: IAuthRequestBody }>,
     const username = req.user?.username;
 
     if (!userID || !username) {
-        return reply.code(401).send({ error: 'Unauthorized' });
+        return reply.code(401).send({ error: 'Unauthorized - no username or no userID' });
     }
 
     try {

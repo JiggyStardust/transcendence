@@ -12,7 +12,7 @@ const authRoutes: FastifyPluginAsync = async (fastify): Promise<void> => {
     fastify.post('/verify-setup-2fa', { preHandler: verifyToken }, verify2FASetup);
 
     // public route
-    fastify.post('/login-2fa', verifyFALogin);
+    fastify.post('/login-2fa', verify2FALogin);
 };
 
 export default authRoutes;
