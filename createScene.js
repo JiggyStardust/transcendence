@@ -269,8 +269,8 @@ export async function createScene(game) {
 
   // Attach objects
   game.sphere = game.scene.getMeshByName("sphere");
-  game.sphere.position.x = game.move.xStartingPosition;
-  game.sphere.position.z = game.move.zStartingPosition;
+  game.sphere.position.x = game.move.xStartingPos;
+  game.sphere.position.z = game.move.zStartingPos;
 
   game.paddle1 = game.scene.getMeshByName("paddle1");
   game.paddle2 = game.scene.getMeshByName("paddle2");
