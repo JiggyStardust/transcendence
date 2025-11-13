@@ -1,5 +1,4 @@
 
-
 type InputProps = {
   id: string;
   label: string;

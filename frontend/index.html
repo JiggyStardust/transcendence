@@ -2,22 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Honk&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Chango&display=swap" rel="stylesheet">
-
+	<script>
+		if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+			document.documentElement.classList.toggle("dark", true);
+		}
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>frontend</title>
-
-    <!-- Tailwind CDN Needs to be here for some reason for tailwind access to work-->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-    tailwind.config = {
-     darkMode: 'class',
-    }
-    </script>
+	<link href="./src/index.css" rel="stylesheet">
   </head>
   <body>
     <div id="root"></div>
