@@ -1,7 +1,7 @@
 import { cva } from "class-variance-authority";
 import { useNavigate } from "react-router-dom";
 
-const buttonStyles = cva("font-bold", {
+const buttonStyles = cva("font-bold  cursor-pointer transition duration-400 ease-in-out", {
   variants: {
     variant: {
       primary: "bg-cyan-600 dark:bg-slate-700 hover:bg-cyan-500 dark:hover:bg-cyan-600 border-pink-900 dark:border-pink-400",
@@ -49,7 +49,7 @@ export const Button = ({ to, onClick, children, variant = "primary", size = "md"
   };
 
   return (
-	<button onClick={handleClick} className={buttonStyles({ variant, size, disabled }) + " cursor-pointer "}>
+	<button onClick={handleClick} className={buttonStyles({ variant, size, disabled })}>
 		<p className="bg-linear-to-b from-pink-700 to-yellow-300 dark:from-pink-500 dark:to-yellow-500 bg-clip-text text-transparent">
 			{children}
 		</p>
