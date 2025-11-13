@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 
 interface ButtonProps {
@@ -8,20 +7,13 @@ interface ButtonProps {
   variant?: "primary" | "secondary"; // optional style variants
 }
 
-export const Button: React.FC<ButtonProps> = ({
+export const Button = ({
   children,
   to,
   onClick,
   variant = "primary",
-}) => {
+}: ButtonProps) => {
   const navigate = useNavigate();
-
-  const baseStyles =
-    "px-6 py-3 rounded-xl font-semibold transition-colors duration-200";
-  const variants = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700",
-    secondary: "bg-white text-blue-700 hover:bg-gray-200",
-  };
 
   const handleClick = () => {
     if (to) navigate(to);
@@ -29,8 +21,11 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   return (
-    <button className={`${baseStyles} ${variants[variant]}`} onClick={handleClick}>
-      {children}
-    </button>
+<button
+  onClick={handleClick}
+  className="relative px-[26px] py-[8px] font-[Chango] text-[18px]"
+>
+  <span className="relative z-10">{children}</span>
+</button>
   );
 };
