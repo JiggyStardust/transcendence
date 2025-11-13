@@ -9,7 +9,25 @@ export async function createScene(game) {
 
   // Create Light
   const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0.7), game.scene);
-  light.intensity = 0.5;
+  light.intensity = 0.5; //0.5
+  //
+
+  const auxLight = new BABYLON.PointLight("auxLight",
+    new BABYLON.Vector3(0, -4, 0), game.scene);
+  auxLight.intensity = 0; //0.13
+
+  const yellowLightLeft = new BABYLON.PointLight("yellowLightLeft",
+    new BABYLON.Vector3(-1, 1.5, 2.7), game.scene);
+  yellowLightLeft.intensity = 0.3;
+  yellowLightLeft.diffuse = new BABYLON.Color3(1, 1, 0);
+  yellowLightLeft.range = 1;
+
+  const yellowLightLeft2 = new BABYLON.PointLight("yellowLightRight",
+    new BABYLON.Vector3(-1, 0.8, 2.7), game.scene);
+  yellowLightLeft2.intensity = 0.3;
+  yellowLightLeft2.diffuse = new BABYLON.Color3(1, 1, 0);
+  yellowLightLeft2.range = 1;
+
 
   // Create Materials
   var mPaddle = new BABYLON.StandardMaterial("mPaddle", game.scene);
