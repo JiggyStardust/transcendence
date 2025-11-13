@@ -24,6 +24,7 @@ export const game = {
 	arrowRightText: null,
 	arrowLeftText: null,
 	gameOverText: null,
+	winnerText: null,
 	p1NameText: null,
 	p2NameText: null,
 	startingCameraY: 7,
@@ -34,7 +35,7 @@ export const game = {
 	score: {
 		p1: 0,
 		p2: 0,
-		max: 1
+		max: 7
 	},
 
 	pointScored: {

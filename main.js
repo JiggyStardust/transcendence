@@ -1,11 +1,11 @@
 import {game} from "./game.js";
 import {createScene} from "./createScene.js";
+import {applyCollision} from "./applyCollision.js";
 import {moveSphere} from "./moveSphere.js";
 import {updateScoreText} from "./updateScoreText.js";
+import {pointScored} from "./pointScored.js";
 import {reset} from "./reset.js";
 import {gameOver} from "./gameOver.js";
-import {applyCollision} from "./applyCollision.js";
-import {pointScored} from "./pointScored.js";
 
 // Init
 game.canvas = document.getElementById('renderCanvas');

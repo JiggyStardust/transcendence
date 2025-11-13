@@ -1,3 +1,3 @@
 export async function gameOver(game) {
-    game.gameOverText.setEnabled(true);s
+    game.gameOverText.setEnabled(true);
 }

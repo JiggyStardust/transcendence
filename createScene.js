@@ -33,6 +33,12 @@ export async function createScene(game) {
   mRedText.specularColor = new BABYLON.Color3(0.3, 0.1, 0.1);
   mRedText.alpha = 1.0;
 
+  const mGreenText = new BABYLON.StandardMaterial("mGreenText", game.scene);
+  mGreenText.diffuseColor  = new BABYLON.Color3(0.1, 1.0, 0.1);
+  mGreenText.emissiveColor = new BABYLON.Color3(0.3, 0.75, 0.25);
+  mGreenText.specularColor = new BABYLON.Color3(0.1, 0.3, 0.1);
+  mGreenText.alpha = 1.0;
+
   const mWhiteText = new BABYLON.StandardMaterial("mWhiteText", game.scene);
   mWhiteText.diffuseColor = new BABYLON.Color3(1.0, 1.0, 1.0);
   mWhiteText.emissiveColor = new BABYLON.Color3(0.75, 0.75, 0.75);
@@ -60,22 +66,20 @@ export async function createScene(game) {
   const fontScoreBoard = await (await fetch("assets/Score_Board_Regular.json")).json();
   const fontImpact = await (await fetch("assets/Impact_Regular.json")).json();
 
-  
   // Scoreboard and text positions
   var boardVec = new BABYLON.Vector3(0, 1.25, 2.95);
   var countVec =  new BABYLON.Vector3(0, boardVec.y, 2.95);
-  var scoreLeftVec = new BABYLON.Vector3(-1, boardVec.y - 0.5, 2.95);
-  var scoreRightVec = new BABYLON.Vector3(1, boardVec.y - 0.5, 2.95);
+  var scoreLeftVec = new BABYLON.Vector3(-1, boardVec.y - 0.4, 2.95);
+  var scoreRightVec = new BABYLON.Vector3(1, boardVec.y - 0.4, 2.95);
   var p1Vec = new BABYLON.Vector3(-1, boardVec.y + 0.5, 2.899);
   var p2Vec = new BABYLON.Vector3(1, boardVec.y + 0.5, 2.899);
-  var leg1Vec = new BABYLON.Vector3(-1, 0.5, 2.85);
-  var leg2Vec = new BABYLON.Vector3(1, 0.5, 2.85);
+  var leg1Vec = new BABYLON.Vector3(-1, 0.5, 2.87);
+  var leg2Vec = new BABYLON.Vector3(1, 0.5, 2.87);
   var arrowVec =  new BABYLON.Vector3(0, boardVec.y - 0.5, 2.95);
   var arrowRightVec =  new BABYLON.Vector3(0.18, arrowVec.y - 0.14, 2.95);
   var arrowLeftVec =  new BABYLON.Vector3(-0.18, arrowVec.y - 0.14, 2.95);
   var gameOverVec =  new BABYLON.Vector3(0, boardVec.y - 0.2, 2.95);
-  
-  
+
   // Gameover text
   game.gameOverText = BABYLON.MeshBuilder.CreateText(
     "gameOverText",
@@ -172,7 +176,7 @@ export async function createScene(game) {
       "scoreTextLeft" + x,
       x,
       fontScoreBoard,
-      {size: 0.9, resolution: 64,depth: 0.5},
+      {size: 0.8, resolution: 64,depth: 0.5},
       game.scene
     );
     scoreTextLeft.material = mScoreText;
