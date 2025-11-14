@@ -2,17 +2,35 @@ import { ThemeToggle } from "../components/ThemeToggle";
 import { Logo } from "../components/Logo"
 import { useState } from "react";
 import Input from "../components/Input";
-import { Button } from "../components/Button";
+import { Button} from "../components/Button";
+import { PROXY_URL } from "../constants"
 
 export default function SignUp() {
-	
+
 	const [information, setInformation] = useState("");
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 
-	function handleSignUp() {
-		//API call here
-		console.log("Sign up API called");			//TEST
+	async function handleSignUp() {
+    //API call here
+    const res = await fetch(PROXY_URL + "/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({username,password})
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.log(data);
+      return;
+    }
+
+    setInformation("Wow!!!!");
+
+    console.log("Sign up API called");            //TEST
 	}
 
 	function usernameInUse() {
@@ -64,16 +82,3 @@ export default function SignUp() {
 		</div>
 	)
 }
-//   return (
-{/* <div className="flex flex-col items-center justify-center min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300"
-	style={{
-        background: `linear-gradient(to bottom, var(--bg-start) 0%, var(--bg-end) var(--bg-shift))`,
-      }}> */}
-// 	  <Logo />
-// 	  <ThemeToggle />
-// 	  <p className="mt-4 text-lg text-center max-w-md">
-// 		This is where you SignUp!
-// 	  </p>
-// 	</div>
-//   );
-// }
