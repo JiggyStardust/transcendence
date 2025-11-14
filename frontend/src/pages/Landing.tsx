@@ -19,9 +19,10 @@ export default function Landing() {
         <Button to="/signin" variant="primary" size="lg">
           Sign In
         </Button>
-		<Button to="/testing">
-			Testing
-		</Button>
+    		<Button to="/testing">
+    			Testing
+    		</Button>
+        <Button to="/profile_settings">Profile settings</Button>
       </div>
       <ThemeToggle />
     </div>
