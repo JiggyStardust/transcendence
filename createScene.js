@@ -7,14 +7,17 @@ export async function createScene(game) {
   game.camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, game.startingCameraY, -6), game.scene);
   game.camera.setTarget(BABYLON.Vector3.Zero());
 
-  // Create Light
+  // Create Main Light
   const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0.7), game.scene);
   light.intensity = 0.5; //0.5
-  //
+  
+  // Create scoreboard light
 
   const auxLight = new BABYLON.PointLight("auxLight",
     new BABYLON.Vector3(0, -4, 0), game.scene);
   auxLight.intensity = 0; //0.13
+
+  // Create fake score lights
 
   const yellowLightLeft = new BABYLON.PointLight("yellowLightLeft",
     new BABYLON.Vector3(-1, 1.5, 2.7), game.scene);
@@ -22,12 +25,23 @@ export async function createScene(game) {
   yellowLightLeft.diffuse = new BABYLON.Color3(1, 1, 0);
   yellowLightLeft.range = 1;
 
-  const yellowLightLeft2 = new BABYLON.PointLight("yellowLightRight",
+  const yellowLightLeft2 = new BABYLON.PointLight("yellowLightLeft2",
     new BABYLON.Vector3(-1, 0.8, 2.7), game.scene);
   yellowLightLeft2.intensity = 0.3;
   yellowLightLeft2.diffuse = new BABYLON.Color3(1, 1, 0);
   yellowLightLeft2.range = 1;
 
+  const yellowLightRight = new BABYLON.PointLight("yellowLightRight",
+    new BABYLON.Vector3(1, 1.5, 2.7), game.scene);
+  yellowLightRight.intensity = 0.3;
+  yellowLightRight.diffuse = new BABYLON.Color3(1, 1, 0);
+  yellowLightRight.range = 1;
+
+  const yellowLightRight2 = new BABYLON.PointLight("yellowLightRight2",
+    new BABYLON.Vector3(1, 0.8, 2.7), game.scene);
+  yellowLightRight2.intensity = 0.3;
+  yellowLightRight2.diffuse = new BABYLON.Color3(1, 1, 0);
+  yellowLightRight2.range = 1;
 
   // Create Materials
   var mPaddle = new BABYLON.StandardMaterial("mPaddle", game.scene);
@@ -211,6 +225,7 @@ export async function createScene(game) {
   const scoreBoard = BABYLON.MeshBuilder.CreateBox("scoreBoard", {width: 3.5, height: 1.75, depth: 0.3}, game.scene);
   scoreBoard.position = boardVec;
   scoreBoard.material = mScoreBoard;
+  scoreBoard.material.maxSimultaneousLights = 8;
 
   // Legs
   const leg1 = BABYLON.MeshBuilder.CreateBox("leg1", {width: 0.13, height: 0.5, depth: 0.13}, game.scene);
