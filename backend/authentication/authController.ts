@@ -102,7 +102,7 @@ export async function signup(req: FastifyRequest<{ Body: IAuthRequestBody }>, re
             reply.code(400).send({ error: 'Username already exists' });
         } else {
             console.error(err);
-            reply.code(500).send({ error: 'Internal server error' });
+            reply.code(500).send({ error: 'Internal server error - here' });
         }
     }
 }

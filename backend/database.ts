@@ -13,4 +13,14 @@ db.prepare(`
     )
 `).run();
 
+try {
+    db.prepare(`
+        ALTER TABLE users ADD COLUMN twofa_enabled INTEGER DEFAULT 0
+        `).run();
+} catch (e: any) {
+    if (!e.message.includes ("duplicate column name")) {
+        throw e;
+    }
+}
+
 export default db;
