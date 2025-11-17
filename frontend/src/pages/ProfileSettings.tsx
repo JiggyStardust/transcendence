@@ -1,6 +1,7 @@
 import { Button } from "../components/Button";
 import { FiUser } from "react-icons/fi";
 import Input from "../components/Input";
+import { useState } from "react";
 
 const ProfilePic = () => {
 
@@ -33,12 +34,17 @@ const ProfileInfo = ({}) => {
 }
 
 const Settings = ({}) => {
+
+	const [name, setName] = useState("name");
+
 	return (
 		<div className="grid grid-cols-2">
-			<Input id="name" label="Name on server"/>
+			<Input id="name" label="Name on server" value={name} onChange={(e) => setName(e.target.value)}/>
 			<Input id="language" label="Language preference" />
-			<Input id="name" label="Name on server"/>
-			<Input id="language" label="Language preference" />
+		  <div className="flex m-2 px-4 gap-3">
+		    <label>Two factor authentication</label>
+		    <input type="checkbox" id="twoFactorAuth" />
+		  </div>
 		</div>
 	)
 }
