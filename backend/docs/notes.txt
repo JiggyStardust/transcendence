@@ -1,0 +1,31 @@
+# how to run server
+
+node server.js
+
+# how to log in on command line without a frontend
+# This code must be copied as is because of the location of newline chars
+
+curl -X POST http://localhost:4000/signup \
+  -H "Content-Type: application/json" \
+  -d '{"username":"demoUser","password":"demoPass"}'
+
+
+# to log in
+
+curl -X POST http://localhost:4000/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"demoUser","password":"demoPass"}'
+
+
+# Authorization header
+
+# login once you get the token
+
+curl http://localhost:4000/matches \
+  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>"
+
+# Check if username available
+
+NB: change VALUE to actual username
+
+curl -X GET http://localhost:4000/users/check-username?username=VALUE

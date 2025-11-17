@@ -1,0 +1,44 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: transcendence-frontend
+    ports: ["${VITE_PORT}:${VITE_PORT}"]
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_PORT=${VITE_PORT}
+      - VITE_HOST=${VITE_HOST}
+      - VITE_ALLOWED_HOST_NAME=${VITE_ALLOWED_HOST_NAME}
+      - VITE_LOCAL_BACKEND_URL=${DOCKER_BACKEND_URL}
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks: [transcendence-network]
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: transcendence-backend
+    expose: ["${BACKEND_PORT}"]
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/prisma:/app/prisma
+      - /app/node_modules
+    environment:
+      - BACKEND_PORT=${BACKEND_PORT}
+      - BACKEND_HOST=${BACKEND_HOST}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+      - JWT_ACCESS_EXPIRATION=${JWT_ACCESS_EXPIRATION}
+      - JWT_REFRESH_EXPIRATION=${JWT_REFRESH_EXPIRATION}
+    restart: unless-stopped
+    networks: [transcendence-network]
+
+networks:
+  transcendence-network:
+    driver: bridge

@@ -1,0 +1,41 @@
+# setup
+.env*
+!.env.example
+secrets/*
+certs
+
+# dependencies
+node_modules/
+package.json
+package-lock.json
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# temporary files
+tmp/
+temp/
+
+# build outputs
+dist/
+build/
+
+# cache
+.cache/
+.npm/
+
+# editor files
+.vscode/
+.DS_Store
+
+# SQLite database files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# tests
+tmp*
