@@ -109,14 +109,46 @@ export async function signup(req: FastifyRequest<{ Body: IAuthRequestBody }>, re
 
 export async function login(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
     const { username, password } = req.body;
+    
     const user = db.prepare('SELECT id, username, password FROM users WHERE username = ?').get(username) as IUserData;
     if (!user) return reply.code(401).send({ error: 'Invalid username or password' });
 
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return reply.code(401).send({ error: 'Invalid username or password' });
 
+    if (user.twofa_enabled) {
+        return reply.send({
+            twoFARequired: true,
+            userId: user.id,
+            username: user.username
+        });
+    }
+
+    // normal login without 2FA
     const accessToken = generateAccessToken({ id: user.id, username: user.username });
     const refreshToken = generateRefreshToken({ id: user.id });
 
-    reply.send({ accessToken, refreshToken });
+    reply.send({ 
+        userId: user.id,
+        username: user.username,
+        accessToken,
+        refreshToken
+    }); // should also add userID?
 }
+
+
+/*
+Front-end will store something like :
+localStorage.setItem("userId", userId);
+localStorage.setItem("username", username);
+localStorage.setItem("accessToken", accessToken);
+localStorage.setItem("refreshToken", refreshToken);
+
+login returns:
+{
+    "twoFARequired": true,
+    "userId": 5,
+    "username": "Natalie"
+}
+
+*/
