@@ -1,26 +1,18 @@
 
 CURRENT
--add game states
-	-stateStart
-	-statePlaying
-	-stateScored
-	-stateRestart
-	-stateGameOver
+-add dynamic way to change displayed name
+-
 
 CHANGE
--start ball on hitting spacebar or 
-	-both players hit both of their buttons like ninentdo switch style
+-
 
 MAYBE
--fix accidental scoring when messing with inspector or right clicking etc
+-3rd player clicks ball to change direction.
+	-angle one notch
+	-direction towards opposite player
+	-
 
 
-ThemeToggle
-	-Set default dark class
-	-Set default dark button
-	-Set default lightMode
-	
-	-Check for mouse click
-		-Toggle lightMode dark to light or light to dark
-		-Set class based on lightMode
-		-Set button based on lightMode
+
+
+

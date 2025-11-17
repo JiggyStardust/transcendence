@@ -166,7 +166,7 @@ export async function createScene(game) {
   // Player name text
   game.p1NameText = BABYLON.MeshBuilder.CreateText(
     "p1NameText",
-    "HOME",
+    game.username.p1Display,
     fontImpact,
     {size: 0.18, resolution: 64,depth: 0.2},
     game.scene
@@ -177,7 +177,7 @@ export async function createScene(game) {
 
   game.p2NameText = BABYLON.MeshBuilder.CreateText(
     "p2NameText",
-    "AWAY",
+    game.username.p2Display,
     fontImpact,
     {size: 0.18, resolution: 64,depth: 0.2},
     game.scene
