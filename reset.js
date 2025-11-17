@@ -17,12 +17,6 @@ function countdown(game) {
     game.countdownText1.setEnabled(true);
   }
 
-  // Arrow
-
-
-
-
-
   // Return true when countdown complete
   if (game.reset.timer < 0) {
     game.reset.timer = game.reset.interval;
@@ -40,7 +34,8 @@ export async function reset(game) {
     game.reset.timer = game.reset.interval;
     game.move.toggleDirection *= -1;
     game.move.direction = new BABYLON.Vector3(2.236 * game.move.toggleDirection, 0, 0);
-
+    game.light.redArrow.setEnabled(true);
+    game.light.redCountdown.setEnabled(true);
 
     game.arrowLineText.setEnabled(true);
     if (game.move.toggleDirection == 1) {
@@ -56,6 +51,8 @@ export async function reset(game) {
     game.arrowLineText.setEnabled(false);
     game.arrowRightText.setEnabled(false);
     game.arrowLeftText.setEnabled(false);
+    game.light.redArrow.setEnabled(false);
+    game.light.redCountdown.setEnabled(false);
     game.reset.complete = false;
 		game.currentState = game.state.playing;
 	}
