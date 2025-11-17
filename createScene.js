@@ -27,17 +27,24 @@ export async function createScene(game) {
 
   game.light.redArrow = new BABYLON.PointLight("redArrow",
     new BABYLON.Vector3(0, 0.75, 2.6), game.scene);
-  game.light.redArrow.intensity = 0.25;
+  game.light.redArrow.intensity = 0.2;
   game.light.redArrow.diffuse = new BABYLON.Color3(1, 0, 0);
   game.light.redArrow.range = 2;
   game.light.redArrow.setEnabled(false);
 
   game.light.redCountdown = new BABYLON.PointLight("redCountdown",
     new BABYLON.Vector3(0, 1.5, 2.6), game.scene);
-  game.light.redCountdown.intensity = 0.25;
+  game.light.redCountdown.intensity = 0.2;
   game.light.redCountdown.diffuse = new BABYLON.Color3(1, 0, 0);
   game.light.redCountdown.range = 2;
   game.light.redCountdown.setEnabled(false);
+
+  game.light.final = new BABYLON.PointLight("final",
+    new BABYLON.Vector3(0, 1.2, 2.6), game.scene);
+  game.light.final.intensity = 0.25;
+  game.light.final.diffuse = new BABYLON.Color3(1, 0, 0);
+  game.light.final.range = 2;
+  game.light.final.setEnabled(false);
 
 
   // Create Materials
@@ -241,6 +248,7 @@ export async function createScene(game) {
   wallTop.position.y = 0.1;
   wallTop.position.x = 0;
   wallTop.material = mWall;
+
   var wallBottom = wallTop.clone("wallBottom");
   wallTop.position.z = 2.9;
   wallBottom.position.z = -2.9;
@@ -248,9 +256,19 @@ export async function createScene(game) {
   var wallLeft = BABYLON.MeshBuilder.CreateBox("wallTop", {width: 0.2, height: 0.2, depth: 6}, game.scene);
   wallLeft.position.y = 0.1;
   wallLeft.material = mWall;
+
   var wallRight = wallLeft.clone("wallRight");
   wallLeft.position.x = -2.9;
   wallRight.position.x = 2.9;
+
+  // Base
+
+  const h = 60;
+  const y = (h / 2) * -1;
+  var base = BABYLON.MeshBuilder.CreateBox("base", {width: 6, height: h, depth: 6}, game.scene);
+  base.position.y = y;
+  base.position.x = 0;
+  base.material = mWall;
   
   // Ground
   var ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 6, height: 6}, game.scene);
