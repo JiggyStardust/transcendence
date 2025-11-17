@@ -5,6 +5,8 @@ import App from './App.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+  	<div className='bg-gradient dark:bg-gradient-dark text-black dark:text-white'>
+      	<App />
+  	</div>
   </StrictMode>
 )
