@@ -34,7 +34,8 @@ export const game = {
 
 	light: {
 		redArrow: null,
-		redCountdown: null
+		redCountdown: null,
+		redFinal: null
 	},
 
 	username: {
@@ -45,7 +46,7 @@ export const game = {
 	},
 
 	score: {
-		p1: 4,
+		p1: 0,
 		p2: 0,
 		max: 7
 	},

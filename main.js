@@ -17,7 +17,8 @@ await createScene(game);
 
 // Render loop
 game.engine.runRenderLoop(function () {
-  //game.currentState = game.state.start //REMOVE
+  //game.currentState = game.state.start; //REMOVE
+  //game.currentState = game.state.gameOver;
   switch(game.currentState) {
     case game.state.start:
       reset(game);
