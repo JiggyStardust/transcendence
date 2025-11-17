@@ -32,6 +32,11 @@ export const game = {
   	state: state,
 	currentState: state.start,
 
+	light: {
+		redArrow: null,
+		redCountdown: null
+	},
+
 	username: {
 		p1: "natalie",
 		p2: "saaraisthebest",
@@ -40,7 +45,7 @@ export const game = {
 	},
 
 	score: {
-		p1: 0,
+		p1: 4,
 		p2: 0,
 		max: 7
 	},

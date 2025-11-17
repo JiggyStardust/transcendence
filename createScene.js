@@ -9,39 +9,36 @@ export async function createScene(game) {
 
   // Create Main Light
   const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0.7), game.scene);
-  light.intensity = 0.5; //0.5
-  
-  // Create scoreboard light
+  light.intensity = 0.47;
 
-  const auxLight = new BABYLON.PointLight("auxLight",
-    new BABYLON.Vector3(0, -4, 0), game.scene);
-  auxLight.intensity = 0; //0.13
-
-  // Create fake score lights
+  // Create scoreboard lights
 
   const yellowLightLeft = new BABYLON.PointLight("yellowLightLeft",
-    new BABYLON.Vector3(-1, 1.5, 2.7), game.scene);
-  yellowLightLeft.intensity = 0.3;
+    new BABYLON.Vector3(-1, 1.2, 2.6), game.scene);
+  yellowLightLeft.intensity = 0.25;
   yellowLightLeft.diffuse = new BABYLON.Color3(1, 1, 0);
-  yellowLightLeft.range = 1;
-
-  const yellowLightLeft2 = new BABYLON.PointLight("yellowLightLeft2",
-    new BABYLON.Vector3(-1, 0.8, 2.7), game.scene);
-  yellowLightLeft2.intensity = 0.3;
-  yellowLightLeft2.diffuse = new BABYLON.Color3(1, 1, 0);
-  yellowLightLeft2.range = 1;
+  yellowLightLeft.range = 3;
 
   const yellowLightRight = new BABYLON.PointLight("yellowLightRight",
-    new BABYLON.Vector3(1, 1.5, 2.7), game.scene);
-  yellowLightRight.intensity = 0.3;
+    new BABYLON.Vector3(1, 1.2, 2.6), game.scene);
+  yellowLightRight.intensity = 0.25;
   yellowLightRight.diffuse = new BABYLON.Color3(1, 1, 0);
-  yellowLightRight.range = 1;
+  yellowLightRight.range = 3;
 
-  const yellowLightRight2 = new BABYLON.PointLight("yellowLightRight2",
-    new BABYLON.Vector3(1, 0.8, 2.7), game.scene);
-  yellowLightRight2.intensity = 0.3;
-  yellowLightRight2.diffuse = new BABYLON.Color3(1, 1, 0);
-  yellowLightRight2.range = 1;
+  game.light.redArrow = new BABYLON.PointLight("redArrow",
+    new BABYLON.Vector3(0, 0.75, 2.6), game.scene);
+  game.light.redArrow.intensity = 0.25;
+  game.light.redArrow.diffuse = new BABYLON.Color3(1, 0, 0);
+  game.light.redArrow.range = 2;
+  game.light.redArrow.setEnabled(false);
+
+  game.light.redCountdown = new BABYLON.PointLight("redCountdown",
+    new BABYLON.Vector3(0, 1.5, 2.6), game.scene);
+  game.light.redCountdown.intensity = 0.25;
+  game.light.redCountdown.diffuse = new BABYLON.Color3(1, 0, 0);
+  game.light.redCountdown.range = 2;
+  game.light.redCountdown.setEnabled(false);
+
 
   // Create Materials
   var mPaddle = new BABYLON.StandardMaterial("mPaddle", game.scene);
@@ -79,6 +76,8 @@ export async function createScene(game) {
 
   var mScoreBoard = new BABYLON.StandardMaterial("mScoreText", game.scene);
   mScoreBoard.diffuseColor = new BABYLON.Color3(0.6, 0.75, 0.75);
+  mScoreBoard.specularPower = 1000000;
+
 
   var mSphere = new BABYLON.StandardMaterial("mSphere", game.scene);
   mSphere.diffuseColor = new BABYLON.Color3(1, 1, 1);
