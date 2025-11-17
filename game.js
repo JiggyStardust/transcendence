@@ -32,6 +32,13 @@ export const game = {
   	state: state,
 	currentState: state.start,
 
+	username: {
+		p1: "natalie",
+		p2: "saaraisthebest",
+		p1Display: null,
+		p2Display: null,
+	},
+
 	score: {
 		p1: 0,
 		p2: 0,
