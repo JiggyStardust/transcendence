@@ -13,8 +13,10 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "checkJs": false,
+    "declaration": true,
     "baseUrl": ".",
-    "paths": { "*": ["./src/*", "*"] }
+    "paths": { "*": ["./src/*", "*"] },
+    "types": ["node", "fastify"]
   },
-  "include": ["./**/*.ts"]
+  "include": ["src", "src/types"]
 }

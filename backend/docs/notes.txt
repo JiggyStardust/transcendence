@@ -32,12 +32,9 @@ curl http://localhost:4000/profile \
 # Enabling 2FA
 curl -X POST http://localhost:4000/enable-2fa \
   -H "Authorization: Bearer <TOKEN>" \
-  -H "Content-Type: application/json"
 
 curl -X POST http://localhost:4000/enable-2fa \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJ0ZXN0VXNlcjEiLCJpYXQiOjE3NjMwMzY1NjksImV4cCI6MTc2MzAzNzQ2OX0.lH9Eso6UqdyvuCSqZKWEbrpDzuSv4NLCrgFOSmZdZZ4" \
-  -H "Content-Type: application/json"
-  -d '{}'
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJkZW1vVXNlciIsImlhdCI6MTc2MzQyMjkzNSwiZXhwIjoxNzYzNDIzODM1fQ.qSj61jHIgTZm9_6djE1ir8jwxa6H8yOsGUIa9w2Ohf0" \
 
 
 # Expected response (I think)
@@ -56,12 +53,17 @@ curl -X POST http://localhost:4000/verify-setup-2fa \
   -H "Content-Type: application/json" \
   -d '{"code": "123456"}'
 
+curl -X POST http://localhost:4000/verify-setup-2fa \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJkZW1vVXNlciIsImlhdCI6MTc2MzQyMjkzNSwiZXhwIjoxNzYzNDIzODM1fQ.qSj61jHIgTZm9_6djE1ir8jwxa6H8yOsGUIa9w2Ohf0" \
+  -H "Content-Type: application/json" \
+  -d '{"code": "904481"}'
+
 
 # 2FA login
 
 curl -X POST http://localhost:4000/login-2fa \
   -H "Content-Type: application/json" \
-  -d '{"email": "test@example.com", "code": "654321"}'
+  -d '{"username": "demoUser", "token": "654321"}'
 
 
 # Verification
@@ -69,4 +71,3 @@ curl -X POST http://localhost:4000/login-2fa \
 curl -X POST http://localhost:3000/verify-2fa \
   -H "Content-Type: application/json" \
   -d '{"token": "123456", "secret": "JBSWY3DPEHPK3PXP"}'
-

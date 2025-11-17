@@ -1,0 +1,132 @@
+// from docs: Data source: Specifies your database connection (via an environment variable)
+// https://www.prisma.io/docs/orm/prisma-schema/overview/generators
+generator client {
+  provider = "prisma-client-js"
+}
+
+// from docs: Generator: Indicates that you want to generate Prisma Client
+// https://www.prisma.io/docs/orm/prisma-schema/overview/data-sources
+// https://www.prisma.io/docs/orm/overview/databases/sqlite
+datasource db {
+  provider = "sqlite"
+  url      = "file:./data/pong.db"
+}
+
+// from docs: Data model: Defines your application models
+// https://www.prisma.io/docs/orm/prisma-schema/data-model/models
+
+enum FriendStatus {
+  PENDING
+  ACCEPTED
+  BLOCKED
+}
+
+enum UserStatus {
+  ONLINE
+  OFFLINE
+}
+
+model User {
+  id                  Int             @id @default(autoincrement())
+  username            String          @unique
+  displayName         String
+  passwordHash        String
+  isTwoFAenabled      Boolean         @default(false)
+  twoFAsecret         String?
+  tokenHash           String?
+  tokenExpiresAt      DateTime?
+  tokenRevoked        Boolean         @default(false)
+
+  // --- Profile avatar relation (many users can share one Avatar)
+  avatarID            Int?
+  avatar              Avatar?         @relation("AvatarAsProfile", fields: [avatarID], references: [id])
+
+  status              UserStatus      @default(OFFLINE)
+  updatedAt           DateTime        @updatedAt
+  createdAt           DateTime        @default(now())
+  isDeleted           Boolean         @default(false)
+
+  // --- Other relations
+  createdTournaments  Tournament[]    @relation("TournamentCreator")
+  matchesWon          Match[]         @relation("MatchWinner")
+  matchParticipants   MatchParticipant[]
+  friendsAsUser       Friend[]        @relation("Friends_user")
+  friendsAsFriend     Friend[]        @relation("Friends_friend")
+
+  // Opposite side of "uploadedBy" on Avatar
+  avatarsUploaded     Avatar[]        @relation("AvatarUploadedBy")
+
+  @@index([username])
+}
+
+model Avatar {
+  id          Int      @id @default(autoincrement())
+  link        String
+  type        String                 // e.g. "default" | "custom" | "external"
+
+  // Uploader relation (optional)
+  uploadedBy  Int?
+  uploader    User?    @relation("AvatarUploadedBy", fields: [uploadedBy], references: [id])
+
+  createdAt   DateTime @default(now())
+
+  // Profile avatar back-relation: users that reference this avatar
+  users       User[]   @relation("AvatarAsProfile")
+}
+
+model Friend {
+  id        Int      @id @default(autoincrement())
+  userID    Int
+  friendID  Int
+  status    FriendStatus
+  createdAt DateTime @default(now())
+
+  user      User     @relation("Friends_user",   fields: [userID],   references: [id], onDelete: Cascade)
+  friend    User     @relation("Friends_friend", fields: [friendID], references: [id], onDelete: Cascade)
+
+  @@unique([userID, friendID])
+  @@index([friendID])
+}
+
+model Tournament {
+  id         Int       @id @default(autoincrement())
+  name       String
+  createdBy  Int
+  startDate  DateTime
+  endDate    DateTime
+
+  creator    User      @relation("TournamentCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  matches    Match[]
+
+  @@index([createdBy])
+}
+
+model Match {
+  id            Int        @id @default(autoincrement())
+  tournamentId  Int?
+  winnerId      Int?
+  startedAt     DateTime?
+  endedAt       DateTime?
+
+  tournament    Tournament? @relation(fields: [tournamentId], references: [id], onDelete: SetNull)
+  winner        User?       @relation("MatchWinner", fields: [winnerId], references: [id], onDelete: SetNull)
+  participants  MatchParticipant[]
+
+  @@index([tournamentId])
+  @@index([winnerId])
+}
+
+model MatchParticipant {
+  matchId    Int
+  userId     Int
+  score      Int        @default(0)
+  isWinner   Boolean    @default(false)
+  startedAt  DateTime?
+  endedAt    DateTime?
+
+  match      Match      @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([matchId, userId])
+  @@index([userId])
+}
