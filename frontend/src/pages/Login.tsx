@@ -6,7 +6,7 @@ import Input from "../components/Input";
 import { useNavigate } from "react-router-dom";
 
 
-export default function SignIn() {
+export default function Login() {
 
 		const [information, setInformation] = useState("");
 		const [username, setUsername] = useState("");
@@ -14,7 +14,7 @@ export default function SignIn() {
 
 		const navigate = useNavigate();
 
-	async function handleSignIn() {
+	async function handleLogin() {
 
 		const res = await fetch(PROXY_URL + "/login", {
 			method: "POST",
@@ -28,10 +28,10 @@ export default function SignIn() {
 
 		if (!res.ok) {
 			console.log(data);
-			setInformation("SignIn failed!");
+			setInformation("Login failed!");
 			return;
 		}
-		console.log("SignIn was succesfull: ", data);
+		console.log("Login was succesfull: ", data);
 		navigate("/dashboard");
 	}
 
@@ -61,9 +61,9 @@ export default function SignIn() {
 		<div className="flex flex-col items-center justify-center min-h-screen w-screen">
       	<h1 className="font-[Honk] text-[120px]">Ping of Pongs</h1>
 		  <p className="mt-4 text-lg text-center max-w-md">
-				This is where you SignIn!
+				This is where you Login!
 		  </p>
-		  			<form action={handleSignIn} className="px-4 py-8 border border-white rounded-lg ">
+		  			<form action={handleLogin} className="px-4 py-8 border border-white rounded-lg ">
 						<p>{information}</p>
 						<Input 
 						  id="username"
@@ -81,7 +81,7 @@ export default function SignIn() {
 						  onChange={handlePasswordChange}
 						  />
 		  
-						<Button type="submit">Sign In</Button>
+						<Button type="submit">Login</Button>
 					</form>
 		  <ThemeToggle />
 		</div>

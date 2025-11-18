@@ -33,7 +33,7 @@ export default function SignUp() {
       return;
     }
     console.log("SignUp was succesfull:", data);
-	navigate("/signin");
+	navigate("/login");
 	}
 
 // Here we check if username is already in use (saved to backend)
