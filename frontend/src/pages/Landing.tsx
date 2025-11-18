@@ -1,29 +1,29 @@
 import { ThemeToggle } from "../components/ThemeToggle";
-import { Logo } from "../components/Logo";
 import { Button } from "../components/Button";
+import pongImg from "../assets/pong-thumbnail.png";
 
 export default function Landing() {
   return (
-	<div className="flex flex-col items-center justify-center min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300">
-      <h1 className="text-5xl font-bold mb-6">Welcome to</h1>
-      <Logo />
-      <ThemeToggle />
-      <p className="mt-4 text-lg text-center max-w-md">
-        An adaptation of the classic Atari game Pong. Sign up to create a player profile, or sign in if you already have one.
-      </p>
-
-      <div className="mt-6 space-x-4">
+    <div className="flex flex-col gap-8 p-16 items-center min-h-screen text-center transition-colors duration-500">
+      {/* if want to make bg animated, add animated-bg to className above and enable it in  */}
+      {/* className="min-h-screen flex flex-col items-center justify-center transition-colors duration-500 animated-bg" */}
+      <h1 className="font-[Chango] text-5xl font-bold font-style: italic">Welcome to</h1>
+      <h1 className="font-[Honk] text-[120px]">Ping of Pongs</h1>
+	  <h2 className="text-2xl font-bold">An adaptation of the classic Atari game Pong.</h2>
+	  <img src={ pongImg } alt="A photo of our game" className="rounded-xl shadow-lg w-1/3"/>
+	  <p>Sign up to create a player profile, or sign in if you already have one.</p>
+      <div className="space-x-4">
         <Button to="/signup" variant="secondary">
           Sign Up
         </Button>
-        <Button to="/signin" variant="secondary">
+        <Button to="/signin" variant="primary" size="lg">
           Sign In
         </Button>
+		<Button to="/testing">
+			Testing
+		</Button>
       </div>
-
-      <div className="mt-8">
-        <img src="/images/game-screenshot.png" alt="A photo of our game" className="rounded-xl shadow-lg"/>
-      </div>
+      <ThemeToggle />
     </div>
   );
 }

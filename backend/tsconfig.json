@@ -18,5 +18,5 @@
     "paths": { "*": ["./src/*", "*"] },
     "types": ["node", "fastify"]
   },
-  "include": ["src", "src/types"]
+  "include": ["src"]
 }
