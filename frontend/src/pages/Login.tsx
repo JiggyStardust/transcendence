@@ -32,6 +32,8 @@ export default function Login() {
 			return;
 		}
 		console.log("Login was succesfull: ", data);
+		// Now that we've logged in, we probably also want to fetch user data (Display name, scores...) from backend to show statistics on leaderboard etc.
+		// and save them to context.
 		navigate("/dashboard");
 	}
 
