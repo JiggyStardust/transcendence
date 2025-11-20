@@ -16,16 +16,58 @@ curl -X POST http://localhost:4000/login \
   -H "Content-Type: application/json" \
   -d '{"username":"demoUser","password":"demoPass"}'
 
+curl -X POST http://localhost:4000/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "testUser1", "password": "password123"}'
+
 
 # Authorization header
 
 # login once you get the token
 
-curl http://localhost:4000/matches \
+curl http://localhost:4000/profile \
   -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>"
 
-# Check if username available
 
-NB: change VALUE to actual username
+# Enabling 2FA
+curl -X POST http://localhost:4000/enable-2fa \
+  -H "Authorization: Bearer <TOKEN>" \
 
-curl -X GET http://localhost:4000/users/check-username?username=VALUE
+curl -X POST http://localhost:4000/enable-2fa \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJkZW1vVXNlciIsImlhdCI6MTc2MzQyMjkzNSwiZXhwIjoxNzYzNDIzODM1fQ.qSj61jHIgTZm9_6djE1ir8jwxa6H8yOsGUIa9w2Ohf0" \
+
+
+# Expected response (I think)
+{
+  "otpauth_url": "otpauth://totp/MyApp:test@example.com?secret=JBSWY3DPEHPK3PXP&issuer=MyApp",
+  "secret": "JBSWY3DPEHPK3PXP"
+}
+
+# Terminal QR (no frontend required)
+npx qrcode-terminal 'otpauth://totp/MyApp:test@example.com?secret=JBSWY3DPEHPK3PXP&issuer=MyApp'
+
+
+# Verify 2FA
+curl -X POST http://localhost:4000/verify-setup-2fa \
+  -H "Authorization: Bearer <TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{"code": "123456"}'
+
+curl -X POST http://localhost:4000/verify-setup-2fa \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJkZW1vVXNlciIsImlhdCI6MTc2MzQyMjkzNSwiZXhwIjoxNzYzNDIzODM1fQ.qSj61jHIgTZm9_6djE1ir8jwxa6H8yOsGUIa9w2Ohf0" \
+  -H "Content-Type: application/json" \
+  -d '{"code": "904481"}'
+
+
+# 2FA login
+
+curl -X POST http://localhost:4000/login-2fa \
+  -H "Content-Type: application/json" \
+  -d '{"username": "demoUser", "token": "654321"}'
+
+
+# Verification
+
+curl -X POST http://localhost:3000/verify-2fa \
+  -H "Content-Type: application/json" \
+  -d '{"token": "123456", "secret": "JBSWY3DPEHPK3PXP"}'

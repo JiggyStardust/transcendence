@@ -4,6 +4,7 @@ import cors from "@fastify/cors";
 import formbody from "@fastify/formbody";
 import databasePlugin from "./plugin/database";
 import userRoutes from "./routes/users";
+import authRoutes from "./routes/auth";
 import checkUsernameRoute from "./routes/checkUsername";
 import "dotenv/config";
 
@@ -21,6 +22,7 @@ fastify.register(databasePlugin);
 
 // register route module
 fastify.register(userRoutes);
+fastify.register(authRoutes);
 fastify.register(checkUsernameRoute, { prefix: "/users" });
 
 // declare a basic route

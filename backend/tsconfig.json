@@ -15,7 +15,8 @@
     "checkJs": false,
     "declaration": true,
     "baseUrl": ".",
-    "paths": { "*": ["./src/*", "*"] }
+    "paths": { "*": ["./src/*", "*"] },
+    "types": ["node", "fastify"]
   },
   "include": ["src"]
 }

@@ -31,7 +31,11 @@ model User {
   username            String          @unique
   displayName         String
   passwordHash        String
-  isTwoFactorEnabled  Boolean         @default(false)
+  isTwoFAenabled      Boolean         @default(false)
+  twoFAsecret         String?
+  tokenHash           String?
+  tokenExpiresAt      DateTime?
+  tokenRevoked        Boolean         @default(false)
 
   // --- Profile avatar relation (many users can share one Avatar)
   avatarID            Int?
@@ -40,9 +44,9 @@ model User {
   status              UserStatus      @default(OFFLINE)
   updatedAt           DateTime        @updatedAt
   createdAt           DateTime        @default(now())
+  isDeleted           Boolean         @default(false)
 
   // --- Other relations
-  refreshTokens       RefreshToken[]
   createdTournaments  Tournament[]    @relation("TournamentCreator")
   matchesWon          Match[]         @relation("MatchWinner")
   matchParticipants   MatchParticipant[]
@@ -53,20 +57,6 @@ model User {
   avatarsUploaded     Avatar[]        @relation("AvatarUploadedBy")
 
   @@index([username])
-}
-
-model RefreshToken {
-  userId      Int      @id @unique
-  uuid        String   @unique
-  hashedToken String
-  expiresAt   DateTime
-  revoked     Boolean  @default(false)
-  createdAt   DateTime @default(now())
-
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([uuid])
-  @@index([expiresAt])
 }
 
 model Avatar {
