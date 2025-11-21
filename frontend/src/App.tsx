@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
-import  from "./pages/";
 import SignUp from "./pages/SignUp";
 import Testing from "./pages/Testing";
 import Dashboard from "./pages/Dashboard";
