@@ -22,6 +22,9 @@ export default function Landing() {
 		<Button to="/testing">
 			Testing
 		</Button>
+    <Button to="/game">
+      Game
+    </Button>
       </div>
       <ThemeToggle />
     </div>
