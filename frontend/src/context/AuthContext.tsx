@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 
+// below we define what values or functions are accessed with AuthContext
+
 interface AuthContextType {
   accessToken: string | null;
   refreshToken: string | null;
@@ -8,7 +10,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType | null>(null); // is first initialized with null
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [accessToken, setAccessToken] = useState<string | null>(
@@ -32,7 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("refreshToken");
   }
 
-  const isAuthenticated = !!accessToken;
+  const isAuthenticated = !!accessToken; // if token exists, isAuthenticated == true
 
   return (
     <AuthContext.Provider
