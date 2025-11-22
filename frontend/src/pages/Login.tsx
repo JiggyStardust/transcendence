@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
-  const [information, setInformation] = useState<string>("");
+  const [information, setInformation] = useState<string>(""); // adding <string> is optional
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -15,7 +15,7 @@ export default function Login() {
   const { login } = useAuth();
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+    e.preventDefault(); // to prevent browsers default behaviour with forms (reloading the page), optional?
 
     const res = await fetch(PROXY_URL + "/login", {
       method: "POST",
