@@ -33,7 +33,7 @@ export default function SignUp() {
       return;
     }
     console.log("SignUp was succesfull:", data);
-	navigate("/dashboard");
+	navigate("/login");
 	}
 
 // Here we check if username is already in use (saved to backend)
@@ -104,7 +104,8 @@ export default function SignUp() {
   }
 
 	return (
-		<div className="page-bg flex flex-col w-screen items-center justify-center min-h-screen text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300">
+		<div className="flex flex-col w-screen items-center justify-center min-h-screen transition-colors duration-300">
+		<h1 className="font-[Honk] text-[120px]">Ping of Pongs</h1>
 		  <p className="mt-10 text-lg text-center max-w-md">
  			This is where you SignUp!
 	 	  </p>
