@@ -39,11 +39,10 @@ const Settings = ({}) => {
 
 	return (
 		<div className="grid grid-cols-2">
-			<Input id="name" label="Name on server" value={name} onChange={(e) => setName(e.target.value)}/>
-			<Input id="language" label="Language preference" />
-		  <div className="flex m-2 px-4 gap-3">
-		    <label>Two factor authentication</label>
-		    <input type="checkbox" id="twoFactorAuth" />
+			<Input id="name" label="Display name" value={name} onChange={(e) => setName(e.target.value)}/>
+		  <div className="flex m-2 px-4 gap-3 items-center">
+		    <label >Two factor authentication</label>
+		    <input type="checkbox" id="twoFactorAuth"/>
 		  </div>
 		</div>
 	)
