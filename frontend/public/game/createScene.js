@@ -101,11 +101,8 @@ export async function createScene(game) {
 
   // Load font
   const fontArial = await (await fetch("game/assets/Arial_Regular.json")).json();
-  console.log(typeof fontArial);
   const fontScoreBoard = await (await fetch("game/assets/Score_Board_Regular.json")).json();
-  console.log(fontScoreBoard);
   const fontImpact = await (await fetch("game/assets/Impact_Regular.json")).json();
-  console.log(fontImpact);
 
   // Scoreboard and text positions
   var boardVec = new BABYLON.Vector3(0, 1.25, 2.95);
