@@ -11,6 +11,10 @@ export async function createScene(game) {
   const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0.7), game.scene);
   light.intensity = 0.47;
 
+  // Set background color
+
+  game.scene.clearColor = new BABYLON.Color4(0, 0, 0, 0);
+
   // Create scoreboard lights
 
   const yellowLightLeft = new BABYLON.PointLight("yellowLightLeft",
