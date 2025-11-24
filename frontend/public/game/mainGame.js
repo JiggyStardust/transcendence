@@ -1,7 +1,5 @@
 import {game} from "./game.js";
-console.log(game);
 import {parseUsername} from "./parseUsername.js";
-console.log(parseUsername);
 import {createScene} from "./createScene.js";
 import {applyCollision} from "./applyCollision.js";
 import {moveSphere} from "./moveSphere.js";
@@ -12,19 +10,17 @@ import {reset} from "./reset.js";
 import {gameOver} from "./gameOver.js";
 
 // Init
-console.log("log 1");
-
 game.canvas = document.getElementById('renderCanvas');
 game.engine = new BABYLON.Engine(game.canvas, true);
 
-
-await parseUsername(game);
+parseUsername(game);
 await createScene(game);
 
 // Render loop
 game.engine.runRenderLoop(function () {
   //game.currentState = game.state.start; //REMOVE
   //game.currentState = game.state.gameOver;
+  game.canvas.focus();
   switch(game.currentState) {
     case game.state.start:
       reset(game);

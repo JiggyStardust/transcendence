@@ -39,8 +39,8 @@ export const game = {
 	},
 
 	username: {
-		p1: "natalie",
-		p2: "saaraisthebest",
+		p1: "player1",
+		p2: "player2",
 		p1Display: null,
 		p2Display: null,
 	},
