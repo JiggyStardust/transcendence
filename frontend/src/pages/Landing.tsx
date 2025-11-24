@@ -1,6 +1,7 @@
 import { ThemeToggle } from "../components/ThemeToggle";
 import { Button } from "../components/Button";
 import pongImg from "../assets/pong-thumbnail.png";
+import Game from "./Game.tsx";
 
 export default function Landing() {
   return (
@@ -22,9 +23,10 @@ export default function Landing() {
 		<Button to="/testing">
 			Testing
 		</Button>
-    <Button to="/game">
+    {/* <Button to="/game">
       Game
-    </Button>
+    </Button> */}
+    <Game />
       </div>
       <ThemeToggle />
     </div>

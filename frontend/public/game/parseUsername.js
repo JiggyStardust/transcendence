@@ -6,8 +6,7 @@ function truncate(str) {
   return str.slice(0, maxLength) + "...";
 }
 
-
-export async function parseUsername(game) {
+export function parseUsername(game) {
   game.username.p1Display = game.username.p1.toUpperCase();
   game.username.p2Display = game.username.p2.toUpperCase();
   game.username.p1Display = truncate(game.username.p1Display);
