@@ -23,11 +23,10 @@ export default function Landing() {
 		<Button to="/testing">
 			Testing
 		</Button>
-    {/* <Button to="/game">
+    {<Button to="/game">
       Game
-    </Button> */}
-    <Game />
-      </div>
+    </Button>}
+    </div>
       <ThemeToggle />
     </div>
   );
