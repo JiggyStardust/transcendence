@@ -1,17 +1,22 @@
-import {game} from "../frontend/src/game/game.js";
+import {game} from "./game.js";
+console.log(game);
 import {parseUsername} from "./parseUsername.js";
-import {createScene} from "../frontend/src/game/createScene.js";
-import {applyCollision} from "../frontend/src/game/applyCollision.js";
+console.log(parseUsername);
+import {createScene} from "./createScene.js";
+import {applyCollision} from "./applyCollision.js";
 import {moveSphere} from "./moveSphere.js";
 import {moveCamera} from "./moveCamera.js";
 import {updateScoreText} from "./updateScoreText.js";
 import {pointScored} from "./pointScored.js";
 import {reset} from "./reset.js";
-import {gameOver} from "../frontend/src/game/gameOver.js";
+import {gameOver} from "./gameOver.js";
 
 // Init
+console.log("log 1");
+
 game.canvas = document.getElementById('renderCanvas');
 game.engine = new BABYLON.Engine(game.canvas, true);
+
 
 await parseUsername(game);
 await createScene(game);

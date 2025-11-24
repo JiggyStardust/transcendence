@@ -100,9 +100,12 @@ export async function createScene(game) {
   game.paddle2.position.x = 2.7;
 
   // Load font
-  const fontArial = await (await fetch("assets/Arial_Regular.json")).json();
-  const fontScoreBoard = await (await fetch("assets/Score_Board_Regular.json")).json();
-  const fontImpact = await (await fetch("assets/Impact_Regular.json")).json();
+  const fontArial = await (await fetch("game/assets/Arial_Regular.json")).json();
+  console.log(typeof fontArial);
+  const fontScoreBoard = await (await fetch("game/assets/Score_Board_Regular.json")).json();
+  console.log(fontScoreBoard);
+  const fontImpact = await (await fetch("game/assets/Impact_Regular.json")).json();
+  console.log(fontImpact);
 
   // Scoreboard and text positions
   var boardVec = new BABYLON.Vector3(0, 1.25, 2.95);
@@ -132,11 +135,11 @@ export async function createScene(game) {
 
   // Arrow text
   game.arrowLineText = BABYLON.MeshBuilder.CreateText(
-  "arrowLineText",
-  "_",
-  fontScoreBoard,
-  {size: 0.5, resolution: 64, depth: 0.5, letterSpacing: 0},
-  game.scene
+    "arrowLineText",
+    "_",
+    fontScoreBoard,
+    {size: 0.5, resolution: 64, depth: 0.5, letterSpacing: 0},
+    game.scene
   );
   game.arrowLineText.material = mRedText;
   game.arrowLineText.setEnabled(false);

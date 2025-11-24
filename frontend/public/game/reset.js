@@ -28,7 +28,7 @@ function countdown(game) {
   return false;
 }
 
-export async function reset(game) {
+export function reset(game) {
   if (game.reset.complete == false) {
     game.move.ballSpeed = game.move.startingBallSpeed;
     game.reset.timer = game.reset.interval;

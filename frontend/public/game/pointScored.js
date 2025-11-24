@@ -1,4 +1,4 @@
-export async function pointScored(game) {
+export function pointScored(game) {
   game.move.ballSpeed = 0;
   const deltaTime = game.engine.getDeltaTime() / 1000;
   game.pointScored.timer += deltaTime;

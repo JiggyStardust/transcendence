@@ -1,5 +1,5 @@
 
-export async function applyCollision(game) {
+export function applyCollision(game) {
   // Paddle1 Collision
   if (game.sphere.position.x < -game.move.paddleCollisionX
           && game.paddle1.position.z < game.sphere.position.z + (game.move.paddleCollisionSize)

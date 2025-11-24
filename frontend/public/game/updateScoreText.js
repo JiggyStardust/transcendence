@@ -1,4 +1,4 @@
-export async function updateScoreText(game) {
+export function updateScoreText(game) {
   const array = ["0", "1", "2", "3", "4", "5", "6", "7"];
 
   array.forEach((x) => {
