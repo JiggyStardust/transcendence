@@ -1,6 +1,6 @@
 import type { PrismaClient } from "@prisma/client";
-import type { IUserData, DbResult} from "../types";
-import {err, ok} from "../types";
+import type { IUserData, DbResult } from "../types";
+import { err, ok } from "../types";
 
 /**
  * Retrieve a user by username.
@@ -9,10 +9,7 @@ import {err, ok} from "../types";
  * @param username - Target username
  * @returns DbResult with user data or error "NOT_FOUND"
  */
-export const getUser = async (
-  prisma: PrismaClient,
-  username: string,
-): Promise<DbResult<IUserData>> => {
+export const getUser = async (prisma: PrismaClient, username: string): Promise<DbResult<IUserData>> => {
   try {
     const user = await prisma.user.findUniqueOrThrow({
       where: { username },
@@ -20,7 +17,7 @@ export const getUser = async (
         id: true,
         username: true,
         passwordHash: true,
-        isTwoFactorEnabled: true,
+        isTwoFAenabled: true,
       },
     });
 
