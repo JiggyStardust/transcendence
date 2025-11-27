@@ -17,6 +17,8 @@ Select Player 2:
 [Play as guest]```
 
 So there are 2 options, either they can log in or play as guest
+Should also consider if you want more than 2 players. Maybe an inbetween page where we 
+have the user choose 2 or more players.
 
 2.3 Provide second log in form:
     - This does not override player 1's session. 
