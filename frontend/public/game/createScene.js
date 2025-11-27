@@ -56,7 +56,7 @@ export async function createScene(game) {
   mPaddle.diffuseColor = new BABYLON.Color3(2, 2, 2);
 
   var mWall = new BABYLON.StandardMaterial("mWall", game.scene);
-  mWall.diffuseColor = new BABYLON.Color3(0.6, 0.75, 0.75);
+  mWall.diffuseColor = new BABYLON.Color3(0.5, 0.5, 0.5);
 
   var mGround = new BABYLON.StandardMaterial("mGround", game.scene);
   mGround.diffuseColor = new BABYLON.Color3(0, 0, 0);
