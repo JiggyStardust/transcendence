@@ -16,7 +16,7 @@ export interface UserStats {
   losses: number;
 }
 
-export interface UserProfile {
+export interface User {
   id: number;
   username: string; // not sure if we need this at all 
   displayName: string;
@@ -27,17 +27,19 @@ export interface UserProfile {
 }
 
 interface UserContextType {
-  user: UserProfile | null;
+  user: User | null;
   loadUser: () => Promise<void>;
-  updateUser: (data: Partial<UserProfile>) => void;
+
+  updateUser: (data: Partial<User>) => void;
+  
   clearUser: () => void;
 }
 
 const UserContext = createContext<UserContextType | null>(null);
 
-export function UserProvider({ children }: { children: ReactNode }) { // anything react ca n render
+export function UserProvider({ children }: { children: ReactNode }) { // anything react can render
   const { accessToken } = useAuth();
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   // Fetch user profile from backend
   async function loadUser() {
@@ -56,7 +58,7 @@ export function UserProvider({ children }: { children: ReactNode }) { // anythin
 
     const data = await res.json();
 
-    // Expecting backend response to match UserProfile structure later on.
+    // Expecting backend response to match User structure later on.
     setUser({
       id: data.id,
       username: data.username,
@@ -68,8 +70,8 @@ export function UserProvider({ children }: { children: ReactNode }) { // anythin
   }
 
 // Update only specific fields (patch)
-function updateUser(data: Partial<UserProfile>) {
-  setUser((prev: UserProfile) => {
+function updateUser(data: Partial<User>) {
+  setUser((prev: User) => {
     if (!prev) {
 			return prev; // No user loaded yet
 		}
