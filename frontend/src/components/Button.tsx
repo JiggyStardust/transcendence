@@ -4,18 +4,18 @@ import { useNavigate } from "react-router-dom";
 const buttonStyles = cva("font-[Poppins]", {
   variants: {
     variant: {
-      primary: "bg-white-600 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-gray-200 border-black-900 dark:border-black-400",
-      secondary: "bg-white-700 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-gray-200 border-black-800 dark:border-black-500"
+      primary: "bg-neutral-50 dark:bg-neutral-600 hover:bg-gray-200 dark:hover:bg-gray-200 border-black dark:border-black",
+      secondary: "bg-neutral-50 dark:bg-neutral-600 hover:bg-gray-200 dark:hover:bg-gray-200 border-black dark:border-black"
     },
     size: {
-      sm: "text-sm py-1 px-2 rounded-sm border-[0.5px] shadow-md shadow-black-400/60 dark:shadow-pink-600/60",
-      md: "text-base py-2 px-4 rounded-md border-[0.5px] shadow-lg shadow-black-400/60 dark:shadow-pink-500/60",
-	    lg: "text-2xl py-2 px-4 rounded-lg border-[1px] shadow-lg shadow-black-400/60 dark:shadow-pink-500/60"
+      sm: "text-sm py-1 px-2 rounded-sm border-[0.5px] shadow-md shadow-black-60",
+      md: "text-base py-2 px-4 rounded-md border-[0.5px] shadow-lg shadow-black-60",
+	    lg: "text-2xl py-2 px-4 rounded-lg border-[1px] shadow-lg shadow-black-60"
     },
 
     disabled: {
       false: "cursor-pointer",
-      true: "opacity-70 cursor-not-allowed"
+      true: "opacity-30 cursor-not-allowed"
     },
   },
   defaultVariants: {
