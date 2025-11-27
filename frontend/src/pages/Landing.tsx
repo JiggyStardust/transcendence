@@ -16,7 +16,7 @@ export default function Landing() {
         <Button to="/signup" variant="secondary">
           Sign Up
         </Button>
-        <Button to="/signin" variant="primary" size="lg">
+        <Button to="/signin" variant="primary">
           Sign In
         </Button>
 		<Button to="/testing">
