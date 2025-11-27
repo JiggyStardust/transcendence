@@ -10,6 +10,7 @@ import { db } from "../database";
  * Automatically disconnects Prisma when the server shuts down.
  */
 export default fp(async (fastify) => {
+  await db.$connect();
   fastify.decorate("db", db);
   fastify.addHook("onClose", async () => {
     await db.$disconnect();
