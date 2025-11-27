@@ -1,17 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Honk&display=swap");
-
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
 
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Backgrounds */
-@utility bg-gradient {
-  background: white;
-}
-@utility bg-gradient-dark {
-  background: black;
+.font-press-start {
+  font-family: "Press Start 2P", cursive;
 }
 
 /* Buttons */
