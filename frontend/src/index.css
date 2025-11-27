@@ -4,32 +4,33 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Backgorund gradients */
+/* Backgrounds */
 @utility bg-gradient {
-	background: linear-gradient(to bottom, rgba(255, 238, 0, 0.38) 0%, rgb(255, 67, 199) 60%);
+  background: white;
 }
 @utility bg-gradient-dark {
-	background: linear-gradient(to bottom, rgba(176, 26, 119, 0.95) 0%, rgb(23, 21, 23) 40%);
+  background: black;
 }
 
-/* Button background gradients */
+/* Buttons */
 @utility btn-bg {
-	background: linear-gradient(rgb(255, 71, 221), rgb(248, 255, 53));
+  background: white;
 }
 @utility btn-bg-dark {
-	background: linear-gradient(rgba(255, 71, 221, 0.8), rgba(248, 255, 53, 0.8));
+  background: white;
 }
 @utility btn-bg-secondary {
-	background: linear-gradient(rgb(213, 59, 185), rgb(224, 229, 65));
+  background: white;
 }
 @utility btn-bg-secondary-dark {
-	background: linear-gradient(rgba(187, 58, 163, 1), rgba(198, 203, 57, 1));
+  background: white;
 }
 @utility btn-hover-bg {
-	background: linear-gradient(rgb(217, 22, 181), rgb(250, 183, 83));
+  background: black;
 }
 @utility btn-hover-bg-dark {
-	background: linear-gradient(rgb(170, 0, 139), rgb(255, 141, 53));
+  background: white;
 }
+
 
 
