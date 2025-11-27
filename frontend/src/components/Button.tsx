@@ -1,7 +1,7 @@
 import { cva } from "class-variance-authority";
 import { useNavigate } from "react-router-dom";
 
-const buttonStyles = cva("font-[Chango] dark:text-black hover:border-white hover:btn-hover-bg dark:hover:btn-hover-bg-dark", {
+const buttonStyles = cva("font-[Poppins] dark:text-black hover:border-white hover:btn-hover-bg dark:hover:btn-hover-bg-dark", {
   variants: {
     // variant: {
     //   primary: "bg-cyan-600 dark:bg-slate-700 hover:bg-cyan-500 dark:hover:bg-cyan-600 border-pink-900 dark:border-pink-400",
