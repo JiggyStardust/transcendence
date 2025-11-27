@@ -16,7 +16,6 @@ export default function Landing() {
           <IoMdPersonAdd className="text-red-700" /> Sign Up
         </Button>
       </div>
-      <ThemeToggle />
     </div>
   );
 }
