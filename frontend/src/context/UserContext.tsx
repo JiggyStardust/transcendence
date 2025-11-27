@@ -28,10 +28,16 @@ export interface User {
 
 interface UserContextType {
   user: User | null;
+  users: User[];
+
   loadUser: () => Promise<void>;
 
   updateUser: (data: Partial<User>) => void;
-  
+  setDisplayname: (dispayName: string) => void;
+  setAvatar: (avatarUrl: string | null) => void;
+  setStats: (stats: UserStats) => void;
+  setFriends: (friends: Friend[]) => void;
+
   clearUser: () => void;
 }
 
@@ -45,7 +51,7 @@ export function UserProvider({ children }: { children: ReactNode }) { // anythin
   async function loadUser() {
     if (!accessToken) return;
 
-    const res = await fetch(PROXY_URL + "/me", {
+    const res = await fetch(PROXY_URL + "/me", { // not really sure what this API would be called
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
