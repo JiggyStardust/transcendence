@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 const buttonStyles = cva("font-[Poppins] font-medium", {
   variants: {
     variant: {
-      primary: "bg-neutral-50 dark:bg-neutral-600 hover:bg-gray-200 dark:hover:bg-gray-200 border-black dark:border-black",
-      secondary: "bg-neutral-50 dark:bg-neutral-600 hover:bg-gray-200 dark:hover:bg-gray-200 border-black dark:border-black"
+      primary: "bg-vintage-yellow dark:bg-neutral-600 hover:bg-gray-200 dark:hover:bg-gray-200 border-black dark:border-black",
+      secondary: "bg-vintage-yellow dark:bg-neutral-600 hover:bg-gray-200 dark:hover:bg-gray-200 border-black dark:border-black"
     },
     size: {
       sm: "text-sm py-1 px-2 rounded-sm border-[0.5px] shadow-md shadow-black-60",
