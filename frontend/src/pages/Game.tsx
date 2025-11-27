@@ -1,4 +1,3 @@
-import { ThemeToggle } from "../components/ThemeToggle";
 import { useEffect } from "react";
 
 export default function Game() {
@@ -16,7 +15,6 @@ export default function Game() {
   return (
     <div className="page-bg flex flex-col items-center justify-center min-h-screen w-screen">
       <canvas width="1280" height="720" id="renderCanvas"></canvas>
-      <ThemeToggle />
     </div>
   );
 }
