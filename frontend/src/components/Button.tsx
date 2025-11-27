@@ -1,26 +1,18 @@
 import { cva } from "class-variance-authority";
 import { useNavigate } from "react-router-dom";
 
-const buttonStyles = cva("font-[Poppins] dark:text-black hover:border-white hover:btn-hover-bg dark:hover:btn-hover-bg-dark", {
+const buttonStyles = cva("font-[Poppins]", {
   variants: {
-    // variant: {
-    //   primary: "bg-cyan-600 dark:bg-slate-700 hover:bg-cyan-500 dark:hover:bg-cyan-600 border-pink-900 dark:border-pink-400",
-    //   secondary: "bg-cyan-700 dark:bg-slate-800 hover:bg-cyan-600 dark:hover:bg-cyan-700 border-pink-800 dark:border-pink-500"
-    // },
-    // size: {
-    //   sm: "text-sm py-1 px-2 rounded-sm border-[0.5px] shadow-md shadow-cyan-400/60 dark:shadow-pink-600/60",
-    //   md: "text-base py-2 px-4 rounded-md border-[0.5px] shadow-lg shadow-cyan-400/60 dark:shadow-pink-500/60",
-	  //   lg: "text-2xl py-2 px-4 rounded-lg border-[1px] shadow-lg shadow-cyan-400/60 dark:shadow-pink-500/60"
-    // },
     variant: {
-      primary: "btn-bg hover:text-cyan-300 dark:btn-bg-dark  border-yellow-500",
-      secondary: "btn-bg-secondary dark:btn-bg-secondary-dark  hover:text-cyan-400 border-pink-500"
+      primary: "bg-white-600 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-gray-200 border-black-900 dark:border-black-400",
+      secondary: "bg-white-700 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-gray-200 border-black-800 dark:border-black-500"
     },
     size: {
-      sm: "text-sm py-1 px-2 rounded-sm border-2 shadow-md",
-      md: "text-base py-2 px-4 rounded-md border-3 shadow-lg",
-	    lg: "text-2xl py-2 px-4 rounded-lg border-3 shadow-lg"
+      sm: "text-sm py-1 px-2 rounded-sm border-[0.5px] shadow-md shadow-black-400/60 dark:shadow-pink-600/60",
+      md: "text-base py-2 px-4 rounded-md border-[0.5px] shadow-lg shadow-black-400/60 dark:shadow-pink-500/60",
+	    lg: "text-2xl py-2 px-4 rounded-lg border-[1px] shadow-lg shadow-black-400/60 dark:shadow-pink-500/60"
     },
+
     disabled: {
       false: "cursor-pointer",
       true: "opacity-70 cursor-not-allowed"
