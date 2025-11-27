@@ -51,10 +51,9 @@ export const Button = ({ to, onClick, children, variant = "primary", size = "md"
 
   return (
 	<button onClick={handleClick} className={buttonStyles({ variant, size, disabled })}>
-		{/* <p className="bg-linear-to-b from-pink-700 to-yellow-300 dark:from-pink-500 dark:to-yellow-500 bg-clip-text text-transparent">
+    <div className="flex gap-2 items-center">
 			{children}
-		</p> */}
-			{children}
+    </div>
 	</button>
   );
 };
