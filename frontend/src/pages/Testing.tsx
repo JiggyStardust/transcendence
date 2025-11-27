@@ -1,4 +1,3 @@
-import { ThemeToggle } from "../components/ThemeToggle";
 import { Button } from "../components/Button.tsx";
 
 export default function Testing() {
@@ -11,7 +10,6 @@ export default function Testing() {
 				<Button variant="secondary" size="sm">Secondary</Button>
 				<Button variant="secondary" size="md">Secondary</Button>
 				<Button variant="secondary" size="lg">Secondary</Button>
-
 				<Button variant="primary" size="sm" disabled={true} >Primary</Button>
 				<Button variant="primary" size="md" disabled={true}>Primary</Button>
 				<Button variant="primary" size="lg" disabled={true}>Primary</Button>
