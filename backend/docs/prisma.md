@@ -45,5 +45,6 @@ In addition to the built-in [Prisma Client API queries](https://www.prisma.io/do
 ### Custom methods:
 - `db.createUser(username, passwordHash, displayName?)` -> `Promise<DbResult<INewUserData>>`
 - `db.getUser(username)` -> `Promise<DbResult<IUserData>>`
+- `db.getUserProfile(username)` -> `Promise<DbResult<IUserProfile>>`
 
 All custom types -> `backend/src/database/types.ts`
