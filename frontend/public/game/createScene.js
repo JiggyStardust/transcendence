@@ -108,18 +108,18 @@ export async function createScene(game) {
   const fontImpact = await (await fetch("game/assets/Impact_Regular.json")).json();
 
   // Scoreboard and text positions
-  var boardVec = new BABYLON.Vector3(0, 1.25, 2.95);
-  var countVec =  new BABYLON.Vector3(0, boardVec.y, 2.95);
-  var scoreLeftVec = new BABYLON.Vector3(-1, boardVec.y - 0.4, 2.95);
-  var scoreRightVec = new BABYLON.Vector3(1, boardVec.y - 0.4, 2.95);
-  var p1Vec = new BABYLON.Vector3(-1, boardVec.y + 0.5, 2.899);
-  var p2Vec = new BABYLON.Vector3(1, boardVec.y + 0.5, 2.899);
-  var leg1Vec = new BABYLON.Vector3(-1, 0.5, 2.87);
-  var leg2Vec = new BABYLON.Vector3(1, 0.5, 2.87);
-  var arrowVec =  new BABYLON.Vector3(0, boardVec.y - 0.5, 2.95);
-  var arrowRightVec =  new BABYLON.Vector3(0.18, arrowVec.y - 0.14, 2.95);
-  var arrowLeftVec =  new BABYLON.Vector3(-0.18, arrowVec.y - 0.14, 2.95);
-  var gameOverVec =  new BABYLON.Vector3(0, boardVec.y - 0.2, 2.95);
+  const boardVec = new BABYLON.Vector3(0, 1.25, 2.95);
+  const countVec =  new BABYLON.Vector3(0, boardVec.y, 2.95);
+  const scoreLeftVec = new BABYLON.Vector3(-1, boardVec.y - 0.4, 2.95);
+  const scoreRightVec = new BABYLON.Vector3(1, boardVec.y - 0.4, 2.95);
+  const p1Vec = new BABYLON.Vector3(-1, boardVec.y + 0.5, 2.899);
+  const p2Vec = new BABYLON.Vector3(1, boardVec.y + 0.5, 2.899);
+  const leg1Vec = new BABYLON.Vector3(-1, 0.5, 2.87);
+  const leg2Vec = new BABYLON.Vector3(1, 0.5, 2.87);
+  const arrowVec =  new BABYLON.Vector3(0, boardVec.y - 0.5, 2.95);
+  const arrowRightVec =  new BABYLON.Vector3(0.18, arrowVec.y - 0.14, 2.95);
+  const arrowLeftVec =  new BABYLON.Vector3(-0.18, arrowVec.y - 0.14, 2.95);
+  const gameOverVec =  new BABYLON.Vector3(0, boardVec.y - 0.2, 2.95);
 
   // Gameover text
   game.gameOverText = BABYLON.MeshBuilder.CreateText(
