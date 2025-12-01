@@ -1,7 +1,6 @@
 import { ThemeToggle } from "../components/ThemeToggle";
 import { Button } from "../components/Button";
 import pongImg from "../assets/pong-thumbnail.png";
-import Game from "./Game.tsx";
 
 export default function Landing() {
   return (
