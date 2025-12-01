@@ -85,12 +85,12 @@ export async function createScene(game) {
   mWhiteText.specularColor = new BABYLON.Color3(0.3, 0.3, 0.3);
   mWhiteText.alpha = 1.0;
 
-  var mScoreBoard = new BABYLON.StandardMaterial("mScoreText", game.scene);
+  const mScoreBoard = new BABYLON.StandardMaterial("mScoreText", game.scene);
   mScoreBoard.diffuseColor = new BABYLON.Color3(0.6, 0.75, 0.75);
   mScoreBoard.specularPower = 1000000;
 
 
-  var mSphere = new BABYLON.StandardMaterial("mSphere", game.scene);
+  const mSphere = new BABYLON.StandardMaterial("mSphere", game.scene);
   mSphere.diffuseColor = new BABYLON.Color3(1, 1, 1);
   mSphere.emissiveColor = new BABYLON.Color3(0.7, 0.7, 0.7);
 
