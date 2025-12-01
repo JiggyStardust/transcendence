@@ -256,7 +256,7 @@ export async function createScene(game) {
   wallTop.position.z = 2.9;
   wallBottom.position.z = -2.9;
 
-  var wallLeft = BABYLON.MeshBuilder.CreateBox("wallTop", {width: 0.2, height: 0.2, depth: 6}, game.scene);
+  var wallLeft = BABYLON.MeshBuilder.CreateBox("wallLeft", {width: 0.2, height: 0.2, depth: 6}, game.scene);
   wallLeft.position.y = 0.1;
   wallLeft.material = mWall;
 
