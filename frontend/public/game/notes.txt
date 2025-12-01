@@ -1,0 +1,18 @@
+
+CURRENT
+-add dynamic way to change displayed name
+-
+
+CHANGE
+-
+
+MAYBE
+-3rd player clicks ball to change direction.
+	-angle one notch
+	-direction towards opposite player
+	-
+
+
+
+
+

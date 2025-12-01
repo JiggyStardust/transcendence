@@ -1,12 +1,12 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-		<div className='min-h-screen bg-gradient dark:bg-gradient-dark text-black dark:text-white accent-pink-700 dark:accent-yellow-500'>
+		<div className='bg-[#e6dfd3] dark:bg-[#343434] text-black dark:text-white min-h-screen'>
 	    <App />
 		</div>
   </StrictMode>
-);
+)

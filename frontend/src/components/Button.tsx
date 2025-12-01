@@ -1,20 +1,21 @@
 import { cva } from "class-variance-authority";
 import { useNavigate } from "react-router-dom";
 
-const buttonStyles = cva("font-[Chango] dark:text-black hover:border-white hover:btn-hover-bg dark:hover:btn-hover-bg-dark transition duration-300 ease-in-out", {
+const buttonStyles = cva("font-[Poppins] font-medium", {
   variants: {
     variant: {
-      primary: "btn-bg hover:text-cyan-300 dark:btn-bg-dark  border-yellow-500",
-      secondary: "btn-bg-secondary dark:btn-bg-secondary-dark  hover:text-cyan-400 border-pink-500"
+      primary: "hover:bg-vintage-yellow dark:bg-neutral-600 bg-amber-50 dark:hover:bg-neutral-800 border-black dark:border-black",
+      secondary: "hover:bg-vintage-yellow dark:bg-neutral-600 bg-amber-50 dark:hover:bg-neutral-800 border-black dark:border-black"
     },
     size: {
-      sm: "text-sm py-1 px-2 rounded-sm border-2 shadow-md",
-      md: "text-base py-2 px-4 rounded-md border-3 shadow-lg",
-	    lg: "text-2xl py-2 px-4 rounded-lg border-3 shadow-lg"
+      sm: "text-sm py-1 px-2 rounded-lg shadow-md shadow-black-80",
+      md: "text-base py-2 px-4 rounded-lg shadow-lg shadow-black-80",
+	    lg: "text-2xl py-2 px-4 rounded-lg shadow-lg shadow-black-80"
     },
+
     disabled: {
       false: "cursor-pointer",
-      true: "opacity-70 cursor-not-allowed"
+      true: "opacity-30 cursor-not-allowed"
     },
   },
   defaultVariants: {
@@ -50,7 +51,9 @@ export const Button = ({ to, onClick, children, variant = "primary", size = "md"
 
   return (
 	<button onClick={handleClick} className={buttonStyles({ variant, size, disabled })}>
+    <div className="flex gap-2 items-center">
 			{children}
+    </div>
 	</button>
   );
 };
