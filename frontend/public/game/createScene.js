@@ -104,7 +104,6 @@ export async function createScene(game) {
   game.paddle2.position.x = 2.7;
 
   // Load font
-  const fontArial = await (await fetch("game/assets/Arial_Regular.json")).json();
   const fontScoreBoard = await (await fetch("game/assets/Score_Board_Regular.json")).json();
   const fontImpact = await (await fetch("game/assets/Impact_Regular.json")).json();
 
