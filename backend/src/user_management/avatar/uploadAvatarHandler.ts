@@ -3,13 +3,18 @@ import { AvatarType } from "@prisma/client";
 import fs from "fs";
 import path from "path";
 import { pipeline } from "stream/promises";
-import type { DbResult, IUserData } from "../../database/types";
+import type { DbResult, IUserProfile } from "../../database/types";
 
 export interface IUploadAvatarParams {
   username: string;
 }
 
-const ALLOWED_MIMETYPES = ["image/png", "image/jpeg", "image/jpg"];
+// Derive extension from mimetype, not user-provided filename
+const MIMETYPE_TO_EXT: Record<string, string> = {
+  "image/png": ".png",
+  "image/jpeg": ".jpg",
+  "image/jpg": ".jpg",
+};
 
 export const uploadAvatarHandler = async (
   req: FastifyRequest<{ Params: IUploadAvatarParams }>,
@@ -22,7 +27,7 @@ export const uploadAvatarHandler = async (
     return reply.code(403).send({ error: "Forbidden" });
   }
 
-  const result: DbResult<IUserData> = await req.server.db.getUserProfile(username);
+  const result: DbResult<IUserProfile> = await req.server.db.getUserProfile(username);
 
   if (!result.ok) {
     return reply.code(404).send({ error: "User not found" });
@@ -35,13 +40,19 @@ export const uploadAvatarHandler = async (
     return reply.code(400).send({ error: "No file uploaded" });
   }
 
-  // return reply.code(400).send({ error: "File size limit reached" });
+  const mimetype = file.mimetype;
 
-  if (!ALLOWED_MIMETYPES.includes(file.mimetype)) {
+  if (!(mimetype in MIMETYPE_TO_EXT)) {
     return reply.code(400).send({ error: "Invalid file type" });
   }
 
-  const ext = path.extname(file.filename) || ".png";
+  const expectedExt = MIMETYPE_TO_EXT[mimetype];
+  const ext = path.extname(file.filename);
+
+  if (!ext || expectedExt !== ext) {
+    return reply.code(400).send({ error: "Invalid file type" });
+  }
+
   const newFileName = `${dbUser.id}${ext}`;
 
   const uploadsRoot = path.join(process.cwd(), "uploads");
@@ -51,7 +62,13 @@ export const uploadAvatarHandler = async (
 
   const newFilePath = path.join(avatarDir, newFileName);
 
-  await pipeline(file.file, fs.createWriteStream(newFilePath));
+  try {
+    await pipeline(file.file, fs.createWriteStream(newFilePath));
+  } catch (err) {
+    await fs.promises.unlink(newFilePath).catch(() => {});
+    return reply.code(500).send({ error: "Failed to save avatar file" });
+  }
+
   if (file.file.truncated) {
     await fs.promises.unlink(newFilePath).catch(() => {});
     return reply.code(413).send({ error: "File too large" });
@@ -59,13 +76,18 @@ export const uploadAvatarHandler = async (
 
   const newAvatarUrl = `/uploads/avatars/${newFileName}`;
 
-  await req.server.db.user.update({
-    where: { id: dbUser.id },
-    data: {
-      avatarURL: newAvatarUrl,
-      avatarType: AvatarType.CUSTOM,
-    },
-  });
+  try {
+    await req.server.db.user.update({
+      where: { id: dbUser.id },
+      data: {
+        avatarURL: newAvatarUrl,
+        avatarType: AvatarType.CUSTOM,
+      },
+    });
+  } catch (err) {
+    await fs.promises.unlink(newFilePath).catch(() => {});
+    return reply.code(500).send({ error: "Failed to update avatar" });
+  }
 
   return reply.send({ avatarURL: newAvatarUrl });
 };

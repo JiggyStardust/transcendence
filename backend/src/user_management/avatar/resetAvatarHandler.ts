@@ -27,26 +27,40 @@ export const resetAvatarHandler = async (req: FastifyRequest<{ Params: IResetAva
 
   // If current avatar is custom, try to delete file
   if (dbUser.avatarType === AvatarType.CUSTOM) {
+    const uploadsRoot = path.join(process.cwd(), "uploads");
+    const avatarDir = path.join(uploadsRoot, "avatars");
+    const avatarFilename = path.basename(dbUser.avatarURL);
+
+    if (!avatarFilename || avatarFilename.includes("/") || avatarFilename.includes("\\")) {
+      return reply.code(400).send({ error: "Invalid avatar filename" });
+    }
+
+    const filePath = path.join(avatarDir, avatarFilename);
+
+    const relative = path.relative(avatarDir, filePath);
+
+    // Validate: file must remain inside avatarDir
+    if (relative.startsWith("..") || path.isAbsolute(relative)) {
+      return reply.code(400).send({ error: "Invalid avatar path" });
+    }
+
     try {
-      const uploadsRoot = path.join(process.cwd(), "uploads");
-      const relative = dbUser.avatarURL.replace("/uploads/", "");
-      const filePath = path.join(uploadsRoot, relative);
-
-      const avatarDir = path.join(uploadsRoot, "avatars");
-      if (filePath.startsWith(avatarDir)) {
-        await fs.promises.unlink(filePath);
-      }
-
-      await req.server.db.user.update({
-        where: { id: dbUser.id },
-        data: {
-          avatarUrl: DEFAULT_AVATAR_URL,
-          avatarType: AvatarType.DEFAULT,
-        },
-      });
+      await fs.promises.unlink(filePath);
     } catch (err) {
       req.log.warn({ err }, "Failed to delete custom avatar on reset");
     }
+  }
+
+  try {
+    await req.server.db.user.update({
+      where: { id: dbUser.id },
+      data: {
+        avatarURL: DEFAULT_AVATAR_URL,
+        avatarType: AvatarType.DEFAULT,
+      },
+    });
+  } catch (err) {
+    return reply.code(500).send({ error: "Failed to update avatar" });
   }
 
   return reply.send({ avatarURL: DEFAULT_AVATAR_URL });

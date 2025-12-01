@@ -62,7 +62,7 @@ GET /users/check-username?username=alice
 
 **Usage Notes:**
 
-- Avatars are served as static images from the backend. On the frontend, it’s enough to use `avatarURL` directly as an `<img src={API_URL + avatarUrl}>`.
+- Avatars are served as static images from the backend. On the frontend, it’s enough to use `avatarURL` directly as an `<img src={API_URL + avatarURL}>`.
 - Uploaded files:  
   - Max size: 2 MB
   - Allowed types: `image/jpeg`, `image/jpg`, `image/png`
@@ -103,7 +103,7 @@ curl -X POST "http://localhost:4000/users/demoUser/avatar" \
 
 The image is:
 - validated (size + mimetype),
-- NOT resized, NOT modifyed,
+- NOT resized, NOT modified,
 - saved to disk under `/uploads/avatars/…`,
 - and the user’s avatarURL is updated.
 
@@ -186,7 +186,7 @@ curl -X DELETE "http://localhost:4000/users/demoUser/avatar" \
 
 ```json
 {
-  "avatarUrl": "/uploads/avatars/default.jpeg"
+  "avatarURL": "/uploads/avatars/default.jpeg"
 }
 ```
 
