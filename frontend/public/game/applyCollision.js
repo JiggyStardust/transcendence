@@ -1,10 +1,12 @@
 
 export function applyCollision(game) {
+  console.log(game.middlePaddleFlag);
   // Paddle1 Collision
   if (game.sphere.position.x < -game.move.paddleCollisionX
           && game.paddle1.position.z < game.sphere.position.z + (game.move.paddleCollisionSize)
           && game.paddle1.position.z > game.sphere.position.z - (game.move.paddleCollisionSize)
           && game.move.direction.x < 0) {
+    game.middlePaddleFlag = true;
     if (game.move.ballSpeed < game.move.maxBallSpeed)
       game.move.ballSpeed += game.move.ballSpeedIncrement;
     if (game.paddle1.position.z < game.sphere.position.z + (game.move.paddleSize / 6)
@@ -65,6 +67,7 @@ export function applyCollision(game) {
           && game.paddle2.position.z < game.sphere.position.z + (game.move.paddleCollisionSize)
           && game.paddle2.position.z > game.sphere.position.z - (game.move.paddleCollisionSize)
           && game.move.direction.x > 0) {
+    game.middlePaddleFlag = true;
     if (game.move.ballSpeed < game.move.maxBallSpeed)
       game.move.ballSpeed += game.move.ballSpeedIncrement;
     if (game.paddle2.position.z < game.sphere.position.z + (game.move.paddleSize / 6)
@@ -140,5 +143,19 @@ export function applyCollision(game) {
   else if (game.sphere.position.x < -game.move.scoreCollisionX) {
     game.currentState = game.state.pointScored;
     game.score.p2++;
+  }
+
+  // Paddle 3
+  if (game.paddle3.position.z < game.sphere.position.z + (game.move.paddle3CollisionSize)
+          && game.paddle3.position.z > game.sphere.position.z - (game.move.paddle3CollisionSize)
+          && game.middlePaddleFlag === true) {
+    if (game.sphere.position.x >= -0.5 && game.sphere.position.x <= 0.5 && game.move.direction.x > 0){
+      game.move.direction.x = -game.move.direction.x;
+      game.middlePaddleFlag = false;
+    }
+    else if (game.sphere.position.x <= 0.5 && game.sphere.position.x >= -0.5 && game.move.direction.x < 0){
+      game.move.direction.x = -game.move.direction.x;
+      game.middlePaddleFlag = false;
+    }
   }
 }
