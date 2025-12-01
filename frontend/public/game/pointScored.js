@@ -8,7 +8,7 @@ export function pointScored(game) {
     game.sphere.position.z = game.move.zStartingPos;
     game.paddle1.position.z = 0;
     game.paddle2.position.z = 0;
-    if (game.score.p1 == game.score.max || game.score.p2 == game.score.max)
+    if (game.score.p1 === game.score.max || game.score.p2 === game.score.max)
       game.currentState = game.state.gameOver;
     else 
       game.currentState = game.state.reset;
