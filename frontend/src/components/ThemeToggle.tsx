@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { FiSun } from "react-icons/fi";
-import { FiMoon } from "react-icons/fi";
+import { FiSun, FiMoon } from "react-icons/fi";
 
 export const ThemeToggle: React.FC = () => {
 
