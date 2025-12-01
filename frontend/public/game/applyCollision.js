@@ -141,5 +141,4 @@ export function applyCollision(game) {
     game.currentState = game.state.pointScored;
     game.score.p2++;
   }
-  return;
 }
