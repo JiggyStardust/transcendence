@@ -146,14 +146,15 @@ export function applyCollision(game) {
   }
 
   // Paddle 3
+  const p3offset = 0.3;
   if (game.paddle3.position.z < game.sphere.position.z + (game.move.paddle3CollisionSize)
           && game.paddle3.position.z > game.sphere.position.z - (game.move.paddle3CollisionSize)
           && game.middlePaddleFlag === true) {
-    if (game.sphere.position.x >= -0.5 && game.sphere.position.x <= 0.5 && game.move.direction.x > 0){
+    if (game.sphere.position.x >= -p3offset && game.sphere.position.x <= p3offset && game.move.direction.x > 0){
       game.move.direction.x = -game.move.direction.x;
       game.middlePaddleFlag = false;
     }
-    else if (game.sphere.position.x <= 0.5 && game.sphere.position.x >= -0.5 && game.move.direction.x < 0){
+    else if (game.sphere.position.x <= p3offset && game.sphere.position.x >= -p3offset && game.move.direction.x < 0){
       game.move.direction.x = -game.move.direction.x;
       game.middlePaddleFlag = false;
     }

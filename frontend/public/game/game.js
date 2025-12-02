@@ -82,6 +82,7 @@ export const game = {
 		paddleSize: 1.5,
 		paddleCollisionSize: 0.95,
 		paddle3CollisionSize: 0.775,
+		p3StartingZ: -2,
 		startingBallSpeed: 2.5,
 		ballSpeed: 2.5,
 		ballSpeedIncrement: 0.08,
