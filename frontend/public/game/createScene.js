@@ -128,6 +128,9 @@ export async function createScene(game) {
   const arrowRightVec =  new BABYLON.Vector3(0.18, arrowVec.y - 0.14, 2.95);
   const arrowLeftVec =  new BABYLON.Vector3(-0.18, arrowVec.y - 0.14, 2.95);
   const gameOverVec =  new BABYLON.Vector3(0, boardVec.y - 0.2, 2.95);
+  const p3Vec = new BABYLON.Vector3(-2.9, 1.05, 2.899);
+  const p3BoardVec = new BABYLON.Vector3(-2.9, 1, 2.95);
+  const p3BorderVec = new BABYLON.Vector3(-2.9, 0.75, 2.95);
 
   // Gameover text
   game.gameOverText = BABYLON.MeshBuilder.CreateText(
@@ -140,6 +143,20 @@ export async function createScene(game) {
   game.gameOverText.material = mRedText;
   game.gameOverText.setEnabled(false);
   game.gameOverText.position = gameOverVec;
+
+  if (game.hasThirdPlayer) {
+    var p3Border = BABYLON.MeshBuilder.CreateText(
+      "gameOverText",
+      "+",
+      fontScoreBoard,
+      {size: 0.35, resolution: 64, depth: 0.5, letterSpacing: 0},
+      game.scene
+    );
+    p3Border.material = mRedText;
+    p3Border.rotation.y = -0.5;
+    p3Border.setEnabled(true);
+    p3Border.position = p3BorderVec;
+  }
 
   // Arrow text
   game.arrowLineText = BABYLON.MeshBuilder.CreateText(
@@ -218,8 +235,7 @@ export async function createScene(game) {
   game.p2NameText.position = p2Vec;
 
   if (game.hasThirdPlayer) {
-    // -2.9, 1, 2.95
-    const p3Vec = new BABYLON.Vector3(-2.9, 0.95, 2.899);
+    
 
     game.p3NameText = BABYLON.MeshBuilder.CreateText(
       "p3NameText",
@@ -270,9 +286,8 @@ export async function createScene(game) {
   leg2.position = leg2Vec;
   leg2.material = mScoreBoard;
 
+  // p3ScoreBoard and legs
   if (game.hasThirdPlayer) {
-    // p3ScoreBoard
-    const p3BoardVec = new BABYLON.Vector3(-2.9, 1, 2.95);
 
     const p3ScoreBoard = BABYLON.MeshBuilder.CreateBox("p3ScoreBoard", {width: 1.4, height: .7, depth: .25}, game.scene);
     p3ScoreBoard.position = p3BoardVec;
