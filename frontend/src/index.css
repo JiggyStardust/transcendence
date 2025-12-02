@@ -6,10 +6,14 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+.yellow {
+  color: #e3cc98;
+}
+
 .font-press-start {
   font-family: "Press Start 2P", cursive;
 }
 
 @theme {
-  --color-vintage-yellow: #e3cc98;
+  --color-vintage-yellow: var(yellow);
 }
