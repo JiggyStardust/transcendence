@@ -43,9 +43,9 @@ export const game = {
 	},
 
 	username: {
-		p1: "player1",
-		p2: "player2",
-		p3: "player3",
+		p1: "Player1",
+		p2: "Player2",
+		p3: "Player3",
 		p1Display: null,
 		p2Display: null,
 		p3Display: null
