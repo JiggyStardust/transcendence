@@ -47,7 +47,7 @@ have the user choose 2 or more players.
 
 ```Player 1: Julia (logged in)
 
-🎮 Local Game Setup
+Local Game Setup
 
 Player 2 identity:
 [  username: ________  ]

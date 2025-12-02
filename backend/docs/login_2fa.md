@@ -15,9 +15,12 @@ curl -X POST http://localhost:4000/signup \
   -d '{"username":"demoUser","password":"demoPass"}'
 ```
 
-### to log in
+### to log in (this will explicitly tell curl to save cookies and send them back)
 
-```curl -X POST http://localhost:4000/login \
+```
+curl -i \
+  -c cookies.txt \
+curl -X POST http://localhost:4000/login \
   -H "Content-Type: application/json" \
   -d '{"username":"demoUser","password":"demoPass"}'
 ```
@@ -90,3 +93,8 @@ curl -X POST http://localhost:3000/verify-2fa \
   -H "Content-Type: application/json" \
   -d '{"token": "123456", "secret": "JBSWY3DPEHPK3PXP"}'
 ``` 
+
+## to test a protected route
+```
+curl -b cookies.txt http://localhost:4000/protected
+```
