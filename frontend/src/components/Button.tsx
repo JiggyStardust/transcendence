@@ -1,11 +1,11 @@
 import { cva } from "class-variance-authority";
 import { useNavigate } from "react-router-dom";
 
-const buttonStyles = cva("font-[Poppins] font-medium", {
+const buttonStyles = cva("font-tomorrow font-medium", {
   variants: {
     variant: {
-      primary: "hover:bg-vintage-yellow dark:bg-neutral-600 bg-amber-50 dark:hover:bg-neutral-800 border-black dark:border-black",
-      secondary: "hover:bg-vintage-yellow dark:bg-neutral-600 bg-amber-50 dark:hover:bg-neutral-800 border-black dark:border-black"
+      primary: "hover:bg-vintage-yellow/60 dark:bg-stone-600 bg-amber-50 dark:hover:bg-neutral-800",
+      secondary: "hover:bg-vintage-yellow/60 text-stone-700 dark:text-stone-200 border border-stone-600 dark:border-amber-50 dark:hover:bg-neutral-800 "
     },
     size: {
       sm: "text-sm py-1 px-2 rounded-lg shadow-md shadow-black-80",
