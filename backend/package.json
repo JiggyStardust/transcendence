@@ -14,9 +14,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fastify/cookie": "^11.0.2",
     "@fastify/cors": "^11.1.0",
     "@fastify/formbody": "^8.0.2",
     "@prisma/client": "^6.19.0",
+    "@types/cookie-parser": "^1.4.10",
     "bcrypt": "^6.0.0",
     "better-sqlite3": "^12.4.1",
     "dotenv": "^17.2.3",

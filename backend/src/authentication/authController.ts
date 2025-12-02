@@ -172,11 +172,22 @@ export async function login(req: FastifyRequest<{ Body: IAuthRequestBody }>, rep
   // TODO:
   // - store refresh token as deterministic hash (SHA256)
   // - [ security ] set the refresh token in an HttpOnly cookie
-  // - short-lived tocken in json - OK
-  reply.send({
-    userId: user.id,
-    username: user.username,
-    accessToken,
-    refreshToken, // should be set as HttpOnly cookie
-  });
+  // - short-lived tocken in json - OK - both as cookies?
+
+  reply
+    .setCookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: true,
+      //sameSite: "Strict",
+      maxAge: 15 * 60 * 1000,
+      path: "/"
+    })
+    .setCookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      //sameSite: "Strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/"
+    })
+    .send({ message: "Logged in!" });
 }
