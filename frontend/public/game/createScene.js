@@ -217,6 +217,23 @@ export async function createScene(game) {
   game.p2NameText.setEnabled(true);
   game.p2NameText.position = p2Vec;
 
+  if (game.hasThirdPlayer) {
+    // -2.9, 1, 2.95
+    const p3Vec = new BABYLON.Vector3(-2.9, 0.95, 2.899);
+
+    game.p3NameText = BABYLON.MeshBuilder.CreateText(
+      "p3NameText",
+      game.username.p3Display,
+      fontImpact,
+      {size: 0.18, resolution: 64,depth: 0.2},
+      game.scene
+    );
+    game.p3NameText.material = mWhiteText;
+    game.p3NameText.rotation.y = -0.5;
+    game.p3NameText.setEnabled(true);
+    game.p3NameText.position = p3Vec;
+  }
+
 
   // Score text
   const array = ["0", "1", "2", "3", "4", "5", "6", "7"];
@@ -252,6 +269,26 @@ export async function createScene(game) {
   const leg2 = BABYLON.MeshBuilder.CreateBox("leg2", {width: 0.13, height: 0.5, depth: 0.13}, game.scene);
   leg2.position = leg2Vec;
   leg2.material = mScoreBoard;
+
+  if (game.hasThirdPlayer) {
+    // p3ScoreBoard
+    const p3BoardVec = new BABYLON.Vector3(-2.9, 1, 2.95);
+
+    const p3ScoreBoard = BABYLON.MeshBuilder.CreateBox("p3ScoreBoard", {width: 1.4, height: .7, depth: .25}, game.scene);
+    p3ScoreBoard.position = p3BoardVec;
+    p3ScoreBoard.rotation.y = -0.5;
+    p3ScoreBoard.material = mScoreBoard;
+    p3ScoreBoard.material.maxSimultaneousLights = 8;
+
+    // p3Legs
+    const p3LegVec = new BABYLON.Vector3(-2.9, 0.5, 2.87);
+
+    const p3Leg = BABYLON.MeshBuilder.CreateBox("p3Leg", {width: 0.13, height: 0.5, depth: 0.1}, game.scene);
+    p3Leg.position = p3LegVec;
+    p3Leg.rotation.y = -0.5;
+    p3Leg.material = mScoreBoard;
+
+  }
 
 
   // Sidewalls

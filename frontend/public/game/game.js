@@ -28,6 +28,7 @@ export const game = {
 	winnerText: null,
 	p1NameText: null,
 	p2NameText: null,
+	p3NameText: null,
 	middlePaddleFlag: false,
 	startingCameraY: 7,
 	currentCameraZ: 2,
@@ -44,8 +45,10 @@ export const game = {
 	username: {
 		p1: "player1",
 		p2: "player2",
+		p3: "player3",
 		p1Display: null,
 		p2Display: null,
+		p3Display: null
 	},
 
 	score: {
