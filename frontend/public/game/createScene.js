@@ -102,10 +102,13 @@ export async function createScene(game) {
   game.paddle2 = game.paddle1.clone("paddle2");
   game.paddle1.position.x = -2.7;
   game.paddle2.position.x = 2.7;
-  game.paddle3 = BABYLON.MeshBuilder.CreateBox("paddle3", {width: 0.2, height: 0.3, depth: 0.75}, game.scene);
-  game.paddle3.position.y = 0.125;
-  game.paddle3.position.x = 0;
-  game.paddle3.position.z = game.move.p3StartingZ;
+
+  if (game.hasThirdPlayer) {
+    game.paddle3 = BABYLON.MeshBuilder.CreateBox("paddle3", {width: 0.2, height: 0.3, depth: 0.75}, game.scene);
+    game.paddle3.position.y = 0.125;
+    game.paddle3.position.x = 0;
+    game.paddle3.position.z = game.move.p3StartingZ;
+  }
   
 
   // Load font
@@ -309,7 +312,6 @@ export async function createScene(game) {
   game.scene.onBeforeRenderObservable.add(() => {
     const paddleSpeed = 0.17;
     const sidePosition = 2.05;
-    //const sidePosPaddle3 = 2.55;l
     if (game.currentState != game.state.pointScored) {
       if (inputMap["w"] && game.paddle1.position.z + paddleSpeed < sidePosition) {
         game.paddle1.position.z += paddleSpeed;
@@ -323,12 +325,14 @@ export async function createScene(game) {
       if (inputMap["ArrowDown"] && game.paddle2.position.z - paddleSpeed > -sidePosition) {
         game.paddle2.position.z -= paddleSpeed;
       }
-      if (inputMap["-"] && game.paddle3.position.z + paddleSpeed < 2.45
-          && !(!game.currentState == game.state.playing && game.paddle3.position.z + paddleSpeed > -0.75)) {
-        game.paddle3.position.z += paddleSpeed;
-      }
-      if (inputMap["+"] && game.paddle3.position.z - paddleSpeed > -2.45) {
-        game.paddle3.position.z -= paddleSpeed;
+      if (game.hasThirdPlayer) {
+        if (inputMap["-"] && game.paddle3.position.z + paddleSpeed < 2.45
+            && !(!game.currentState == game.state.playing && game.paddle3.position.z + paddleSpeed > -0.75)) {
+          game.paddle3.position.z += paddleSpeed;
+        }
+        if (inputMap["+"] && game.paddle3.position.z - paddleSpeed > -2.45) {
+          game.paddle3.position.z -= paddleSpeed;
+        }
       }
     }
   });
@@ -340,5 +344,6 @@ export async function createScene(game) {
 
   game.paddle1 = game.scene.getMeshByName("paddle1");
   game.paddle2 = game.scene.getMeshByName("paddle2");
-  game.paddle3 = game.scene.getMeshByName("paddle3");
+  if (game.hasThirdPlayer)
+    game.paddle3 = game.scene.getMeshByName("paddle3");
 }

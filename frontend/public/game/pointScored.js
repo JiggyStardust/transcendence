@@ -8,7 +8,8 @@ export function pointScored(game) {
     game.sphere.position.z = game.move.zStartingPos;
     game.paddle1.position.z = 0;
     game.paddle2.position.z = 0;
-    game.paddle3.position.z = game.move.p3StartingZ;
+    if (game.hasThirdPlayer)
+      game.paddle3.position.z = game.move.p3StartingZ;
     if (game.score.p1 === game.score.max || game.score.p2 === game.score.max)
       game.currentState = game.state.gameOver;
     else 
