@@ -1,5 +1,5 @@
 
-function keyboardInput(game) {
+function getKeyboardInput(game) {
   const inputMap = {};
   game.scene.actionManager = new BABYLON.ActionManager(game.scene);
 
@@ -163,27 +163,7 @@ function createMeshPositions(POS) {
   POS.plusSignP3 = new BABYLON.Vector3(-2.9, 0.75, 2.95);
 }
 
-export async function createScene(game) {
-  // Create scene
-  game.scene = new BABYLON.Scene(game.engine);
-  // Set background color
-  game.scene.clearColor = new BABYLON.Color4(0, 0, 0, 0);
-
-  var font = {};
-  font.scoreboard = await (await fetch("game/assets/Score_Board_Regular.json")).json();
-  font.impact = await (await fetch("game/assets/Impact_Regular.json")).json();
-  createCamera(game);
-  createLights(game);
-  var material = {};
-  createMaterial(game, material);
-  createPaddles(game, material);
-  var POS = {};
-  createMeshPositions(POS);
-
-  // Scoreboard and text positions
-
-
-  // Gameover text
+function createGameOverText(game, POS, material, font) {
   game.gameOverText = BABYLON.MeshBuilder.CreateText(
     "gameOverText",
     "FINAL",
@@ -208,8 +188,9 @@ export async function createScene(game) {
     p3Border.setEnabled(true);
     p3Border.position = POS.plusSignP3;
   }
+}
 
-  // Arrow text
+function createArrowText(game, POS, material, font) {
   game.arrowLineText = BABYLON.MeshBuilder.CreateText(
     "arrowLineText",
     "_",
@@ -242,8 +223,9 @@ export async function createScene(game) {
   game.arrowLeftText.material = material.redText;
   game.arrowLeftText.setEnabled(false);
   game.arrowLeftText.position = POS.arrowLeft;
+}
 
-  // Countdown text
+function createCountdownText(game, POS, material, font) {
   const array2 = ["1", "2", "3"];
   array2.forEach((x) => {
       const countdownText = BABYLON.MeshBuilder.CreateText(
@@ -261,8 +243,9 @@ export async function createScene(game) {
   game.countdownText1 = game.scene.getMeshByName("countdownText1");
   game.countdownText2 = game.scene.getMeshByName("countdownText2");
   game.countdownText3 = game.scene.getMeshByName("countdownText3");
+}
 
-  // Player name text
+function createPlayerNameText(game, POS, material, font) {
   game.p1NameText = BABYLON.MeshBuilder.CreateText(
     "p1NameText",
     game.username.p1Display,
@@ -300,9 +283,9 @@ export async function createScene(game) {
     game.p3NameText.setEnabled(true);
     game.p3NameText.position = POS.nameP3;
   }
+}
 
-
-  // Score text
+function createScoreText(game, POS, material, font) {
   const array = ["0", "1", "2", "3", "4", "5", "6", "7"];
   array.forEach((x) => {
       const scoreTextLeft = BABYLON.MeshBuilder.CreateText(
@@ -321,14 +304,14 @@ export async function createScene(game) {
     scoreTextLeft.position = POS.scoreP1;
     scoreTextRight.position = POS.scoreP2;
   });
+}
 
-  // ScoreBoard
+function createScoreboard(game, POS, material, font) {
   const scoreBoard = BABYLON.MeshBuilder.CreateBox("scoreBoard", {width: 3.5, height: 1.75, depth: 0.3}, game.scene);
   scoreBoard.position = POS.scoreboard;
   scoreBoard.material = material.scoreboard;
   scoreBoard.material.maxSimultaneousLights = 8;
 
-  // Legs
   const leg1 = BABYLON.MeshBuilder.CreateBox("leg1", {width: 0.13, height: 0.5, depth: 0.13}, game.scene);
   leg1.position = POS.legLeft;
   leg1.material = material.scoreboard;
@@ -336,67 +319,88 @@ export async function createScene(game) {
   const leg2 = BABYLON.MeshBuilder.CreateBox("leg2", {width: 0.13, height: 0.5, depth: 0.13}, game.scene);
   leg2.position = POS.legRight;
   leg2.material = material.scoreboard;
+}
 
-  // POS.scoreboardP3 and legs
+function createScoreboardP3(game, POS, material, font) {
   if (game.hasThirdPlayer) {
-
     const scoreboardP3 = BABYLON.MeshBuilder.CreateBox("POS.scoreboardP3", {width: 1.4, height: .7, depth: .25}, game.scene);
     scoreboardP3.position = POS.scoreboardP3;
     scoreboardP3.rotation.y = -0.5;
     scoreboardP3.material = material.scoreboard;
     scoreboardP3.material.maxSimultaneousLights = 8;
 
-    // p3Legs
     const p3LegVec = new BABYLON.Vector3(-2.9, 0.5, 2.87);
 
     const p3Leg = BABYLON.MeshBuilder.CreateBox("p3Leg", {width: 0.13, height: 0.5, depth: 0.1}, game.scene);
     p3Leg.position = p3LegVec;
     p3Leg.rotation.y = -0.5;
     p3Leg.material = material.scoreboard;
-
   }
+}
 
-
-  // Sidewalls
+function createGameBoard(game, material) {
+  var ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 6, height: 6}, game.scene);
+  ground.material = material.ground;
+  
   var wallTop = BABYLON.MeshBuilder.CreateBox("wallTop", {width: 6, height: 0.2, depth: 0.2}, game.scene);
   wallTop.position.y = 0.1;
   wallTop.position.x = 0;
   wallTop.material = material.wall;
-
+  
   var wallBottom = wallTop.clone("wallBottom");
   wallTop.position.z = 2.9;
   wallBottom.position.z = -2.9;
-
+  
   var wallLeft = BABYLON.MeshBuilder.CreateBox("wallLeft", {width: 0.2, height: 0.2, depth: 6}, game.scene);
   wallLeft.position.y = 0.1;
   wallLeft.material = material.wall;
-
+  
   var wallRight = wallLeft.clone("wallRight");
   wallLeft.position.x = -2.9;
   wallRight.position.x = 2.9;
 
-  // Base
-  const h = 60;
-  const y = (h / 2) * -1;
-  var base = BABYLON.MeshBuilder.CreateBox("base", {width: 6, height: h, depth: 6}, game.scene);
-  base.position.y = y;
-  base.position.x = 0;
-  base.material = material.wall;
-  
-  // Ground
-  var ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 6, height: 6}, game.scene);
-  ground.material = material.ground;
-
-  // Sphere
-  game.sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 0.4, segments: 32}, game.scene);
-  game.sphere.position.y = 0.2;
-  game.sphere.material = material.sphere;
-
-  // Center line
   var centerLine = BABYLON.MeshBuilder.CreateBox("centerLine", {width: 0.1, height: 0.1, depth: 5.8}, game.scene);
   centerLine.position.y = -0.049;
   centerLine.position.z = 0;
   centerLine.material = material.paddle;
+  
+  var base = BABYLON.MeshBuilder.CreateBox("base", {width: 6, height: 60, depth: 6}, game.scene);
+  base.position.y = -30;
+  base.position.x = 0;
+  base.material = material.wall;
+}
 
-  keyboardInput(game);
+function createSphere(game, material) {
+  game.sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 0.4, segments: 32}, game.scene);
+  game.sphere.position.y = 0.2;
+  game.sphere.material = material.sphere;
+}
+
+export async function createScene(game) {
+  var font = {};
+  var material = {};
+  var POS = {};
+
+  game.scene = new BABYLON.Scene(game.engine);
+  game.scene.clearColor = new BABYLON.Color4(0, 0, 0, 0);
+  font.scoreboard = await (await fetch("game/assets/Score_Board_Regular.json")).json();
+  font.impact = await (await fetch("game/assets/Impact_Regular.json")).json();
+  
+  createCamera(game);
+  createLights(game);
+  createMaterial(game, material);
+  createMeshPositions(POS);
+
+  createPaddles(game, material);
+  createGameBoard(game, material);
+  createSphere(game, material);
+
+  createScoreboard(game, POS, material, font);
+  createPlayerNameText(game, POS, material, font);
+  createScoreText(game, POS, material, font);
+  createCountdownText(game, POS, material, font);
+  createGameOverText(game, POS, material, font);
+  createArrowText(game, POS, material, font);
+  createScoreboardP3(game, POS, material, font);
+  getKeyboardInput(game);
 }
