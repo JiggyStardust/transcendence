@@ -11,7 +11,7 @@ type InputProps = {
 export default function Input({id, label, type = "text", value, onChange, onBlur,}: InputProps) {
 
 	return (
-		<div className="flex flex-col m-2 px-4">
+		<div className="flex flex-col m-2 px-4  text-black dark:text-white">
 			<label className="flex justify-left">
 				{label}
 			</label>
