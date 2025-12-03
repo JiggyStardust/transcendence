@@ -12,12 +12,12 @@ type InputProps = {
 export default function Input({id, label, type = "text", value, tooltip, onChange, onBlur,}: InputProps) {
 
 	return (
-		<div className="flex flex-col m-2 px-4  text-black dark:text-white">
+		<div className="flex flex-col m-2 px-4 text-black dark:text-white">
 			<div className="relative group">
 				<label className="flex justify-left">
 					{label}
 				</label>
-				<div className="absolute bottom-full w-max px-2 py-1 text-sm bg-gray-700 rounded shadow-lg opacity-0 group-hover:opacity-100">
+				<div className="absolute bottom-full w-max px-2 py-1 text-sm bg-vintage-yellow/30 dark:bg-stone-600 rounded shadow-lg opacity-0 group-hover:opacity-100">
           {tooltip}
 				</div>
 			</div>
