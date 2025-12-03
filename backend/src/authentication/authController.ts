@@ -197,3 +197,25 @@ export async function login(req: FastifyRequest<{ Body: IAuthRequestBody }>, rep
     })
     .send({ message: "Logged in!" })
 }
+
+export async function verify_player(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
+  const { username, password } = req.body;
+ 
+  if (!username || !password) {
+    return reply.code(400).send({ error: "Username and password are required" });
+  }
+
+  const result = await req.server.db.getUser(username);
+  if (!result.ok) return reply.code(401).send({ error: "Invalid username or password" });
+
+  const user: IUserData = result.data;
+
+  const valid = await bcrypt.compare(password, user.passwordHash);
+  if (!valid) return reply.code(401).send({ error: "Invalid username or password" });
+
+  return {
+    status: "verified",
+    userID: user.id,
+    username: user.username
+  };
+}
