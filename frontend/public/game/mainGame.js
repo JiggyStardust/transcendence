@@ -3,7 +3,6 @@ import {parseUsername} from "./parseUsername.js";
 import {createScene} from "./createScene.js";
 import {applyCollision} from "./applyCollision.js";
 import {moveSphere} from "./moveSphere.js";
-import {moveCamera} from "./moveCamera.js";
 import {updateScoreText} from "./updateScoreText.js";
 import {pointScored} from "./pointScored.js";
 import {reset} from "./reset.js";
@@ -18,8 +17,6 @@ await createScene(game);
 
 // Render loop
 game.engine.runRenderLoop(function () {
-  //game.currentState = game.state.start; //REMOVE
-  //game.currentState = game.state.gameOver;
   game.canvas.focus();
   switch(game.currentState) {
     case game.state.start:
@@ -28,7 +25,6 @@ game.engine.runRenderLoop(function () {
     case game.state.playing:
       applyCollision(game);
       moveSphere(game);
-      moveCamera(game);
       break;
     case game.state.pointScored:
       pointScored(game);

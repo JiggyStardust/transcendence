@@ -8,7 +8,9 @@ export default function Game() {
     document.body.appendChild(script);
 
     return () => {
-      document.body.removeChild(script);
+      if (script.parentNode === document.body) {
+        document.body.removeChild(script);
+      }
     };
   }, []);
 
