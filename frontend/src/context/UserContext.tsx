@@ -68,7 +68,7 @@ export function UserProvider({ children }: { children: ReactNode }) { // anythin
     setUser({
       id: data.id,
       username: data.username,
-      displayName: data.displayName ?? "", // if undefined, use the value on the right
+      displayName: data.displayName ?? data.username, // if undefined, use the value on the right (username)
       avatarUrl: data.avatarUrl ?? null, // we might have a default pic then?
       friends: data.friends ?? [],
       stats: data.stats ?? null
