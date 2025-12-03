@@ -159,21 +159,33 @@ function createMeshPositions(POS) {
   POS.arrowMiddle =  new BABYLON.Vector3(0, POS.scoreboard.y - 0.5, 2.95);
   POS.arrowLeft =  new BABYLON.Vector3(-0.18, POS.arrowMiddle.y - 0.14, 2.95);
   POS.arrowRight =  new BABYLON.Vector3(0.18, POS.arrowMiddle.y - 0.14, 2.95);
-  POS.gameover =  new BABYLON.Vector3(0, POS.scoreboard.y - 0.2, 2.95);
+  POS.gameoverFinal =  new BABYLON.Vector3(0, POS.scoreboard.y + 0.1, 2.95);
+  POS.gameoverScore =  new BABYLON.Vector3(0, POS.scoreboard.y - 0.35, 2.95);
   POS.plusSignP3 = new BABYLON.Vector3(-2.9, 0.75, 2.95);
 }
 
 function createGameOverText(game, POS, material, font) {
-  game.gameOverText = BABYLON.MeshBuilder.CreateText(
-    "gameOverText",
+  game.gameOverFinalText = BABYLON.MeshBuilder.CreateText(
+    "gameOverFinalText",
     "FINAL",
     font.scoreboard,
     {size: 0.3, resolution: 64,depth: 0.5},
     game.scene
   );
-  game.gameOverText.material = material.redText;
-  game.gameOverText.setEnabled(false);
-  game.gameOverText.position = POS.gameover;
+  game.gameOverFinalText.material = material.redText;
+  game.gameOverFinalText.setEnabled(false);
+  game.gameOverFinalText.position = POS.gameoverFinal;
+
+  game.gameOverScoreText = BABYLON.MeshBuilder.CreateText(
+    "gameOverScoreText",
+    "SCORE",
+    font.scoreboard,
+    {size: 0.3, resolution: 64,depth: 0.5},
+    game.scene
+  );
+  game.gameOverScoreText.material = material.redText;
+  game.gameOverScoreText.setEnabled(false);
+  game.gameOverScoreText.position = POS.gameoverScore;
 
   if (game.hasThirdPlayer) {
     var p3Border = BABYLON.MeshBuilder.CreateText(
