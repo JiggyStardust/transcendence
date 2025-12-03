@@ -6,7 +6,7 @@ This project uses **Prisma ORM** with an **extended Prisma client** to keep data
 
 ### Database structure
 
-<img width="1358" height="721" alt="Image" src="https://github.com/user-attachments/assets/69ff6f64-467c-407c-bdd8-e06151b5991b" />
+<img width="1358" height="721" alt="Image" src="https://github.com/user-attachments/assets/52516be2-ef50-44df-bfc1-e0a978f36b48" />
 
 ### Prisma Studio
 
@@ -45,5 +45,6 @@ In addition to the built-in [Prisma Client API queries](https://www.prisma.io/do
 ### Custom methods:
 - `db.createUser(username, passwordHash, displayName?)` -> `Promise<DbResult<INewUserData>>`
 - `db.getUser(username)` -> `Promise<DbResult<IUserData>>`
+- `db.getUserProfile(username)` -> `Promise<DbResult<IUserProfile>>`
 
 All custom types -> `backend/src/database/types.ts`
