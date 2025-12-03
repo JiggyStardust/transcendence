@@ -28,7 +28,7 @@ function getKeyboardInput(game) {
       if (inputMap["ArrowDown"] && game.paddle2.position.z - paddleSpeed > -sidePosition) {
         game.paddle2.position.z -= paddleSpeed;
       }
-      if (game.hasThirdPlayer) {
+      if (game.hasThirdPlayer && game.currentState === game.state.playing) {
         if (inputMap["-"] && game.paddle3.position.z + paddleSpeed < 2.45) {
           game.paddle3.position.z += paddleSpeed;
         }
