@@ -1,4 +1,3 @@
-import { ThemeToggle } from "../components/ThemeToggle";
 import { useState } from "react";
 import { PROXY_URL } from "../constants";
 import { Button } from "../components/Button";
@@ -61,31 +60,27 @@ export default function Login() {
 
   return (
 		<div className="flex flex-col items-center justify-center min-h-screen w-screen">
-      	<h1 className="font-[Honk] text-[120px]">Ping of Pongs</h1>
 		  <p className="mt-4 text-lg text-center max-w-md">
 				This is where you Login!
 		  </p>
-		  			<form action={handleLogin} className="px-4 py-8 border border-white rounded-lg ">
-						<p>{information}</p>
-						<Input 
-						  id="username"
-						  label="Username:" 
-						  type="text" 
-						  value={username} 
-						  onChange={handleUsernameChange}
-						  />
-		  
-						<Input
-						  id="password" 
-						  label="Password:" 
-						  type="password" 
-						  value={password} 
-						  onChange={handlePasswordChange}
-						  />
-		  
-						<Button type="submit">Login</Button>
-					</form>
-		  <ThemeToggle />
+	  	<form action={handleLogin} className="px-4 py-8 border border-white rounded-lg ">
+				<p>{information}</p>
+				<Input 
+				  id="username"
+				  label="Username:" 
+				  type="text" 
+				  value={username} 
+				  onChange={handleUsernameChange}
+				  />
+				<Input
+				  id="password" 
+				  label="Password:" 
+				  type="password" 
+				  value={password} 
+				  onChange={handlePasswordChange}
+				  />
+					<Button>Login</Button>
+				</form>
 		</div>
   	);
 };
