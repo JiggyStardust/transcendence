@@ -26,6 +26,11 @@ enum UserStatus {
   OFFLINE
 }
 
+enum AvatarType {
+  DEFAULT
+  CUSTOM
+}
+
 model User {
   id                  Int             @id @default(autoincrement())
   username            String          @unique
@@ -37,9 +42,8 @@ model User {
   tokenExpiresAt      DateTime?
   tokenRevoked        Boolean         @default(false)
 
-  // --- Profile avatar relation (many users can share one Avatar)
-  avatarID            Int?
-  avatar              Avatar?         @relation("AvatarAsProfile", fields: [avatarID], references: [id])
+  avatarURL           String          @default("/uploads/avatars/default.jpeg")
+  avatarType          AvatarType      @default(DEFAULT)
 
   status              UserStatus      @default(OFFLINE)
   updatedAt           DateTime        @updatedAt
@@ -53,25 +57,7 @@ model User {
   friendsAsUser       Friend[]        @relation("Friends_user")
   friendsAsFriend     Friend[]        @relation("Friends_friend")
 
-  // Opposite side of "uploadedBy" on Avatar
-  avatarsUploaded     Avatar[]        @relation("AvatarUploadedBy")
-
   @@index([username])
-}
-
-model Avatar {
-  id          Int      @id @default(autoincrement())
-  link        String
-  type        String                 // e.g. "default" | "custom" | "external"
-
-  // Uploader relation (optional)
-  uploadedBy  Int?
-  uploader    User?    @relation("AvatarUploadedBy", fields: [uploadedBy], references: [id])
-
-  createdAt   DateTime @default(now())
-
-  // Profile avatar back-relation: users that reference this avatar
-  users       User[]   @relation("AvatarAsProfile")
 }
 
 model Friend {
