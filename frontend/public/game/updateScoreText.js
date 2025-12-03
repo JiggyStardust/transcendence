@@ -5,11 +5,11 @@ export function updateScoreText(game) {
     game.scoreTextLeft = game.scene.getMeshByName("scoreTextLeft" + x);
     game.scoreTextRight = game.scene.getMeshByName("scoreTextRight" + x);
 
-    if (game.score.p1 == x)
+    if (game.score.p1 === x)
       game.scoreTextLeft.setEnabled(true);
     else
       game.scoreTextLeft.setEnabled(false);
-    if (game.score.p2 == x)
+    if (game.score.p2 === x)
       game.scoreTextRight.setEnabled(true);
     else
       game.scoreTextRight.setEnabled(false);

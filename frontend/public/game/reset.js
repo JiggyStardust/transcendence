@@ -29,7 +29,7 @@ function countdown(game) {
 }
 
 export function reset(game) {
-  if (game.reset.complete == false) {
+  if (game.reset.complete === false) {
     game.move.ballSpeed = game.move.startingBallSpeed;
     game.reset.timer = game.reset.interval;
     game.move.toggleDirection *= -1;
@@ -38,7 +38,7 @@ export function reset(game) {
     game.light.redCountdown.setEnabled(true);
 
     game.arrowLineText.setEnabled(true);
-    if (game.move.toggleDirection == 1) {
+    if (game.move.toggleDirection === 1) {
       game.arrowRightText.setEnabled(true);
     }
     else {

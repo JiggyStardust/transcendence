@@ -12,11 +12,9 @@ export async function createScene(game) {
   light.intensity = 0.47;
 
   // Set background color
-
   game.scene.clearColor = new BABYLON.Color4(0, 0, 0, 0);
 
   // Create scoreboard lights
-
   const yellowLightLeft = new BABYLON.PointLight("yellowLightLeft",
     new BABYLON.Vector3(-1, 1.2, 2.6), game.scene);
   yellowLightLeft.intensity = 0.25;
@@ -325,7 +323,6 @@ export async function createScene(game) {
   wallRight.position.x = 2.9;
 
   // Base
-
   const h = 60;
   const y = (h / 2) * -1;
   var base = BABYLON.MeshBuilder.CreateBox("base", {width: 6, height: h, depth: 6}, game.scene);
@@ -378,8 +375,7 @@ export async function createScene(game) {
         game.paddle2.position.z -= paddleSpeed;
       }
       if (game.hasThirdPlayer) {
-        if (inputMap["-"] && game.paddle3.position.z + paddleSpeed < 2.45
-            && !(!game.currentState == game.state.playing && game.paddle3.position.z + paddleSpeed > -0.75)) {
+        if (inputMap["-"] && game.paddle3.position.z + paddleSpeed < 2.45) {
           game.paddle3.position.z += paddleSpeed;
         }
         if (inputMap["+"] && game.paddle3.position.z - paddleSpeed > -2.45) {

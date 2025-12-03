@@ -24,7 +24,7 @@ export function applyCollision(game) {
       // Sphere moving down
       else if (game.move.direction.z < 0) {
         // SmallAngle
-        if (game.move.direction.x == game.move.vxSmallAngle) {
+        if (game.move.direction.x === game.move.vxSmallAngle) {
           game.move.direction.x = game.move.vxStraightAngle;
           game.move.direction.z = game.move.vzStraightAngle;
         }
@@ -43,7 +43,7 @@ export function applyCollision(game) {
     else {
       // Bottom of paddle
       if (game.move.direction.z > 0) {
-        if (game.move.direction.x == game.move.vxLargeAngle) {
+        if (game.move.direction.x === game.move.vxLargeAngle) {
           game.move.direction.x = game.move.vxSmallAngle;
           game.move.direction.z = game.move.vzSmallAngle;
         }
@@ -84,7 +84,7 @@ export function applyCollision(game) {
       }
       // Sphere moving up
       else if (game.move.direction.z < 0) {
-        if (game.move.direction.x == game.move.vxSmallAngle) {
+        if (game.move.direction.x === game.move.vxSmallAngle) {
           game.move.direction.x = -game.move.vxStraightAngle;
           game.move.direction.z = game.move.vzStraightAngle;
         }
@@ -103,7 +103,7 @@ export function applyCollision(game) {
       // Bottom of paddle
       // Sphere moving up
       if (game.move.direction.z > 0) {
-        if (game.move.direction.x == game.move.vxLargeAngle) {
+        if (game.move.direction.x === game.move.vxLargeAngle) {
           game.move.direction.x = -game.move.vxSmallAngle;
           game.move.direction.z = game.move.vzSmallAngle;
         }
