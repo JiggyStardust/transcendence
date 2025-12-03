@@ -335,9 +335,9 @@ export async function createScene(game) {
   ground.material = mGround;
 
   // Sphere
-  var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 0.4, segments: 32}, game.scene);
-  sphere.position.y = 0.2;
-  sphere.material = mSphere;
+  game.sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 0.4, segments: 32}, game.scene);
+  game.sphere.position.y = 0.2;
+  game.sphere.material = mSphere;
 
   // Center line
   var centerLine = BABYLON.MeshBuilder.CreateBox("centerLine", {width: 0.1, height: 0.1, depth: 5.8}, game.scene);
@@ -385,13 +385,5 @@ export async function createScene(game) {
     }
   });
 
-  // Attach objects
-  game.sphere = game.scene.getMeshByName("sphere");
-  game.sphere.position.x = game.move.xStartingPos;
-  game.sphere.position.z = game.move.zStartingPos;
 
-  game.paddle1 = game.scene.getMeshByName("paddle1");
-  game.paddle2 = game.scene.getMeshByName("paddle2");
-  if (game.hasThirdPlayer)
-    game.paddle3 = game.scene.getMeshByName("paddle3");
 }
