@@ -69,6 +69,7 @@ const ProfileSettings = ({}) => {
 			console.log("Response: " + data);
 	    if (data.success) {
 				setShowQRModal(false);
+				//TODO some success message?
 			}
 			else {
 				console.log("Wrong code");
