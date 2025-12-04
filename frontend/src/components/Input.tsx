@@ -17,9 +17,11 @@ export default function Input({id, label, type = "text", value, tooltip, onChang
 				<label className="flex justify-left">
 					{label}
 				</label>
+				{tooltip && 
 				<div className="absolute bottom-full w-max px-2 py-1 text-sm bg-vintage-yellow/30 dark:bg-stone-600 rounded shadow-lg opacity-0 group-hover:opacity-100">
           {tooltip}
 				</div>
+				}
 			</div>
 			<input className="p-1 border border-white rounded-sm" type={type} id={id} value={value} onChange={onChange} onBlur={onBlur}/>
 		</div>

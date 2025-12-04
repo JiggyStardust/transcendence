@@ -7,11 +7,17 @@ import userRoutes from "./routes/users";
 import authRoutes from "./routes/auth";
 import checkUsernameRoute from "./routes/checkUsername";
 import "dotenv/config";
+import fastifyCookie from "@fastify/cookie";
 
 const PORT = parseInt(process.env.BACKEND_PORT ?? "4000");
 const HOST = process.env.BACKEND_HOST || "localhost";
 
 const fastify = Fastify({ logger: { level: "error" } });
+
+// register cookies
+fastify.register(fastifyCookie, {
+  secret: "a_random_secret_key" // used for signed cookies
+});
 
 // register middleware
 fastify.register(cors, { origin: true });

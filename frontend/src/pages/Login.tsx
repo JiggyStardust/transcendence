@@ -7,11 +7,11 @@ import { useNavigate } from "react-router-dom";
 
 export default function Login() {
 
-		const [information, setInformation] = useState("");
-		const [username, setUsername] = useState("");
-		const [password, setPassword] = useState("");
+	const [information, setInformation] = useState("");
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
 
-		const navigate = useNavigate();
+	const navigate = useNavigate();
 
 	async function handleLogin() {
 
@@ -33,7 +33,7 @@ export default function Login() {
 		console.log("Login was succesfull: ", data);
 		// Now that we've logged in, we probably also want to fetch user data (Display name, scores...) from backend to show statistics on leaderboard etc.
 		// and save them to context.
-		navigate("/dashboard");
+		navigate("/profile_settings");
 	}
 
 	function handleUsernameChange(e) {

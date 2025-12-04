@@ -1,6 +1,7 @@
 import { Button } from "../components/Button";
 import { FiUser } from "react-icons/fi";
 import Input from "../components/Input";
+import { PROXY_URL } from "../constants";
 import { useState } from "react";
 
 const ProfilePic = () => {
@@ -54,12 +55,10 @@ const ProfileSettings = ({}) => {
 	}
 
 	async function request2FASetup() {
-	  const res = await fetch("/enable-2fa", {
+	  const res = await fetch(PROXY_URL + "/enable-2fa", {
 	    method: "POST",
 	    credentials: "include",
-			headers: { Authorization: `Bearer ${user.accessToken}` },
 	  });
-
 	  return res.json(); // { qr: "data:image/png;base64,...." }
 	}
 
@@ -71,7 +70,7 @@ const ProfileSettings = ({}) => {
 	function saveSettings() {
 		console.log("save settings button pressed");
 
-		if (twoFactor != user.twoFactorEnabled) {
+		if (twoFactor != false) {			//change to actual value
 			let showQr  = confirm("To enable two factor authentication you now need to scan a qr code with a second device. Do you want to proceed?");
 			if (showQr) {
 				startSetup();

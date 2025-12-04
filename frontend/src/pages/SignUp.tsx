@@ -1,4 +1,3 @@
-import { ThemeToggle } from "../components/ThemeToggle";
 import { useState } from "react";
 import Input from "../components/Input";
 import { Button} from "../components/Button";
@@ -12,8 +11,6 @@ export default function SignUp() {
 	const [password, setPassword] = useState("");
 
 	const navigate = useNavigate();
-
-// In this function we actually try to sign up
 
 	async function handleSignUp() {
 
@@ -29,11 +26,11 @@ export default function SignUp() {
 
     if (!res.ok) {
       console.log(data);
-	  setInformation("SignUp failed!");
+	  	setInformation("SignUp failed!");
       return;
     }
     console.log("SignUp was succesfull:", data);
-	navigate("/login");
+		navigate("/login");
 	}
 
 // Here we check if username is already in use (saved to backend)
@@ -45,10 +42,10 @@ export default function SignUp() {
 
 	try {
 	  const res = await fetch(url.toString(), {
-	  method: "GET",
-	  headers: { 
-		"Content-Type": "application/json"
-	    }
+		  method: "GET",
+		  headers: { 
+			"Content-Type": "application/json"
+		    }
 	  });
 	  
 	  console.log("fetch response status: ", res.status); // log HTTP status
@@ -56,8 +53,8 @@ export default function SignUp() {
 	  if (!res.ok){ 			// backend responded with an error status
 	    console.error("Username check failed:", res.status);
 	    return (false);
-	  }	
-	  const data = await res.json();			
+	  }
+	  const data = await res.json();
       console.log("data from check-username:", data);
       return !data.available; // return true if username is free
 	
@@ -72,9 +69,9 @@ export default function SignUp() {
 	  console.log(username);
 	  setUsername(username);
 	  if (username === "") {
-		setInformation("Username can not be empty");
+			setInformation("Username can not be empty");
 	  } else {
-		setInformation("");
+			setInformation("");
 	  }
 	}
 
@@ -105,7 +102,6 @@ export default function SignUp() {
 
 	return (
 		<div className="flex flex-col w-screen items-center justify-center min-h-screen transition-colors duration-300">
-		<h1 className="font-[Honk] text-[120px]">Ping of Pongs</h1>
 		  <p className="mt-10 text-lg text-center max-w-md">
  			This is where you SignUp!
 	 	  </p>
@@ -128,10 +124,8 @@ export default function SignUp() {
 				  onChange={handlePasswordChange}
 				  />
 
-				<Button type="submit">Sign up</Button>
+				<Button>Sign up</Button>
 			</form>
-
-			<ThemeToggle />
 		</div>
 	);
 }

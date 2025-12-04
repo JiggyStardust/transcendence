@@ -37,6 +37,8 @@ export function verify2FAToken(secret: string, token: string) {
 export const generateAccessToken = (payload: JwtPayload | string) => {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: ACCESS_EXPIRATION });
 };
+
 export const generateRefreshToken = (payload: JwtPayload | string) => {
   return jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: REFRESH_EXPIRATION });
 };
+
