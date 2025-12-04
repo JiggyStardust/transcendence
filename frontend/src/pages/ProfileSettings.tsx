@@ -54,6 +54,50 @@ const ProfileSettings = ({}) => {
 		)
 	}
 
+	const QrModal = () => {
+		const [token, setToken] = useState("");
+
+		const verifySetup = async () => {
+	    const res = await fetch(PROXY_URL + "/verify-setup-2fa", {
+	      method: "POST",
+	      credentials: "include",
+	      headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ token })
+	    });
+
+	    const data = await res.json();
+			console.log("Response: " + data);
+	    if (data.success) {
+				setShowQRModal(false);
+			}
+			else {
+				console.log("Wrong code");
+			}
+	  };
+
+		return (
+			<div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/50 z-50">
+				<div className="bg-light-bg dark:bg-dark-bg p-8 rounded-xl shadow-xl max-w-sm w-full text-center">
+					<h2 className="text-md font-semibold mb-4">Scan the QR Code to activate two factor athentication</h2>
+					{qr && (
+						<>
+							<img src={qr} alt="2FA QR" className="w-48 h-48 mx-auto mb-6"/>
+							<Input id="2faCode" label="Code from app" tooltip="Write the code you see in the app after scanning the qr code" value={token} onChange={(e) => setToken(e.target.value)}/>
+						</>
+					)}
+					<div className="flex justify-around">
+						<Button variant="secondary" onClick={() => {setShowQRModal(false); setTwoFactor(!twoFactor);}}>
+							Close
+						</Button>
+						<Button variant="primary" onClick={() => {verifySetup()}}>
+							Verify
+						</Button>
+					</div>
+				</div>
+			</div>
+		)
+	}
+
 	async function request2FASetup() {
 	  const res = await fetch(PROXY_URL + "/enable-2fa", {
 	    method: "POST",
@@ -94,25 +138,7 @@ const ProfileSettings = ({}) => {
 					</div>
 				</form>
 			</div>
-			{showQRModal && (
-				<div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/50 z-50">
-					<div className="bg-white p-8 rounded-xl shadow-xl max-w-sm w-full text-center">
-						<h2 className="text-xl font-semibold mb-4">Scan the QR Code to activate two factor athentication</h2>
-
-						{qr && (
-							<img 
-								src={qr} 
-								alt="2FA QR" 
-								className="w-48 h-48 mx-auto mb-6"
-							/>
-						)}
-
-						<Button variant="primary" onClick={() => setShowQRModal(false)}>
-							Close
-						</Button>
-					</div>
-				</div>
-			)}
+			{showQRModal && <QrModal/>}
 		</div>
 	)
 }
