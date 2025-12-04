@@ -42,9 +42,7 @@ export default function Login() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen w-screen">
-      <h1 className="font-[Honk] text-[120px]">Ping of Pongs</h1>
       <p className="mt-4 text-lg text-center max-w-md">This is where you Login!</p>
-
       <form
         onSubmit={handleLogin}
         className="px-4 py-8 border border-white rounded-lg"
@@ -70,7 +68,6 @@ export default function Login() {
         <Button type="submit">Login</Button>
       </form>
 
-      <ThemeToggle />
     </div>
   );
 }
