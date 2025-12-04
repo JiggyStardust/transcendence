@@ -59,7 +59,7 @@ const ProfileSettings = ({}) => {
 	    method: "POST",
 	    credentials: "include",
 	  });
-	  return res.json(); // { qr: "data:image/png;base64,...." }
+	  return res.json();
 	}
 
 	const startSetup = async () => {
@@ -74,6 +74,7 @@ const ProfileSettings = ({}) => {
 			let showQr  = confirm("To enable two factor authentication you now need to scan a qr code with a second device. Do you want to proceed?");
 			if (showQr) {
 				startSetup();
+				setShowQRModal(true);
 			}
 			else {
 				setTwoFactor(!twoFactor);
