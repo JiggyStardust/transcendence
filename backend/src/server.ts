@@ -20,7 +20,11 @@ fastify.register(fastifyCookie, {
 });
 
 // register middleware
-fastify.register(cors, { origin: true });
+// fastify.register(cors, { origin: true }); <-- old version. before cookies.
+fastify.register(cors, {
+  origin: ["http://" + HOST + ":" + PORT],
+  credentials: true
+});
 fastify.register(formbody);
 
 // register custom plugins

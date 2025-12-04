@@ -65,3 +65,21 @@ Player 2: Ethan ✔️
 [Start Match]
 
 And they can play on one keyboard
+
+
+This is returned from the verified player:
+return {
+    status: "verified",
+    user_id: user.id,
+    username: user.username
+  };
+
+  So this is a possible new rooute to initialize the game with info from both players:
+
+fastify.post("/game/create", async (req, reply) => {
+  const { player1_user_id, player2_user_id, local } = req.body;
+
+  const game = await createGame({ player1_user_id, player2_user_id, local });
+
+  return game;
+});
