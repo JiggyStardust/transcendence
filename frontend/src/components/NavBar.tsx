@@ -8,7 +8,7 @@ export const navLinkStyles = cva(
     variants: {
       active: {
         true: "text-vintage-yellow dark:text-vintage-yellow font-extrabold",
-        false: "text-neutral-900 dark:text-white font-normal",
+        false: "font-normal",
       },
     }
   }
@@ -16,7 +16,7 @@ export const navLinkStyles = cva(
 
 export default function NavBar() {
 	return (
-		<nav className="sticky top-0 px-6 py-3 mb-12 items-center flex justify-between bg-stone-600 dark:bg-zinc-900 w-screen">
+		<nav className="sticky top-0 px-6 py-3 mb-12 items-center flex justify-between bg-stone-600 dark:bg-zinc-900 max-w-screen">
 			<span className="text-lg font-extrabold font-tomorrow text-vintage-yellow">
 				<NavLink to="/">Ping of Pongs</NavLink>
 			</span>
@@ -25,6 +25,7 @@ export default function NavBar() {
 				<NavLink to="/profile_settings" className={({ isActive }) => navLinkStyles({ active: isActive })}>Profile settings</NavLink>
 				<NavLink to="/login" className={({ isActive }) => navLinkStyles({ active: isActive })}>Log in</NavLink>
 				<NavLink to="/game" className={({ isActive }) => navLinkStyles({ active: isActive })}>Game</NavLink>
+				<NavLink to="/players" className={({ isActive }) => navLinkStyles({ active: isActive })}>Players</NavLink>
 				<ThemeToggle />
 			</div>
 		</nav>

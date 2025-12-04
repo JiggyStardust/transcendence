@@ -5,6 +5,7 @@ import Testing from "./pages/Testing";
 import Login from "./pages/Login";
 import ProfileSettings from "./pages/ProfileSettings";
 import Game from "./pages/Game";
+import Players from "./pages/Players.tsx";
 
 import NavBar from "./components/NavBar.tsx";
 
@@ -21,6 +22,7 @@ function App() {
 		      <Route path="/testing" element={<Testing />} />
           <Route path="/profile_settings" element={<ProfileSettings />} />
           <Route path="/game" element={<Game />} />
+          <Route path="/players" element={<Players />} />
         </Routes>
       </Router>
     </div>
