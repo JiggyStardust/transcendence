@@ -335,10 +335,8 @@ function createScoreboardP3(game, POS, material, font) {
     scoreboardP3.material = material.scoreboard;
     scoreboardP3.material.maxSimultaneousLights = 8;
 
-    const p3LegVec = new BABYLON.Vector3(-2.9, 0.5, 2.87);
-
     const p3Leg = BABYLON.MeshBuilder.CreateBox("p3Leg", {width: 0.13, height: 0.5, depth: 0.1}, game.scene);
-    p3Leg.position = p3LegVec;
+    p3Leg.position.set(-2.9, 0.5, 2.87);
     p3Leg.rotation.y = -0.5;
     p3Leg.material = material.scoreboard;
   }
