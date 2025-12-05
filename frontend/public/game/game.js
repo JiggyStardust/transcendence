@@ -33,7 +33,7 @@ export const game = {
 	middlePaddleFlag: false,
 	startingCameraY: 7,
 	currentCameraZ: 2,
-	hasThirdPlayer: true,
+	hasThirdPlayer: false,
   	state: state,
 	currentState: state.start,
 

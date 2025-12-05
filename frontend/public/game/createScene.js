@@ -189,7 +189,7 @@ function createGameOverText(game, POS, material, font) {
 
   if (game.hasThirdPlayer) {
     var p3Border = BABYLON.MeshBuilder.CreateText(
-      "gameOverText",
+      "p3PlusText",
       "+",
       font.scoreboard,
       {size: 0.35, resolution: 64, depth: 0.5, letterSpacing: 0},
@@ -281,8 +281,6 @@ function createPlayerNameText(game, POS, material, font) {
   game.p2NameText.position = POS.nameP2;
 
   if (game.hasThirdPlayer) {
-    
-
     game.p3NameText = BABYLON.MeshBuilder.CreateText(
       "p3NameText",
       game.username.p3Display,

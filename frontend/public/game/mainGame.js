@@ -18,7 +18,6 @@ await createScene(game);
 // Render loop
 game.engine.runRenderLoop(function () {
   game.canvas.focus();
-  game.currentState = game.state.gameOver;
   switch(game.currentState) {
     case game.state.start:
       reset(game);
