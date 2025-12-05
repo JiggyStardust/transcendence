@@ -119,7 +119,7 @@ function createMaterial(game, material) {
   material.whiteText.specularColor = new BABYLON.Color3(0.3, 0.3, 0.3);
   material.whiteText.alpha = 1.0;
 
-  material.scoreboard = new BABYLON.StandardMaterial("scoreText", game.scene);
+  material.scoreboard = new BABYLON.StandardMaterial("scoreboard", game.scene);
   material.scoreboard.diffuseColor = new BABYLON.Color3(0.6, 0.75, 0.75);
   material.scoreboard.specularPower = 1000000;
 
@@ -130,18 +130,14 @@ function createMaterial(game, material) {
 
 function createPaddles(game, material) {
   game.paddle1 = BABYLON.MeshBuilder.CreateBox("paddle1", {width: 0.2, height: 0.3, depth: 1.5}, game.scene);
-  game.paddle1.position.y = 0.125;
-  game.paddle1.position.z = 0;
+  game.paddle1.position.set(-2.7, 0.125, 0);
   game.paddle1.material = material.paddle;
   game.paddle2 = game.paddle1.clone("paddle2");
-  game.paddle1.position.x = -2.7;
   game.paddle2.position.x = 2.7;
 
   if (game.hasThirdPlayer) {
     game.paddle3 = BABYLON.MeshBuilder.CreateBox("paddle3", {width: 0.2, height: 0.3, depth: 0.75}, game.scene);
-    game.paddle3.position.y = 0.125;
-    game.paddle3.position.x = 0;
-    game.paddle3.position.z = game.move.p3StartingZ;
+    game.paddle3.position.set(0, 0.125, game.move.p3StartingZ);
   }
 }
 
@@ -333,7 +329,7 @@ function createScoreboard(game, POS, material, font) {
 
 function createScoreboardP3(game, POS, material, font) {
   if (game.hasThirdPlayer) {
-    const scoreboardP3 = BABYLON.MeshBuilder.CreateBox("POS.scoreboardP3", {width: 1.4, height: .7, depth: .25}, game.scene);
+    const scoreboardP3 = BABYLON.MeshBuilder.CreateBox("scoreboardP3", {width: 1.4, height: .7, depth: .25}, game.scene);
     scoreboardP3.position = POS.scoreboardP3;
     scoreboardP3.rotation.y = -0.5;
     scoreboardP3.material = material.scoreboard;
@@ -353,36 +349,30 @@ function createGameBoard(game, material) {
   ground.material = material.ground;
   
   var wallTop = BABYLON.MeshBuilder.CreateBox("wallTop", {width: 6, height: 0.2, depth: 0.2}, game.scene);
-  wallTop.position.y = 0.1;
-  wallTop.position.x = 0;
+  wallTop.position.set(0, 0.1, 2.9);
   wallTop.material = material.wall;
   
   var wallBottom = wallTop.clone("wallBottom");
-  wallTop.position.z = 2.9;
   wallBottom.position.z = -2.9;
   
   var wallLeft = BABYLON.MeshBuilder.CreateBox("wallLeft", {width: 0.2, height: 0.2, depth: 6}, game.scene);
-  wallLeft.position.y = 0.1;
+  wallLeft.position.set(-2.9, 0.1, 0);
   wallLeft.material = material.wall;
   
   var wallRight = wallLeft.clone("wallRight");
-  wallLeft.position.x = -2.9;
   wallRight.position.x = 2.9;
 
   var centerLine = BABYLON.MeshBuilder.CreateBox("centerLine", {width: 0.1, height: 0.1, depth: 5.8}, game.scene);
-  centerLine.position.y = -0.049;
-  centerLine.position.z = 0;
+  centerLine.position.set(0, -0.049, 0);
   centerLine.material = material.paddle;
   
   var base = BABYLON.MeshBuilder.CreateBox("base", {width: 6, height: 60, depth: 6}, game.scene);
-  base.position.y = -30;
-  base.position.x = 0;
+  base.position.set(0, -30, 0);
   base.material = material.wall;
 }
 
 function createSphere(game, material) {
-  game.sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 0.4, segments: 32}, game.scene);
-  game.sphere.position.y = 0.2;
+  game.sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 0.4, segments: 32}, game.scene);  game.sphere.position.set(0, 0.2, 0);
   game.sphere.material = material.sphere;
 }
 
