@@ -11,6 +11,20 @@ function isInLineWithPaddle(game, paddle) {
   return false;
 }
 
+function ballHitMiddleOfPaddle(game, paddle) {
+  if (paddle.position.z < game.sphere.position.z + (game.move.paddleSize / 6)
+        && paddle.position.z > game.sphere.position.z - (game.move.paddleSize / 6)) {
+    return true;
+  }
+  return false;
+}
+
+function ballHitTopOfPaddle(game, paddle) {
+  if (game.paddle1.position.z < game.sphere.position.z)
+      return true;
+  return false;
+}
+
 export function applyCollision(game) {
   // Paddle1 Collision
   if (game.sphere.position.x < -game.move.paddleCollisionX
@@ -20,13 +34,9 @@ export function applyCollision(game) {
     game.middlePaddleFlag = true;
     increaseBallSpeed(game);
 
-    // Middle of paddle
-    if (game.paddle1.position.z < game.sphere.position.z + (game.move.paddleSize / 6)
-          && game.paddle1.position.z > game.sphere.position.z - (game.move.paddleSize / 6)) {
+    if (ballHitMiddleOfPaddle(game, game.paddle1))
       game.move.direction.x = -game.move.direction.x;
-    }
-    // Top of paddle
-    else if (game.paddle1.position.z < game.sphere.position.z){
+    else if (ballHitTopOfPaddle(game, game.paddle1)){
       // Sphere moving up
       if (game.move.direction.z > 0) {
         game.move.direction.x = game.move.vxLargeAngle;
@@ -84,13 +94,9 @@ export function applyCollision(game) {
     game.middlePaddleFlag = true;
     increaseBallSpeed(game);
 
-    // Middle of paddle
-    if (game.paddle2.position.z < game.sphere.position.z + (game.move.paddleSize / 6)
-          && game.paddle2.position.z > game.sphere.position.z - (game.move.paddleSize / 6)) {
+    if (ballHitMiddleOfPaddle(game, game.paddle2))
       game.move.direction.x = -game.move.direction.x;
-    }
-    // Top of paddle
-    else if (game.paddle2.position.z < game.sphere.position.z){
+    else if (ballHitTopOfPaddle(game, game.paddle2)){
       // Sphere moving down
       if (game.move.direction.z > 0) {
         game.move.direction.x = -game.move.vxLargeAngle;
