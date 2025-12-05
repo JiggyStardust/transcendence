@@ -1,21 +1,32 @@
 
+function increaseBallSpeed(game) {
+  if (game.move.ballSpeed < game.move.maxBallSpeed)
+    game.move.ballSpeed += game.move.ballSpeedIncrement;
+}
+
+function isInLineWithPaddle(game, paddle) {
+  if (paddle.position.z < game.sphere.position.z + (game.move.paddleCollisionSize)
+      && paddle.position.z > game.sphere.position.z - (game.move.paddleCollisionSize))
+    return true;
+  return false;
+}
+
 export function applyCollision(game) {
-  console.log(game.middlePaddleFlag);
   // Paddle1 Collision
   if (game.sphere.position.x < -game.move.paddleCollisionX
-          && game.paddle1.position.z < game.sphere.position.z + (game.move.paddleCollisionSize)
-          && game.paddle1.position.z > game.sphere.position.z - (game.move.paddleCollisionSize)
+          && isInLineWithPaddle(game, game.paddle1)
           && game.move.direction.x < 0) {
+
     game.middlePaddleFlag = true;
-    if (game.move.ballSpeed < game.move.maxBallSpeed)
-      game.move.ballSpeed += game.move.ballSpeedIncrement;
+    increaseBallSpeed(game);
+
+    // Middle of paddle
     if (game.paddle1.position.z < game.sphere.position.z + (game.move.paddleSize / 6)
           && game.paddle1.position.z > game.sphere.position.z - (game.move.paddleSize / 6)) {
-      // Middle of paddle
       game.move.direction.x = -game.move.direction.x;
     }
+    // Top of paddle
     else if (game.paddle1.position.z < game.sphere.position.z){
-      // Top of paddle
       // Sphere moving up
       if (game.move.direction.z > 0) {
         game.move.direction.x = game.move.vxLargeAngle;
@@ -40,8 +51,9 @@ export function applyCollision(game) {
         game.move.direction.z = game.move.vzSmallAngle;
       }
     }
+    // Bottom of paddle
     else {
-      // Bottom of paddle
+      // Sphere moving up
       if (game.move.direction.z > 0) {
         if (game.move.direction.x === game.move.vxLargeAngle) {
           game.move.direction.x = game.move.vxSmallAngle;
@@ -52,10 +64,12 @@ export function applyCollision(game) {
           game.move.direction.z = game.move.vzStraightAngle;
         }
       }
+      // Sphere moving down
       else if (game.move.direction.z < 0) {
         game.move.direction.x = game.move.vxLargeAngle;
         game.move.direction.z = -game.move.vzLargeAngle;
       }
+      // Sphere moving straight
       else {
         game.move.direction.x = game.move.vxSmallAngle;
         game.move.direction.z = -game.move.vzSmallAngle;
@@ -64,19 +78,19 @@ export function applyCollision(game) {
   }
   // Paddle2 Collision
   else if (game.sphere.position.x > game.move.paddleCollisionX
-          && game.paddle2.position.z < game.sphere.position.z + (game.move.paddleCollisionSize)
-          && game.paddle2.position.z > game.sphere.position.z - (game.move.paddleCollisionSize)
+          && isInLineWithPaddle(game, game.paddle2)
           && game.move.direction.x > 0) {
+
     game.middlePaddleFlag = true;
-    if (game.move.ballSpeed < game.move.maxBallSpeed)
-      game.move.ballSpeed += game.move.ballSpeedIncrement;
+    increaseBallSpeed(game);
+
+    // Middle of paddle
     if (game.paddle2.position.z < game.sphere.position.z + (game.move.paddleSize / 6)
           && game.paddle2.position.z > game.sphere.position.z - (game.move.paddleSize / 6)) {
-      // Middle of paddle
       game.move.direction.x = -game.move.direction.x;
     }
+    // Top of paddle
     else if (game.paddle2.position.z < game.sphere.position.z){
-      // Top of paddle
       // Sphere moving down
       if (game.move.direction.z > 0) {
         game.move.direction.x = -game.move.vxLargeAngle;
@@ -99,8 +113,8 @@ export function applyCollision(game) {
         game.move.direction.z = game.move.vzSmallAngle;
       }
     }
+    // Bottom of paddle
     else {
-      // Bottom of paddle
       // Sphere moving up
       if (game.move.direction.z > 0) {
         if (game.move.direction.x === game.move.vxLargeAngle) {
