@@ -3,9 +3,7 @@ import { createContext, useContext, useState, ReactNode } from "react";
 // below we define what values or functions are accessed with AuthContext
 
 interface AuthContextType {
-  accessToken: string | null;
-  refreshToken: string | null;
-  login: (tokens: { access: string; refresh: string }) => void;
+  login: () => void;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -13,33 +11,21 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null); // is first initialized with null
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [accessToken, setAccessToken] = useState<string | null>(
-    localStorage.getItem("accessToken")
-  );
-  const [refreshToken, setRefreshToken] = useState<string | null>(
-    localStorage.getItem("refreshToken")
-  );
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  function login(tokens: { access: string; refresh: string }) {
-    setAccessToken(tokens.access);
-    setRefreshToken(tokens.refresh);
-    localStorage.setItem("accessToken", tokens.access);
-    localStorage.setItem("refreshToken", tokens.refresh);
+  function login() {
+    // cookies are set in the backend, no storing tokens anymore
+    setIsAuthenticated(true);
   }
 
   function logout() {
-    setAccessToken(null);
-    setRefreshToken(null);
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
+    // no logout endpoint in the backend yet, we just set as false in the front (cookies should be deleted in the back)
+    setIsAuthenticated(false);
   }
 
-  const isAuthenticated = !!accessToken; // if token exists, isAuthenticated == true
 
   return (
-    <AuthContext.Provider
-      value={{ accessToken, refreshToken, login, logout, isAuthenticated }}
-    >
+    <AuthContext.Provider value={{ login, logout, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );

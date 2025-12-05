@@ -80,6 +80,8 @@ export default function SignUp() {
 			setInformation("");
 	  }
 	}
+ // "Password must be at least 8 chars, with upper, lower, digit, special and not common";
+ // This should be displayed somewhere!
 
 	function handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const password = e.target.value;

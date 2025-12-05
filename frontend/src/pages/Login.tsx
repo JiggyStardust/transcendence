@@ -1,5 +1,5 @@
-import { ThemeToggle } from "../components/ThemeToggle";
 import { useState } from "react";
+import { useEffect } from "react";
 import { PROXY_URL } from "../constants";
 import { Button } from "../components/Button";
 import Input from "../components/Input";
@@ -20,10 +20,11 @@ export default function Login() {
     const res = await fetch(PROXY_URL + "/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ username, password }),
+      credentials: "include" // for the cookies
     });
 
-    const data = await res.json();
+    // const data = await res.json();
 
     if (!res.ok) {
       setInformation("Login failed!");
@@ -32,10 +33,7 @@ export default function Login() {
       return;
     }
 
-    login({
-      access: data.accessToken,
-      refresh: data.refreshToken
-    });
+    login();
 
     navigate("/dashboard");
   }
