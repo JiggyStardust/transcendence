@@ -70,12 +70,12 @@ export const game = {
 	},
 
 	move: {
-		vxStraightAngle: 2.236,
-		vxSmallAngle: 2,
-		vxLargeAngle: 1.581,
-		vzStraightAngle: 0,
-		vzSmallAngle: 1,
-		vzLargeAngle: 1.581,
+		vxStraight: 2.236,
+		vxSmall: 2,
+		vxLarge: 1.581,
+		vzStraight: 0,
+		vzSmall: 1,
+		vzLarge: 1.581,
 		xStartingAngle: 2.236,
 		zStartingAngle: 0,
 
@@ -87,8 +87,8 @@ export const game = {
 		sideCollisionZ: 2.6,
 
 		paddleSize: 1.5,
-		paddleCollisionSize: 0.95,
-		paddle3CollisionSize: 0.775,
+		paddleColSize: 0.95,
+		paddle3ColSize: 0.775,
 
 		p3StartingZ: -2,
 		startingBallSpeed: 2.5,
