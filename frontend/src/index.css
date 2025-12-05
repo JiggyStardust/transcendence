@@ -1,35 +1,25 @@
-@import url("https://fonts.googleapis.com/css2?family=Honk&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Chango&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Tomorrow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Background gradients → solid black */
-@utility bg-gradient {
-	background: #000;
-}
-@utility bg-gradient-dark {
-	background: #000;
+:root {
+  --vintage-yellow: #e3cc98;
+  --light-bg: #e6dfd3;
+  --dark-bg: #343434;
 }
 
-/* Button background gradients → solid black */
-@utility btn-bg {
-	background: #000;
-}
-@utility btn-bg-dark {
-	background: #000;
-}
-@utility btn-bg-secondary {
-	background: #000;
-}
-@utility btn-bg-secondary-dark {
-	background: #000;
-}
-@utility btn-hover-bg {
-	background: #000;
-}
-@utility btn-hover-bg-dark {
-	background: #000;
+@theme {
+  --color-vintage-yellow: var(--vintage-yellow);
+  --color-vintage-red: var(--color-red-700);
+  --color-light-bg: var(--light-bg);
+  --color-dark-bg: var(--dark-bg);
+
+  --font-press: "Press Start 2P";
+  --font-tomorrow: "Tomorrow";
 }
 
 

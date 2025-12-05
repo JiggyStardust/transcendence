@@ -26,62 +26,38 @@ enum UserStatus {
   OFFLINE
 }
 
+enum AvatarType {
+  DEFAULT
+  CUSTOM
+}
+
 model User {
   id                  Int             @id @default(autoincrement())
   username            String          @unique
   displayName         String
   passwordHash        String
-  isTwoFactorEnabled  Boolean         @default(false)
+  isTwoFAenabled      Boolean         @default(false)
+  twoFAsecret         String?
+  tokenHash           String?
+  tokenExpiresAt      DateTime?
+  tokenRevoked        Boolean         @default(false)
 
-  // --- Profile avatar relation (many users can share one Avatar)
-  avatarID            Int?
-  avatar              Avatar?         @relation("AvatarAsProfile", fields: [avatarID], references: [id])
+  avatarURL           String          @default("/uploads/avatars/default.jpeg")
+  avatarType          AvatarType      @default(DEFAULT)
 
   status              UserStatus      @default(OFFLINE)
   updatedAt           DateTime        @updatedAt
   createdAt           DateTime        @default(now())
+  isDeleted           Boolean         @default(false)
 
   // --- Other relations
-  refreshTokens       RefreshToken[]
   createdTournaments  Tournament[]    @relation("TournamentCreator")
   matchesWon          Match[]         @relation("MatchWinner")
   matchParticipants   MatchParticipant[]
   friendsAsUser       Friend[]        @relation("Friends_user")
   friendsAsFriend     Friend[]        @relation("Friends_friend")
 
-  // Opposite side of "uploadedBy" on Avatar
-  avatarsUploaded     Avatar[]        @relation("AvatarUploadedBy")
-
   @@index([username])
-}
-
-model RefreshToken {
-  userId      Int      @id @unique
-  uuid        String   @unique
-  hashedToken String
-  expiresAt   DateTime
-  revoked     Boolean  @default(false)
-  createdAt   DateTime @default(now())
-
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([uuid])
-  @@index([expiresAt])
-}
-
-model Avatar {
-  id          Int      @id @default(autoincrement())
-  link        String
-  type        String                 // e.g. "default" | "custom" | "external"
-
-  // Uploader relation (optional)
-  uploadedBy  Int?
-  uploader    User?    @relation("AvatarUploadedBy", fields: [uploadedBy], references: [id])
-
-  createdAt   DateTime @default(now())
-
-  // Profile avatar back-relation: users that reference this avatar
-  users       User[]   @relation("AvatarAsProfile")
 }
 
 model Friend {

@@ -4,23 +4,17 @@ CREATE TABLE "User" (
     "username" TEXT NOT NULL,
     "displayName" TEXT NOT NULL,
     "passwordHash" TEXT NOT NULL,
-    "isTwoFactorEnabled" BOOLEAN NOT NULL DEFAULT false,
+    "isTwoFAenabled" BOOLEAN NOT NULL DEFAULT false,
+    "twoFAsecret" TEXT NOT NULL,
+    "tokenHash" TEXT NOT NULL,
+    "tokenExpiresAt" DATETIME NOT NULL,
+    "tokenRevoked" BOOLEAN NOT NULL DEFAULT false,
     "avatarID" INTEGER,
     "status" TEXT NOT NULL DEFAULT 'OFFLINE',
     "updatedAt" DATETIME NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     CONSTRAINT "User_avatarID_fkey" FOREIGN KEY ("avatarID") REFERENCES "Avatar" ("id") ON DELETE SET NULL ON UPDATE CASCADE
-);
-
--- CreateTable
-CREATE TABLE "RefreshToken" (
-    "userId" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "uuid" TEXT NOT NULL,
-    "hashedToken" TEXT NOT NULL,
-    "expiresAt" DATETIME NOT NULL,
-    "revoked" BOOLEAN NOT NULL DEFAULT false,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "RefreshToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -86,18 +80,6 @@ CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 CREATE INDEX "User_username_idx" ON "User"("username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "RefreshToken_userId_key" ON "RefreshToken"("userId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "RefreshToken_uuid_key" ON "RefreshToken"("uuid");
-
--- CreateIndex
-CREATE INDEX "RefreshToken_uuid_idx" ON "RefreshToken"("uuid");
-
--- CreateIndex
-CREATE INDEX "RefreshToken_expiresAt_idx" ON "RefreshToken"("expiresAt");
-
--- CreateIndex
 CREATE INDEX "Friend_friendID_idx" ON "Friend"("friendID");
 
 -- CreateIndex
@@ -114,4 +96,3 @@ CREATE INDEX "Match_winnerId_idx" ON "Match"("winnerId");
 
 -- CreateIndex
 CREATE INDEX "MatchParticipant_userId_idx" ON "MatchParticipant"("userId");
-
