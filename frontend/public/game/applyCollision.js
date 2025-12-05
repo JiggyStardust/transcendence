@@ -20,7 +20,7 @@ function ballHitMiddleOfPaddle(game, paddle) {
 }
 
 function ballHitTopOfPaddle(game, paddle) {
-  if (game.paddle1.position.z < game.sphere.position.z)
+  if (paddle.position.z < game.sphere.position.z)
       return true;
   return false;
 }
