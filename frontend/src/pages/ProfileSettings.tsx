@@ -21,8 +21,7 @@ const ProfilePic = () => {
 	)
 }
 
-const ProfileInfo = ({}) => {
-
+const ProfileInfo = () => {
 	return (
 		<div className="flex gap-8">
 			<ProfilePic />
@@ -34,113 +33,147 @@ const ProfileInfo = ({}) => {
 	)
 }
 
+interface User {
+  displayName: string;
+  twoFactorEnabled: boolean;
+}
 
-const ProfileSettings = ({}) => {
+interface SettingsProps {
+  user: User;
+  setUser: React.Dispatch<React.SetStateAction<User>>;
+}
 
-	const [twoFactor, setTwoFactor] = useState(false);		//chenge to user.twoFactorEnabled or similar
-	const [qr, setQr] = useState<string | null>(null);
-	const [showQRModal, setShowQRModal] = useState(false);
+const Settings = ({ user, setUser }: SettingsProps) => {
 
-	const Settings = ({}) => {
-		const [name, setName] = useState("name");							//change to user.displayName or similar
+	function updateName(e) {
+    setUser(u => ({ ...u, displayName: e.target.value }));
+  }
 
-		return (
-			<div className="flex flex-col">
-				<Input id="name" label="Display name" value={name} tooltip="Name that is shown" onChange={(e) => setName(e.target.value)}/>
-			  <div className="flex m-2 px-4 gap-3 items-center">
-			    <label >Two factor authentication</label>
-			    <input type="checkbox" id="twoFactorAuth" checked={twoFactor} onChange={(e) => setTwoFactor(e.target.checked)}/>
-			  </div>
-			</div>
-		)
-	}
+  function update2FA(e) {
+    setUser(u => ({ ...u, twoFactorEnabled: e.target.checked }));
+  }
 
-	const QrModal = () => {
-		const [token, setToken] = useState("");
+	return (
+		<div className="flex flex-col">
+			<Input
+				id="name"
+				label="Display name"
+				value={user.displayName}
+				tooltip="Name that is shown to other players"
+				onChange={(e) => updateName(e)}/>
+		  <div className="flex m-2 px-4 gap-3 items-center">
+		    <label >Two factor authentication</label>
+		    <input
+					type="checkbox"
+					id="twoFactorAuth"
+					checked={user.twoFactorEnabled}
+					onChange={(e) => update2FA(e)}/>
+		  </div>
+		</div>
+	)
+}
 
-		const verifySetup = async () => {
-	    const res = await fetch(PROXY_URL + "/verify-setup-2fa", {
-	      method: "POST",
-	      credentials: "include",
-	      headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ token })
-	    });
+interface QrModalProps {
+	qr: string | null;
+	token: string;
+	setToken: React.Dispatch<React.SetStateAction<string>>;
+	onClose: () => void;
+	onVerify: () => void;
+}
 
-	    const data = await res.json();
-			console.log("Response: " + data);
-	    if (data.success) {
-				setShowQRModal(false);
-				//TODO some success message?
-			}
-			else {
-				console.log("Wrong code");
-			}
-	  };
-
-		return (
-			<div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/50 z-50">
-				<div className="bg-light-bg dark:bg-dark-bg p-8 rounded-xl shadow-xl max-w-sm w-full text-center">
-					<h2 className="text-md font-semibold mb-4">Scan the QR Code to activate two factor athentication</h2>
-					{qr && (
-						<>
-							<img src={qr} alt="2FA QR" className="w-48 h-48 mx-auto mb-6"/>
-							<Input id="2faCode" label="Code from app" tooltip="Write the code you see in the app after scanning the qr code" value={token} onChange={(e) => setToken(e.target.value)}/>
-						</>
-					)}
-					<div className="flex justify-around">
-						<Button variant="secondary" onClick={() => {setShowQRModal(false); setTwoFactor(!twoFactor);}}>
-							Close
-						</Button>
-						<Button variant="primary" onClick={() => {verifySetup()}}>
-							Verify
-						</Button>
-					</div>
+const QrModal = ({ qr, token, setToken, onClose, onVerify }: QrModalProps) => {
+	return (
+		<div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/50 z-50">
+			<div className="bg-light-bg dark:bg-dark-bg p-8 rounded-xl shadow-xl max-w-sm w-full text-center">
+				<h2 className="text-md font-semibold mb-4">Scan the QR Code to activate two factor athentication</h2>
+				{qr && (
+					<>
+						<img src={qr} alt="2FA QR" className="w-48 h-48 mx-auto mb-6"/>
+						<Input
+							id="2faCode"
+							label="Code from app"
+							value={token}
+							tooltip="Write the code you see in the app after scanning the qr code"
+							autofocus={true}
+							onChange={(e) => setToken(e.target.value)}/>
+					</>
+				)}
+				<div className="flex justify-around">
+					<Button variant="secondary" onClick={onClose}>
+						Close
+					</Button>
+					<Button variant="primary" onClick={onVerify}>
+						Verify
+					</Button>
 				</div>
 			</div>
-		)
-	}
+		</div>
+	)
+}
 
-	async function request2FASetup() {
-	  const res = await fetch(PROXY_URL + "/enable-2fa", {
+const ProfileSettings = ({}) => {
+	const [user, setUser] = useState({		//get actual data
+    displayName: "name",
+    twoFactorEnabled: false,
+  });
+	const [qr, setQr] = useState<string | null>(null);
+	const [token, setToken] = useState("");
+	const [modalOpen, setModalOpen] = useState(false);
+
+	const verify2FA = async () => {
+	  const res = await fetch(PROXY_URL + "/verify-setup-2fa", {
 	    method: "POST",
 	    credentials: "include",
-	  });
-	  return res.json();
-	}
-
-	const startSetup = async () => {
-    const data = await request2FASetup();
-    setQr(data.qr);
-  };
-	
-	function saveSettings() {
-		console.log("save settings button pressed");
-
-		if (twoFactor != false) {			//change to actual value
-			let showQr  = confirm("To enable two factor authentication you now need to scan a qr code with a second device. Do you want to proceed?");
-			if (showQr) {
-				startSetup();
-				setShowQRModal(true);
-			}
-			else {
-				setTwoFactor(!twoFactor);
-			}
+	    headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ token })
+  	});
+		const data = await res.json();
+	  if (data.success) {
+			setModalOpen(false);
+			//TODO some success message?
 		}
+		else {
+			console.log("Wrong code");
+		}
+	};
 
+	async function start2FA() {
+    const res = await fetch(PROXY_URL + "/enable-2fa", {
+      method: "POST",
+      credentials: "include",
+    });
+    const data = await res.json();
+    setQr(data.qr);
+    setModalOpen(true);
+  }
+	
+	function saveSettings(e) {
+		e.preventDefault();
+		if (user.twoFactorEnabled != false) {			//change to actual value
+			start2FA();
+		}
 	}
 
 	return (
 		<div className="flex justify-center pt-10">
 			<div className="flex flex-col gap-16 w-3/5 min-w-xl max-w-6xl">
 				<ProfileInfo />
-				<form action={saveSettings}>
-					<Settings />
+				<form onSubmit={saveSettings}>
+					<Settings user={user} setUser={setUser} />
 					<div className="flex justify-end">
 						<Button>Save</Button>
 					</div>
 				</form>
 			</div>
-			{showQRModal && <QrModal/>}
+			{modalOpen && (
+				<QrModal
+					qr={qr}
+					token={token}
+					setToken={setToken}
+					onClose={() => {setModalOpen(false); setUser(u => ({ ...u, twoFactorEnabled: !u.twoFactorEnabled}))}}			//is this correct?
+					onVerify={verify2FA}
+				/>
+			)}
 		</div>
 	)
 }
