@@ -37,12 +37,13 @@ const ProfileInfo = ({}) => {
 
 const ProfileSettings = ({}) => {
 
-	const [name, setName] = useState("name");							//change to user.displayName or similar
 	const [twoFactor, setTwoFactor] = useState(false);		//chenge to user.twoFactorEnabled or similar
 	const [qr, setQr] = useState<string | null>(null);
 	const [showQRModal, setShowQRModal] = useState(false);
 
 	const Settings = ({}) => {
+		const [name, setName] = useState("name");							//change to user.displayName or similar
+
 		return (
 			<div className="flex flex-col">
 				<Input id="name" label="Display name" value={name} tooltip="Name that is shown" onChange={(e) => setName(e.target.value)}/>
