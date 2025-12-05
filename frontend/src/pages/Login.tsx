@@ -12,7 +12,13 @@ export default function Login() {
   const [password, setPassword] = useState<string>("");
 
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/sideplayer-login"); // or "/dashboard", whichever you want
+    }
+  }, [isAuthenticated, navigate]);
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault(); // to prevent browsers default behaviour with forms (reloading the page), optional?
