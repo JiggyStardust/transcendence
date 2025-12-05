@@ -38,52 +38,36 @@ export function applyCollision(game) {
       game.move.direction.x = -game.move.direction.x;
     else if (ballHitTopOfPaddle(game, game.paddle1)){
       // Sphere moving up
-      if (game.move.direction.z > 0) {
-        game.move.direction.x = game.move.vxLarge;
-        game.move.direction.z = game.move.vzLarge;
-      }
+      if (game.move.direction.z > 0)
+        game.move.direction.set(game.move.vxLarge, 0, game.move.vzLarge);
       // Sphere moving down
       else if (game.move.direction.z < 0) {
         // SmallAngle
-        if (game.move.direction.x === game.move.vxSmall) {
-          game.move.direction.x = game.move.vxStraight;
-          game.move.direction.z = game.move.vzStraight;
-        }
+        if (game.move.direction.x === game.move.vxSmall)
+          game.move.direction.set(game.move.vxStraight, 0, game.move.vzStraight);
         // LargeAngle
-        else {
-          game.move.direction.x = game.move.vxSmall;
-          game.move.direction.z = -game.move.vzSmall;
-        }
+        else
+          game.move.direction.set(game.move.vxSmall, 0, -game.move.vzSmall);
       }
       // Sphere moving straight
-      else {
-        game.move.direction.x = game.move.vxSmall;
-        game.move.direction.z = game.move.vzSmall;
-      }
+      else
+        game.move.direction.set(game.move.vxSmall, 0, game.move.vzSmall);
     }
     // Bottom of paddle
     else {
       // Sphere moving up
       if (game.move.direction.z > 0) {
-        if (game.move.direction.x === game.move.vxLarge) {
-          game.move.direction.x = game.move.vxSmall;
-          game.move.direction.z = game.move.vzSmall;
-        }
-        else {
-          game.move.direction.x = game.move.vxStraight;
-          game.move.direction.z = game.move.vzStraight;
-        }
+        if (game.move.direction.x === game.move.vxLarge)
+          game.move.direction.set(game.move.vxSmall, 0, game.move.vzSmall);
+        else
+          game.move.direction.set(game.move.vxStraight, 0, game.move.vzStraight);
       }
       // Sphere moving down
-      else if (game.move.direction.z < 0) {
-        game.move.direction.x = game.move.vxLarge;
-        game.move.direction.z = -game.move.vzLarge;
-      }
+      else if (game.move.direction.z < 0)
+        game.move.direction.set(game.move.vxLarge, 0, -game.move.vzLarge);
       // Sphere moving straight
-      else {
-        game.move.direction.x = game.move.vxSmall;
-        game.move.direction.z = -game.move.vzSmall;
-      }
+      else
+        game.move.direction.set(game.move.vxSmall, 0, -game.move.vzSmall);
     }
   }
   // Paddle2 Collision
@@ -98,50 +82,34 @@ export function applyCollision(game) {
       game.move.direction.x = -game.move.direction.x;
     else if (ballHitTopOfPaddle(game, game.paddle2)){
       // Sphere moving down
-      if (game.move.direction.z > 0) {
-        game.move.direction.x = -game.move.vxLarge;
-        game.move.direction.z = game.move.vzLarge;
-      }
+      if (game.move.direction.z > 0)
+        game.move.direction.set(-game.move.vxLarge, 0, game.move.vzLarge);
       // Sphere moving up
       else if (game.move.direction.z < 0) {
-        if (game.move.direction.x === game.move.vxSmall) {
-          game.move.direction.x = -game.move.vxStraight;
-          game.move.direction.z = game.move.vzStraight;
-        }
-        else {
-          game.move.direction.x = -game.move.vxSmall;
-          game.move.direction.z = -game.move.vzSmall;
-        }
+        if (game.move.direction.x === game.move.vxSmall)
+          game.move.direction.set(-game.move.vxStraight, 0, game.move.vzStraight);
+        else
+          game.move.direction.set(-game.move.vxSmall, 0, -game.move.vzSmall);
       }
       // Sphere moving straight
-      else {
-        game.move.direction.x = -game.move.vxSmall;
-        game.move.direction.z = game.move.vzSmall;
-      }
+      else
+        game.move.direction.set(-game.move.vxSmall, 0, game.move.vzSmall);
     }
     // Bottom of paddle
     else {
       // Sphere moving up
       if (game.move.direction.z > 0) {
-        if (game.move.direction.x === game.move.vxLarge) {
-          game.move.direction.x = -game.move.vxSmall;
-          game.move.direction.z = game.move.vzSmall;
-        }
-        else {
-          game.move.direction.x = -game.move.vxStraight;
-          game.move.direction.z = game.move.vzStraight;
-        }
+        if (game.move.direction.x === game.move.vxLarge)
+          game.move.direction.set(-game.move.vxSmall, 0, game.move.vzSmall);
+        else
+          game.move.direction.set(-game.move.vxStraight, 0, game.move.vzStraight);
       }
       // Sphere moving down
-      else if (game.move.direction.z < 0) {
-        game.move.direction.x = -game.move.vxLarge;
-        game.move.direction.z = -game.move.vzLarge;
-      }
+      else if (game.move.direction.z < 0)
+        game.move.direction.set(-game.move.vxLarge, 0, -game.move.vzLarge);
       // Sphere moving straight
-      else {
-        game.move.direction.x = -game.move.vxSmall;
-        game.move.direction.z = -game.move.vzSmall;
-      }
+      else
+        game.move.direction.set(-game.move.vxSmall, 0, -game.move.vzSmall);
     }
   }
 
