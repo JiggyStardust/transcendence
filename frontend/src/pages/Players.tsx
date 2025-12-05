@@ -2,6 +2,7 @@ import { Button } from "../components/Button";
 import Input from "../components/Input";
 import { PROXY_URL } from "../constants";
 import { useState } from "react";
+import { FiPlus } from "react-icons/fi";
 
 const LoginCard = () => {
 	return (
@@ -22,8 +23,8 @@ const Players = () => {
   };
 
 	const AddCard = ({ onAdd }) => (
-	  <button onClick={onAdd} className="text-9xl w-72 h-80 border flex-shrink-0 snap-start rounded-xl shadow-lg cursor-pointer">
-	    +
+	  <button onClick={onAdd} className="flex items-center justify-center w-72 h-80 border flex-shrink-0 snap-start rounded-xl shadow-lg cursor-pointer">
+	    <FiPlus size="128"/>
 	  </button>
 	);
 
