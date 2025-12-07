@@ -15,7 +15,7 @@ const ProfilePic = () => {
 		      className="w-full h-full object-cover rounded-full"
 		    />
 		  ) : ( */}
-		    <FiUser size={120} />
+		    <FiUser size="120" />
 		  {/* )} */}
 		</div>
 	)
