@@ -4,53 +4,61 @@ import { PROXY_URL } from "../constants";
 import { useState } from "react";
 import { FiPlus, FiXCircle } from "react-icons/fi";
 
+type LoggedIn = {
+  type: "loggedIn";
+  id: string;
+  name: string;
+  avatarUrl: string;
+};
 
-type PlayerCard =
-	{
-    type: "loggedIn";
-    id: string;
-    name: string;
-    avatarUrl: string;
-  } | {
-    type: "pending";
-    id: string;
-    username?: string;
-    password?: string;
-    error?: string;
-	};
+type Pending = {
+  type: "pending";
+  id: string;
+  username?: string;
+  password?: string;
+  error?: string;
+};
 
-const LoggedInCard = ({ card }: { card: Extract<PlayerCard, { type: "loggedIn" }> }) => {
+type PlayerCard = LoggedIn | Pending;
+
+const CardFrame = ({ children, className = "" }) => (
+  <div className={`relative p-4 w-72 h-80 border flex-shrink-0 snap-start rounded-xl shadow-lg ${className}`}>
+    {children}
+  </div>
+);
+
+const LoggedInCard = ({ card }: { card: LoggedIn }) => {
 	return (
-		<div className="p-4 w-72 h-80 border flex-shrink-0 flex flex-col items-center justify-center gap-4 snap-start rounded-xl shadow-lg">
+		<CardFrame className="flex flex-col items-center justify-center gap-4">
 			<img src={card.avatarUrl} className="size-28 object-cover rounded-full"/>
 			<p className="bolded text-2xl">{card.name}</p>
-		</div>
+		</CardFrame>
 	)
 }
 
 type PendingCardProps = {
-  card: Extract<PlayerCard, { type: "pending" }>;
-  onUpdate: (id: string, updates: Partial<PlayerCard>) => void;
+  card: Pending;
+  onUpdate: (id: string, updates: Partial<Pending>) => void;
 	handleLogin: () => void;
   onLoginSuccess: (id: string, user: any) => void;
 };
 
 const PendingCard =({ card, onUpdate, handleLogin, onLoginSuccess }: PendingCardProps) => {
 	return (
-		<div className="relative p-4 w-72 h-80 border flex-shrink-0 snap-start rounded-xl shadow-lg">
-			<button className="absolute top-8 right-8 cursor-pointer"><FiXCircle className="size-5" /></button>
-			<div className="absolute bottom-12 inset-x-0 flex flex-col items-center justify-center">
+		<CardFrame>
+			<button className="absolute top-8 right-8 cursor-pointer"><FiXCircle size="20" /></button>
+			<div className="absolute bottom-10 inset-x-0 flex flex-col items-center">
 				<Input id="username" label="Username" value={card.username} onChange={(e) => onUpdate(card.id, { username: e.target.value })}/>
 				<Input id="password" label="Password" value={card.password} onChange={(e) => onUpdate(card.id, { password: e.target.value })}/>
 				<Button onClick={handleLogin}>Log in</Button>
 			</div>
-		</div>
+		</CardFrame>
 	)
 }
 
 type PlayerCardProps = {
   card: PlayerCard;
-  onUpdate: (id: string, updates: Partial<PlayerCard>) => void;
+  onUpdate: (id: string, updates: Partial<Pending>) => void;
 	handleLogin: () => void;
   onLoginSuccess: (id: string, user: any) => void;
 };
@@ -101,18 +109,21 @@ const Players = () => {
 		  ]);
   };
 
-	const updatePendingCard = (id: string, updates: Partial<PlayerCard>) => {
-  	// setCards(prev =>
-    // 	prev.map(p => (p.id === id ? { ...p, ...updates } : p))
-  	// );
-		console.log("Update pending card");
+	const updatePendingCard = (id: string, updates: Partial<Pending>) => {
+	  setCards(prev =>
+	    prev.map(card =>
+	      card.id === id ? { ...card, ...updates } : card
+	    )
+	  );
 	};
 
 	const handleLogIn = () => {
+		//TODO
 		console.log("Handle login");
 	}
 
 	const onLoginSuccess = () => {
+		//TODO
 		console.log("Login was successfull, do something about it");
 	}
 
