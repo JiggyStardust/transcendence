@@ -15,15 +15,24 @@ export const navLinkStyles = cva(
 );
 
 export default function NavBar() {
+	const user = true;		//TODO change to useAuth??
 	return (
 		<nav className="sticky top-0 px-6 py-3 mb-12 items-center flex justify-between bg-stone-600 dark:bg-zinc-900 w-screen">
 			<span className="text-lg font-extrabold font-tomorrow text-vintage-yellow">
 				<NavLink to="/">Ping of Pongs</NavLink>
 			</span>
 			<div className="flex gap-5 items-center">
-				<NavLink to="/signin" className={({ isActive }) => navLinkStyles({ active: isActive })}>Log in</NavLink>
-				<NavLink to="/testing" className={({ isActive }) => navLinkStyles({ active: isActive })}>Testing</NavLink>
-				<NavLink to="/game" className={({ isActive }) => navLinkStyles({ active: isActive })}>Game</NavLink>
+				{user ? (
+	        <>
+						<NavLink to="/game" className={({ isActive }) => navLinkStyles({ active: isActive })}>Game</NavLink>
+						<NavLink to="/testing" className={({ isActive }) => navLinkStyles({ active: isActive })}>Testing</NavLink>
+					</>
+				) : (
+					<>
+						<NavLink to="/signin" className={({ isActive }) => navLinkStyles({ active: isActive })}>Log in</NavLink>
+						<NavLink to="/testing" className={({ isActive }) => navLinkStyles({ active: isActive })}>Testing</NavLink>
+					</>
+				)}
 				<ThemeToggle />
 			</div>
 		</nav>
