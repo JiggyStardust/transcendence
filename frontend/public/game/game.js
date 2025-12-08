@@ -14,6 +14,7 @@ export const game = {
 	sphere: null,
 	paddle1: null,
 	paddle2: null,
+	paddle3: null,
 	scoreBoard: null,
 	scoreLeftText: null,
 	scoreRightText: null,
@@ -23,12 +24,16 @@ export const game = {
 	arrowLineText: null,
 	arrowRightText: null,
 	arrowLeftText: null,
-	gameOverText: null,
+	gameOverFinalText: null,
+	gameOverScoreText: null,
 	winnerText: null,
 	p1NameText: null,
 	p2NameText: null,
+	p3NameText: null,
+	middlePaddleFlag: false,
 	startingCameraY: 7,
 	currentCameraZ: 2,
+	hasThirdPlayer: false,
   	state: state,
 	currentState: state.start,
 
@@ -39,10 +44,12 @@ export const game = {
 	},
 
 	username: {
-		p1: "player1",
-		p2: "player2",
+		p1: "Player1",
+		p2: "Player2",
+		p3: "Player3",
 		p1Display: null,
 		p2Display: null,
+		p3Display: null
 	},
 
 	score: {
@@ -63,21 +70,27 @@ export const game = {
 	},
 
 	move: {
-		vxSmallAngle: 2,
-		vxLargeAngle: 1.581,
-		vxStraightAngle: 2.236,
-		vzSmallAngle: 1,
-		vzLargeAngle: 1.581,
-		vzStraightAngle: 0,
+		vxStraight: 2.236,
+		vxSmall: 2,
+		vxLarge: 1.581,
+		vzStraight: 0,
+		vzSmall: 1,
+		vzLarge: 1.581,
 		xStartingAngle: 2.236,
 		zStartingAngle: 0,
+
 		xStartingPos: 0,
 		zStartingPos: 0,
+
 		paddleCollisionX: 2.4,
 		scoreCollisionX: 2.6,
 		sideCollisionZ: 2.6,
+
 		paddleSize: 1.5,
-		paddleCollisionSize: 0.95,
+		paddleColSize: 0.95,
+		paddle3ColSize: 0.775,
+
+		p3StartingZ: -2,
 		startingBallSpeed: 2.5,
 		ballSpeed: 2.5,
 		ballSpeedIncrement: 0.08,
