@@ -49,7 +49,7 @@ const PendingCard =({ card, onUpdate, handleLogin, onLoginSuccess }: PendingCard
 			<button className="absolute top-8 right-8 cursor-pointer"><FiXCircle size="20" /></button>
 			<div className="absolute bottom-10 inset-x-0 flex flex-col items-center">
 				<Input id="username" label="Username" value={card.username} onChange={(e) => onUpdate(card.id, { username: e.target.value })}/>
-				<Input id="password" label="Password" value={card.password} onChange={(e) => onUpdate(card.id, { password: e.target.value })}/>
+				<Input type="password" id="password" label="Password" value={card.password} onChange={(e) => onUpdate(card.id, { password: e.target.value })}/>
 				<Button onClick={handleLogin}>Log in</Button>
 			</div>
 		</CardFrame>
@@ -98,15 +98,15 @@ const Players = () => {
 
 	const addCard = () => {
     const nextId: string = String(cards.length + 1);
-		  setCards(prev => [
-		    ...prev,
-		    {
-		      type: "pending",
-		      id: nextId,
-		      username: "",
-		      password: ""
-		    }
-		  ]);
+	  setCards(prev => [
+	    ...prev,
+	    {
+	      type: "pending",
+	      id: nextId,
+	      username: "",
+	      password: ""
+	    }
+	  ]);
   };
 
 	const updatePendingCard = (id: string, updates: Partial<Pending>) => {
@@ -139,7 +139,9 @@ const Players = () => {
 			      onLoginSuccess={onLoginSuccess}
 			    />
 			  ))}
-				<AddCard onAdd={addCard} />
+				{cards.length < 4 && 
+					<AddCard onAdd={addCard} />
+				}
 			</div>
 	  </main>
 	);
