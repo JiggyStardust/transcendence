@@ -5,7 +5,7 @@ import Testing from "./pages/Testing";
 import Login from "./pages/Login";
 import ProfileSettings from "./pages/ProfileSettings";
 import Game from "./pages/Game";
-
+import SideplayerLogin from "./pages/SideplayerLogin.tsx";
 import NavBar from "./components/NavBar.tsx";
 
 function App() {
@@ -16,6 +16,7 @@ function App() {
 				<NavBar />
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/sideplayer-login" element={<SideplayerLogin />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
 		      <Route path="/testing" element={<Testing />} />
