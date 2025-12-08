@@ -178,10 +178,49 @@ export async function login(req: FastifyRequest<{ Body: IAuthRequestBody }>, rep
   // - store refresh token as deterministic hash (SHA256)
   // - [ security ] set the refresh token in an HttpOnly cookie
   // - short-lived tocken in json - OK
-  reply.send({
+ /* reply.send({
     userId: user.id,
     username: user.username,
     accessToken,
     refreshToken, // should be set as HttpOnly cookie
-  });
+  });*/
+
+  reply
+    .setCookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: true,
+      //sameSite: "Strict",
+      maxAge: 15 * 60 * 1000,
+      path: "/"
+    })
+    .setCookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      //sameSite: "Strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/"
+    })
+    .send({ message: "Logged in!" })
+}
+
+export async function verify_player(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
+  const { username, password } = req.body;
+ 
+  if (!username || !password) {
+    return reply.code(400).send({ error: "Username and password are required" });
+  }
+
+  const result = await req.server.db.getUser(username);
+  if (!result.ok) return reply.code(401).send({ error: "Invalid username or password" });
+
+  const user: IUserData = result.data;
+
+  const valid = await bcrypt.compare(password, user.passwordHash);
+  if (!valid) return reply.code(401).send({ error: "Invalid username or password" });
+
+  return {
+    status: "verified",
+    userID: user.id,
+    username: user.username
+  };
 }

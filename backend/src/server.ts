@@ -9,14 +9,24 @@ import authRoutes from "./routes/auth";
 import checkUsernameRoute from "./routes/checkUsername";
 import avatarRoutes from "./routes/avatar";
 import "dotenv/config";
+import fastifyCookie from "@fastify/cookie";
 
 const PORT = parseInt(process.env.BACKEND_PORT ?? "4000");
 const HOST = process.env.BACKEND_HOST || "localhost";
 
 const fastify = Fastify({ logger: { level: "error" } });
 
+// register cookies
+fastify.register(fastifyCookie, {
+  secret: "a_random_secret_key" // used for signed cookies
+});
+
 // register middleware
-fastify.register(cors, { origin: true });
+// fastify.register(cors, { origin: true }); <-- old version. before cookies.
+fastify.register(cors, {
+  origin: ["http://" + HOST + ":" + PORT],
+  credentials: true
+});
 fastify.register(formbody);
 
 // register other plugins
