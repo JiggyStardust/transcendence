@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 import { useAuth } from "./AuthContext";
 import { PROXY_URL } from "../constants";
 
@@ -71,7 +71,8 @@ export function UserProvider({ children }: { children: ReactNode }) { // anythin
       displayName: data.displayName ?? data.username, // if undefined, use the value on the right (username)
       avatarUrl: data.avatarUrl ?? null, // we might have a default pic then?
       friends: data.friends ?? [],
-      stats: data.stats ?? null
+      stats: data.stats ?? null,
+      role:     //TODO
     });
   }
 
