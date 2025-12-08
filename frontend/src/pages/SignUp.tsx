@@ -4,6 +4,7 @@ import Input from "../components/Input";
 import { Button} from "../components/Button";
 import { PROXY_URL } from "../constants";
 import { useNavigate } from "react-router-dom";
+import { FiAlertCircle } from "react-icons/fi";
 
 export default function SignUp() {
 
@@ -80,7 +81,7 @@ export default function SignUp() {
 			setInformation("");
 	  }
 	}
- // "Password must be at least 8 chars, with upper, lower, digit, special and not common";
+ // "Password must be at least 8 chars, with upper, lower, digit, special character";
  // This should be displayed somewhere!
 
 	function handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -90,7 +91,7 @@ export default function SignUp() {
 		if (password === "") {
 			setInformation("Password can not be empty");
 		} else {
-			setInformation("");
+			setInformation(""); 
 		}
 	}
 
@@ -99,15 +100,17 @@ export default function SignUp() {
 	async function handleUsernameBlur(e: React.FocusEvent<HTMLInputElement>) {
     
 		const value = e.target.value;
+		if (value === "") {
+			setInformation("Username can not be empty!");
+			return;
+		}
 
-    if (value !== "") {
-      const taken = await usernameInUse(value);
-      if (taken) {
-				setInformation("Username already taken");
-			} else {
-				setInformation(""); // clear message
-			}
-    }
+    const taken = await usernameInUse(value);
+    if (taken) {
+			setInformation("Username already taken");
+		 } else {
+			setInformation(""); // clear message
+		}
   }
 
 	return (
@@ -117,7 +120,14 @@ export default function SignUp() {
  				This is where you SignUp!
 	 	  </p>
 			<form action={handleSignUp} className="px-4 py-8 border border-white rounded-lg ">
-				<p>{information}</p>
+				<p>
+					{information && (
+					<div className="flex items-center gap-2 text-red-500 font-bold mb-2">
+						<FiAlertCircle className="text-xl" />
+						<span>{information}</span>
+					</div>
+				)}
+				</p>
 					<Input 
 				  	id="username"
 				  	label="Username:" 
@@ -125,17 +135,38 @@ export default function SignUp() {
 				  	value={username} 
 				  	onChange={handleUsernameChange}
 				  	onBlur={handleUsernameBlur}
+						focusTooltip={
+							<div>
+    					<p className="font-semibold mb-1">Username requirements:</p>
+    					<ul className="list-disc list-inside space-y-1">
+     						<li>At least 3 characters</li>
+      					<li>Unique (not taken by other user)</li>
+    					</ul>
+  					</div>
+						}
 				  />
 
 					<Input
 				  	id="password" 
 					  label="Password:" 
-				 	 type="password" 
-				 	 value={password} 
-				 	 onChange={handlePasswordChange}
-				 	/>
+				 		type="password" 
+				 		value={password} 
+				 		onChange={handlePasswordChange}
+						focusTooltip={
+							<div>
+    					<p className="font-semibold mb-1">Password requirements:</p>
+    					<ul className="list-disc list-inside space-y-1">
+     						<li>At least 8 characters</li>
+      					<li>One uppercase letter</li>
+      					<li>One lowercase letter</li>
+      					<li>One digit</li>
+      					<li>One special character</li>
+    					</ul>
+  					</div>
+						}
+					/>
 
-					<Button type="submit">Sign up</Button>
+					<Button>Sign up</Button>
 			</form>
 			<ThemeToggle />
 		</div>
