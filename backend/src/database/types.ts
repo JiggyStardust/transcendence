@@ -1,4 +1,5 @@
 // shared types
+import { AvatarType } from ".prisma/client";
 
 export interface IPrismaReturn<T = unknown> {
   data: T | undefined;
@@ -16,6 +17,14 @@ export interface IUserData {
   username: string;
   passwordHash: string;
   isTwoFAenabled: boolean;
+}
+
+export interface IUserProfile {
+  id: number;
+  username: string;
+  displayName: string;
+  avatarURL: string;
+  avatarType: AvatarType;
 }
 
 // Uniform DB return type: { ok: boolean, data: T | string }

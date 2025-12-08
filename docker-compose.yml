@@ -28,6 +28,7 @@ services:
     volumes:
       - ./backend/src:/app/src
       - ./backend/prisma:/app/prisma
+      - ./backend/uploads:/app/uploads
       - /app/node_modules
     environment:
       - BACKEND_PORT=${BACKEND_PORT}
