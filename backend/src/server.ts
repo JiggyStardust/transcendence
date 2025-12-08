@@ -2,10 +2,12 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import formbody from "@fastify/formbody";
+import path from "path";
 import databasePlugin from "./plugin/database";
 import userRoutes from "./routes/users";
 import authRoutes from "./routes/auth";
 import checkUsernameRoute from "./routes/checkUsername";
+import avatarRoutes from "./routes/avatar";
 import "dotenv/config";
 import fastifyCookie from "@fastify/cookie";
 
@@ -27,6 +29,18 @@ fastify.register(cors, {
 });
 fastify.register(formbody);
 
+// register other plugins
+fastify.register(import("@fastify/multipart"), {
+  limits: {
+    fileSize: 2 * 1024 * 1024, // 2 MB
+    files: 1, // only 1 file allowed
+  },
+});
+fastify.register(import("@fastify/static"), {
+  root: path.join(process.cwd(), "uploads"),
+  prefix: "/uploads/",
+});
+
 // register custom plugins
 fastify.register(databasePlugin);
 
@@ -34,6 +48,7 @@ fastify.register(databasePlugin);
 fastify.register(userRoutes);
 fastify.register(authRoutes);
 fastify.register(checkUsernameRoute, { prefix: "/users" });
+fastify.register(avatarRoutes, { prefix: "/users" });
 
 // declare a basic route
 fastify.get("/", async (request, reply) => {

@@ -1,12 +1,12 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-	<div className='bg-gradient dark:bg-gradient-dark text-black dark:text-white'>
-    	<App />
-	</div>
-  </StrictMode>,
+		<div className='bg-light-bg dark:bg-dark-bg text-black dark:text-white'>
+	    <App />
+		</div>
+  </StrictMode>
 )

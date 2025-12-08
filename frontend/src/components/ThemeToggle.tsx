@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { FiSun } from "react-icons/fi";
-import { FiMoon } from "react-icons/fi";
+import { FiSun, FiMoon } from "react-icons/fi";
 
 export const ThemeToggle: React.FC = () => {
 
@@ -14,7 +13,7 @@ export const ThemeToggle: React.FC = () => {
 	}
 
   return (
-    <button onClick={ changeTheme } className="flex gap-2 px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-700 cursor-pointer">
+    <button onClick={ changeTheme } className="flex gap-2 px-4 py-2 rounded-md bg-light-bg dark:bg-stone-600 cursor-pointer">
 			<span className="content-center" >{isDark ? <FiSun /> : <FiMoon />}</span>
 			<span>{isDark ? "Switch to light theme" : "Switch to dark theme"}</span>
     </button>
