@@ -21,7 +21,7 @@ export default function NavBar() {
 				<NavLink to="/">Ping of Pongs</NavLink>
 			</span>
 			<div className="flex gap-5 items-center">
-				<NavLink to="/signin" className={({ isActive }) => navLinkStyles({ active: isActive })}>Log in</NavLink>
+				<NavLink to="/login" className={({ isActive }) => navLinkStyles({ active: isActive })}>Log in</NavLink>
 				<NavLink to="/testing" className={({ isActive }) => navLinkStyles({ active: isActive })}>Testing</NavLink>
 				<NavLink to="/game" className={({ isActive }) => navLinkStyles({ active: isActive })}>Game</NavLink>
 				<ThemeToggle />
