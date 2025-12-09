@@ -16,7 +16,7 @@ export default function SignUp() {
 
 // In this function we actually try to sign up
 
-	async function handleSignUp(e: React.FormEvent<HTMLFormElement>) {
+	async function handleSignUp() {
 
     const res = await fetch(PROXY_URL + "/signup", {
       method: "POST",
