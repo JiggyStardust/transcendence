@@ -12,6 +12,9 @@ import {gameOver} from "./gameOver.js";
 game.canvas = document.getElementById('renderCanvas');
 game.engine = new BABYLON.Engine(game.canvas, true);
 
+if (window.numberOfPlayers == 3)
+  game.hasThirdPlayer = true;
+
 parseUsername(game);
 await createScene(game);
 

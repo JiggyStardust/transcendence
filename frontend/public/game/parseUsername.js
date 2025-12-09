@@ -19,6 +19,11 @@ function reduceSize(str) {
 
 export function parseUsername(game) {
   const maxLength = 9;
+
+  game.username.p1 = window.p1Name;
+  game.username.p2 = window.p2Name;
+  if (game.hasThirdPlayer)
+    game.username.p3 = window.p3Name;
   
   game.username.p1Display = game.username.p1.toUpperCase();
   game.username.p1Display = truncate(game.username.p1Display, maxLength - reduceSize(game.username.p1Display));

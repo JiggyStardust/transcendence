@@ -12,7 +12,7 @@ export interface User {
 const Match = ({game_number, player_1, player_2, active=true}: {game_number: string, player_1: string, player_2:string, active: boolean}) => {
   return (
     <div className="flex justify-center gap-7">
-      <Button variant="primary" size="lg" disabled={!active}>{game_number}</Button>
+      <Button to="/game" variant="primary" size="lg" disabled={!active}>{game_number}</Button>
       <p className="text-3xl">{player_1} vs. {player_2}</p>
     </div>
   )
