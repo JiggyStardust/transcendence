@@ -16,7 +16,9 @@ export default function SignUp() {
 
 // In this function we actually try to sign up
 
-	async function handleSignUp() {
+	async function handleSignUp(e: React.FormEvent<HTMLFormElement>) {
+	
+		e.preventDefault();
 
     const res = await fetch(PROXY_URL + "/signup", {
       method: "POST",
@@ -119,7 +121,7 @@ export default function SignUp() {
 		  <p className="mt-10 text-lg text-center max-w-md">
  				This is where you SignUp!
 	 	  </p>
-			<form action={handleSignUp} className="px-4 py-8 border border-white rounded-lg ">
+			<form onSubmit={handleSignUp} className="px-4 py-8 border border-white rounded-lg ">
 				<p>
 					{information && (
 					<div className="flex items-center gap-2 text-red-500 font-bold mb-2">
