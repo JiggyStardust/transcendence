@@ -2,7 +2,7 @@ import { signup, login, verify_player } from '../authentication/authController';
 import { updateDisplayName, updatePassword } from '../authentication/userController';
 import type { FastifyPluginAsync } from "fastify";
 import meRoutes from "./me";
-import publicProfileRoutes from "./profileRoutes";
+import publicProfileRoutes from "./publicProfileRoutes";
 
 const userRoutes: FastifyPluginAsync = async (fastify): Promise<void> => {
     // public routes
