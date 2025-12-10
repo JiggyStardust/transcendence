@@ -1,8 +1,8 @@
+// @ts-nocheck
 import { Button } from "../components/Button.tsx";
 import { useState } from "react";
 import { type User, useTournamentStore } from "../context/tournamentStore";
 
-// @ts-nocheck
 
 
 const Match = ({game_number, player_1, player_2, active=true}: {game_number: string, player_1: string, player_2:string, active?: boolean}) => {
@@ -38,8 +38,6 @@ export default function Tournament() {
 
   // players.sort( () => Math.random()-0.5 );
 
-
-  
   return (
     <div className="flex justify-center flex-col items-center gap-10">
       <h1 className="mt-4 font-press text-7xl text-vintage-red dark:text-vintage-yellow [word-spacing:-30px] tracking-[-0.1em]">Tournament</h1>
@@ -64,5 +62,4 @@ export default function Tournament() {
     </div>
     
   )
-
 }
