@@ -45,14 +45,34 @@ interface SettingsProps {
   setUser: React.Dispatch<React.SetStateAction<User>>;
 }
 
+const MAX_FILE_SIZE_MB = 2;
+const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/jpg"];
+
 const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 	const [fileName, setFileName] = useState("");
 	const [file, setFile] = useState<File | null>(null);
+	const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const selectedFile = e.target.files?.[0] || null;
+		if (selectedFile === null) {
+			return;
+		}
+		const fileSizeMB = selectedFile.size / (1024 * 1024);
+		if (fileSizeMB > MAX_FILE_SIZE_MB) {
+			console.log("File size too big");
+	    //show error
+	    return;
+	  }
+		if (!ACCEPTED_TYPES.includes(selectedFile.type)) {
+			console.log("Wrong file type");
+	    //show error
+	    return;
+	  }
 		setFile(selectedFile);
-    setFileName(file ? file.name : "");
+    setFileName(selectedFile.name);
+		const url = URL.createObjectURL(selectedFile);
+  	setPreviewUrl(url);
   };
 
 	function updateName(e: React.ChangeEvent<HTMLInputElement>) {
@@ -98,9 +118,10 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 			const avatarResponse = await saveAvatar(file);
 			if (avatarResponse.error) {
 				//alert of error
-			} else {
-				setUser({ ...user, avatarURL: data.avatarURL });
 			}
+			// } else {
+			// 	setUser({ ...user, avatarURL: data.avatarURL });
+			// }
 		}
 	}
 
@@ -118,20 +139,27 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 				<div className="flex gap-4 items-center">
 				  <label
 				    htmlFor="avatar"
-				    className="w-30 px-4 py-2 rounded-lg hover:bg-vintage-yellow/60 dark:bg-stone-600 bg-amber-50 dark:hover:bg-neutral-800">
+				    className="w-30 px-4 py-2 font-tomorrow rounded-lg hover:bg-vintage-yellow/60 dark:bg-stone-600 bg-amber-50 dark:hover:bg-neutral-800">
 				    Choose File
 				  </label>
 				  <input
 				    type="file"
 				    id="avatar"
 				    name="avatar"
-				    accept="image/png, image/jpeg"
+				    accept="image/png, image/jpeg, image/jpg"
 						className="hidden"
 						onChange={handleFileChange}
 				  />
+					{previewUrl && (
+						<img
+							src={previewUrl} 
+							alt="Avatar preview"
+							className="size-16 rounded-full object-cover"
+						/>
+					)}
 					{fileName && (
 		        <p>
-		          Selected: <span>{fileName}</span>
+		          <span>{fileName}</span>
 		        </p>
 		      )}
 				</div>
