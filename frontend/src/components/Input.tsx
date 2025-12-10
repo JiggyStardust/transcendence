@@ -24,8 +24,6 @@ export default function Input({id, label, type = "text", value, tooltip, focusTo
 						{tooltip}
 					</div>
 				)}
-			</div>
-			<div>
 				<input className="flex justify-left p-1 border border-white rounded-sm"
 					type={type}
 					id={id}

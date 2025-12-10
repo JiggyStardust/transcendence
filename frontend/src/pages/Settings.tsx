@@ -259,7 +259,7 @@ const PasswordModal = ({ oldPassword, setOldPassword, newPassword, setNewPasswor
 						value={newPassword}
 						onChange={(e) => setNewPassword(e.target.value)}
 						focusTooltip={
-						<div>
+						<div className="text-left">
 							<p className="font-semibold mb-1">Password requirements:</p>
 							<ul className="list-disc list-inside space-y-1">
 								{passwordRequirements.map((req) => (
