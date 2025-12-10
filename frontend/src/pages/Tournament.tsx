@@ -1,15 +1,11 @@
+import { Button } from "../components/Button.tsx";
+import { useState } from "react";
+import { type User, useTournamentStore } from "../context/tournamentStore";
 
 // @ts-nocheck
 
 
-import { Button } from "../components/Button.tsx";
-import { useState } from "react";
-
-export interface User {
-  username: string; // not sure if we need this at all
-}
-
-const Match = ({game_number, player_1, player_2, active=true}: {game_number: string, player_1: string, player_2:string, active: boolean}) => {
+const Match = ({game_number, player_1, player_2, active=true}: {game_number: string, player_1: string, player_2:string, active?: boolean}) => {
   return (
     <div className="flex justify-center gap-7">
       <Button to="/game" variant="primary" size="lg" disabled={!active}>{game_number}</Button>
@@ -18,17 +14,29 @@ const Match = ({game_number, player_1, player_2, active=true}: {game_number: str
   )
 }
 
-export default function Tournament() {
-  const [players, setPlayers] = useState<User[]>([
-    { username: "Alice" },
-    { username: "Bob" },
-    { username: "Charlie" },
-    { username: "Dana" }
-  ]);
-  const [winner_1, setWinner_1] = useState("Winner of Game 1");
-  const [winner_2, setWinner_2] = useState("Winner of Game 2");
+const contextUsers: User[] = [
+  { username: "Alice" },
+  { username: "Bob" },
+  { username: "Charlie" },
+  { username: "Dana" }
+];
 
-  players.sort( () => Math.random()-0.5 );
+export default function Tournament() {
+  // const [players, setPlayers] = useState<User[]>([
+  //   { username: "Alice" },
+  //   { username: "Bob" },
+  //   { username: "Charlie" },
+  //   { username: "Dana" }
+  // ]);
+  // const [winner_1, setWinner_1] = useState("Winner of Game 1");
+  // const [winner_2, setWinner_2] = useState("Winner of Game 2");
+
+  // Access Zustand store
+  useTournamentStore.getState().setPlayers(contextUsers)
+  const players = useTournamentStore((state) => state.players);
+  console.log(players);
+
+  // players.sort( () => Math.random()-0.5 );
 
 
   
@@ -46,12 +54,12 @@ export default function Tournament() {
           player_1={players[2].username}
           player_2={players[3].username}
         />
-        <Match
+        {/* <Match
           game_number="Game 3"
           player_1={winner_1}
           player_2={winner_2}
           active={false}
-        />
+        /> */}
       </div>
     </div>
     
