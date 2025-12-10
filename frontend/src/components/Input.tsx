@@ -14,7 +14,7 @@ type InputProps = {
 export default function Input({id, label, type = "text", value, tooltip, focusTooltip, autofocus=false, onChange, onBlur,}: InputProps) {
 
 	return (
-		<div className="flex flex-col m-2 px-4  text-black dark:text-white">
+		<div className="flex flex-col text-black dark:text-white">
 			<div className="relative group">
 
 				<label className="flex justify-left">
@@ -27,7 +27,7 @@ export default function Input({id, label, type = "text", value, tooltip, focusTo
 					</div>
 				)}
 
-			<input className="p-1 border border-white rounded-sm"
+			<input className="flex justify-left p-1 border border-white rounded-sm"
 				type={type} id={id} value={value} onChange={onChange} autoFocus={autofocus} onBlur={onBlur}/>
 
 				{/* tooltip on focus and positioned to the right (used by SignUp's password requirements) */}
