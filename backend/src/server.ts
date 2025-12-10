@@ -41,6 +41,10 @@ fastify.register(import("@fastify/static"), {
   prefix: "/uploads/",
 });
 
+
+// friend routes
+fastify.register(import("./routes/friends"), { prefix: "/api" });
+
 // register custom plugins
 fastify.register(databasePlugin);
 

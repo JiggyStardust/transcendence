@@ -1,6 +1,8 @@
 import { signup, login, verify_player } from '../authentication/authController';
 import { updateDisplayName, updatePassword } from '../authentication/userController';
 import type { FastifyPluginAsync } from "fastify";
+import meRoutes from "./me";
+import publicProfileRoutes from "./profileRoutes";
 
 const userRoutes: FastifyPluginAsync = async (fastify): Promise<void> => {
     // public routes
@@ -11,6 +13,9 @@ const userRoutes: FastifyPluginAsync = async (fastify): Promise<void> => {
     // protected routes
     fastify.patch('/updateDisplayName', updateDisplayName);
     fastify.patch('/updatePassword', updatePassword);
+
+    fastify.register(meRoutes); // endpoint => /me
+    fastify.register(publicProfileRoutes); // endpoint => users/:username GET /api/users/maria
     return;
 }
 
