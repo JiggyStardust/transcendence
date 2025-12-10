@@ -24,6 +24,8 @@ export default function Input({id, label, type = "text", value, tooltip, focusTo
 						{tooltip}
 					</div>
 				)}
+			</div>
+			<div className="relative group">
 				<input className="flex justify-left p-1 border border-white rounded-sm"
 					type={type}
 					id={id}
