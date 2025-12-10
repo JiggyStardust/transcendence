@@ -3,6 +3,7 @@ import { FiUser } from "react-icons/fi";
 import Input from "../components/Input";
 import { PROXY_URL } from "../constants";
 import { useState } from "react";
+import { passwordRequirements } from "../constants/passwordRequirements";
 
 const ProfilePic = () => {
 
@@ -256,7 +257,17 @@ const PasswordModal = ({ oldPassword, setOldPassword, newPassword, setNewPasswor
 						label="New password"
 						type="password"
 						value={newPassword}
-						onChange={(e) => setNewPassword(e.target.value)}/>
+						onChange={(e) => setNewPassword(e.target.value)}
+						focusTooltip={
+						<div>
+							<p className="font-semibold mb-1">Password requirements:</p>
+							<ul className="list-disc list-inside space-y-1">
+								{passwordRequirements.map((req) => (
+									<li key={req}>{req}</li>
+								))}
+							</ul>
+						</div>
+					}/>
 				</div>
 				<div className="flex gap-39">
 					<Button variant="secondary" onClick={onClose}>
