@@ -1,4 +1,5 @@
 export function gameOver(game) {
-    game.gameOverText.setEnabled(true);
+    game.gameOverFinalText.setEnabled(true);
+    game.gameOverScoreText.setEnabled(true);
     game.light.final.setEnabled(true);
 }
