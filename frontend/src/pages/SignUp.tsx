@@ -5,6 +5,7 @@ import { Button} from "../components/Button";
 import { PROXY_URL } from "../constants";
 import { useNavigate } from "react-router-dom";
 import { FiAlertCircle } from "react-icons/fi";
+import { passwordRequirements } from "../constants/passwordRequirements";
 
 export default function SignUp() {
 
@@ -117,60 +118,53 @@ export default function SignUp() {
 
 	return (
 		<div className="flex flex-col w-screen items-center justify-center min-h-screen transition-colors duration-300">
-		<h1 className="font-[Honk] text-[120px]">Ping of Pongs</h1>
+			<h1 className="font-[Honk] text-[120px]">Ping of Pongs</h1>
 		  <p className="mt-10 text-lg text-center max-w-md">
  				This is where you SignUp!
 	 	  </p>
 			<form onSubmit={handleSignUp} className="px-4 py-8 border border-white rounded-lg ">
-				<p>
+				<div>
 					{information && (
-					<div className="flex items-center gap-2 text-red-500 font-bold mb-2">
-						<FiAlertCircle className="text-xl" />
-						<span>{information}</span>
+						<div className="flex items-center gap-2 text-red-500 font-bold mb-2">
+							<FiAlertCircle className="text-xl" />
+							<span>{information}</span>
+						</div>
+					)}
+				</div>
+				<Input 
+			  	id="username"
+			  	label="Username:" 
+			  	type="text" 
+			  	value={username} 
+			  	onChange={handleUsernameChange}
+			  	onBlur={handleUsernameBlur}
+					focusTooltip={
+					<div>
+  					<p className="font-semibold mb-1">Username requirements:</p>
+  					<ul className="list-disc list-inside space-y-1">
+   						<li>At least 3 characters</li>
+    					<li>Unique (not taken by other user)</li>
+  					</ul>
 					</div>
-				)}
-				</p>
-					<Input 
-				  	id="username"
-				  	label="Username:" 
-				  	type="text" 
-				  	value={username} 
-				  	onChange={handleUsernameChange}
-				  	onBlur={handleUsernameBlur}
-						focusTooltip={
-							<div>
-    					<p className="font-semibold mb-1">Username requirements:</p>
-    					<ul className="list-disc list-inside space-y-1">
-     						<li>At least 3 characters</li>
-      					<li>Unique (not taken by other user)</li>
-    					</ul>
-  					</div>
-						}
-				  />
-
-					<Input
-				  	id="password" 
-					  label="Password:" 
-				 		type="password" 
-				 		value={password} 
-				 		onChange={handlePasswordChange}
-						focusTooltip={
-							<div>
-    					<p className="font-semibold mb-1">Password requirements:</p>
-    					<ul className="list-disc list-inside space-y-1">
-     						<li>At least 8 characters</li>
-      					<li>One uppercase letter</li>
-      					<li>One lowercase letter</li>
-      					<li>One digit</li>
-      					<li>One special character</li>
-    					</ul>
-  					</div>
-						}
-					/>
-
-					<Button>Sign up</Button>
+				}/>
+				<Input
+			  	id="password" 
+				  label="Password:" 
+			 		type="password" 
+			 		value={password} 
+			 		onChange={handlePasswordChange}
+					focusTooltip={
+					<div>
+  					<p className="font-semibold mb-1">Password requirements:</p>
+  					<ul className="list-disc list-inside space-y-1">
+   						{passwordRequirements.map((req) => (
+							  <li key={req}>{req}</li>
+							))}
+  					</ul>
+					</div>
+				}/>
+				<Button>Sign up</Button>
 			</form>
-			<ThemeToggle />
 		</div>
 	);
 }
