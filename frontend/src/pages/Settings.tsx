@@ -75,8 +75,8 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 	}
 
 	return (
-		<div className="relative flex flex-col bg-stone-500 rounded-3xl p-8">
-			<h2 className="font-tomorrow font-bold text-xl text-stone-800">Public profile</h2>
+		<div className="relative flex flex-col bg-stone-700/50 dark:bg-stone-500  rounded-3xl p-8">
+			<h2 className="font-tomorrow font-bold text-xl text-stone-800 dark:text-vintage-yellow ">Public profile</h2>
 			<form className="flex flex-col gap-2 m-4" onSubmit={(e) => saveSettings(e)}>
 				<Input
 					id="name"
