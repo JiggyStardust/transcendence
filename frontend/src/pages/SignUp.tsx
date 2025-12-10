@@ -4,6 +4,7 @@ import { Button} from "../components/Button";
 import { PROXY_URL } from "../constants";
 import { useNavigate } from "react-router-dom";
 import { FiAlertCircle } from "react-icons/fi";
+import { passwordRequirements } from "../constants/passwordRequirements";
 
 export default function SignUp() {
 
@@ -120,14 +121,14 @@ export default function SignUp() {
  				This is where you SignUp!
 	 	  </p>
 			<form onSubmit={handleSignUp} className="px-4 py-8 border border-white rounded-lg ">
-				<p>
+				<div>
 					{information && (
-					<div className="flex items-center gap-2 text-red-500 font-bold mb-2">
-						<FiAlertCircle className="text-xl" />
-						<span>{information}</span>
-					</div>
-				)}
-				</p>
+						<div className="flex items-center gap-2 text-red-500 font-bold mb-2">
+							<FiAlertCircle className="text-xl" />
+							<span>{information}</span>
+						</div>
+					)}
+				</div>
 				<Input 
 			  	id="username"
 			  	label="Username:" 
@@ -136,16 +137,14 @@ export default function SignUp() {
 			  	onChange={handleUsernameChange}
 			  	onBlur={handleUsernameBlur}
 					focusTooltip={
-						<div>
+					<div>
   					<p className="font-semibold mb-1">Username requirements:</p>
   					<ul className="list-disc list-inside space-y-1">
    						<li>At least 3 characters</li>
     					<li>Unique (not taken by other user)</li>
   					</ul>
 					</div>
-					}
-			  />
-
+				}/>
 				<Input
 			  	id="password" 
 				  label="Password:" 
@@ -153,18 +152,15 @@ export default function SignUp() {
 			 		value={password} 
 			 		onChange={handlePasswordChange}
 					focusTooltip={
-						<div>
+					<div>
   					<p className="font-semibold mb-1">Password requirements:</p>
   					<ul className="list-disc list-inside space-y-1">
-   						<li>At least 8 characters</li>
-    					<li>One uppercase letter</li>
-    					<li>One lowercase letter</li>
-    					<li>One digit</li>
-    					<li>One special character</li>
+   						{passwordRequirements.map((req) => (
+							  <li key={req}>{req}</li>
+							))}
   					</ul>
 					</div>
-					}
-				/>
+				}/>
 				<Button>Sign up</Button>
 			</form>
 		</div>
