@@ -35,6 +35,7 @@ const ProfileInfo = () => {
 }
 
 interface User {
+	username: string;
   displayName: string;
   twoFactorEnabled: boolean;
 }
@@ -45,6 +46,14 @@ interface SettingsProps {
 }
 
 const ProfileSettings = ({ user, setUser }: SettingsProps) => {
+	const [fileName, setFileName] = useState("");
+	const [file, setFile] = useState<File | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const selectedFile = e.target.files?.[0] || null;
+		setFile(selectedFile);
+    setFileName(file ? file.name : "");
+  };
 
 	function updateName(e: React.ChangeEvent<HTMLInputElement>) {
     setUser(u => ({ ...u, displayName: e.target.value }));
@@ -53,26 +62,46 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 	async function saveDisplayName(displayName: string) {
     const res = await fetch(PROXY_URL + "/updateDisplayName", {
 	    method: "POST",
-	    credentials: "include", // sends cookies/session
+	    credentials: "include",
 	    headers: {
 	      "Content-Type": "application/json",
 	    },
 	    body: JSON.stringify({ displayName }),
 	  });
     const data = await res.json();
-		//what happens now
 		return (data);
   }
 
+	async function saveAvatar(file: File) {
+		const endpoint = `/${user.username}/avatar`;
+		const formData = new FormData();
+  	formData.append("file", file);
+		const res = await fetch(PROXY_URL + {endpoint}, {
+	    method: "POST",
+	    credentials: "include",
+	    body: formData,
+	  });
+		const data = await res.json();
+		return (data);
+	}
+
 	async function saveSettings(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		const displayNameResult = await saveDisplayName(user.displayName);
-	  if (displayNameResult.error) {
-	    //something
+		//check if local user.displayName is different from context, only then do api call
+		const displayNameResponse = await saveDisplayName(user.displayName);
+	  if (displayNameResponse.error) {
+	    //alert of error
 	  } else {
-	    //something
+	    setUser({ ...user, displayName: displayNameResponse.displayName});
 	  }
-		//save avatar here also
+		if (file != null) {
+			const avatarResponse = await saveAvatar(file);
+			if (avatarResponse.error) {
+				//alert of error
+			} else {
+				setUser({ ...user, avatarURL: data.avatarURL });
+			}
+		}
 	}
 
 	return (
@@ -81,11 +110,31 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 			<form className="flex flex-col gap-2 m-4" onSubmit={(e) => saveSettings(e)}>
 				<Input
 					id="name"
-					label="Display name"
+					label="Display name:"
 					value={user.displayName}
 					tooltip="Name that is shown to other players"
 					onChange={(e) => updateName(e)}/>
-				<p>Change avatar here</p>
+				<p className="mt-4">Change avatar:</p>
+				<div className="flex gap-4 items-center">
+				  <label
+				    htmlFor="avatar"
+				    className="w-30 px-4 py-2 rounded-lg hover:bg-vintage-yellow/60 dark:bg-stone-600 bg-amber-50 dark:hover:bg-neutral-800">
+				    Choose File
+				  </label>
+				  <input
+				    type="file"
+				    id="avatar"
+				    name="avatar"
+				    accept="image/png, image/jpeg"
+						className="hidden"
+						onChange={handleFileChange}
+				  />
+					{fileName && (
+		        <p>
+		          Selected: <span>{fileName}</span>
+		        </p>
+		      )}
+				</div>
 				<div className="absolute bottom-8 right-12">
 					<Button>Save</Button>
 				</div>
@@ -296,7 +345,8 @@ const AuthSettings = ({ user, setUser }: SettingsProps) => {
 
 const Settings = ({}) => {
 	const [user, setUser] = useState({		//get actual data
-    displayName: "name",
+		username: "maria1",
+    displayName: "maria1",
     twoFactorEnabled: false,
   });
 
