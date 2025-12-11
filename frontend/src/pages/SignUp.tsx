@@ -170,7 +170,6 @@ export default function SignUp() {
 
 					<Button>Sign up</Button>
 			</form>
-			<ThemeToggle />
 		</div>
 	);
 }

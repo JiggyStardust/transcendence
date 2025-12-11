@@ -40,11 +40,10 @@ type PendingCardProps = {
   card: Pending;
 	setCards: React.Dispatch<React.SetStateAction<PlayerCard[]>>
   onUpdate: (id: string, updates: Partial<Pending>) => void;
-	handleLogin: () => void;
-  onLoginSuccess: (id: string, user: any) => void;
+	handleLogin: (player: Pending) => void;
 };
 
-const PendingCard =({ card, setCards, onUpdate, handleLogin, onLoginSuccess }: PendingCardProps) => {
+const PendingCard =({ card, setCards, onUpdate, handleLogin}: PendingCardProps) => {
 
 	const removeCard = (id: string) => {
 		console.log("remove card clicked");
@@ -62,7 +61,7 @@ const PendingCard =({ card, setCards, onUpdate, handleLogin, onLoginSuccess }: P
 			<div className="absolute bottom-10 inset-x-0 flex flex-col items-center">
 				<Input id="username" label="Username" value={card.username} onChange={(e) => onUpdate(card.id, { username: e.target.value })}/>
 				<Input type="password" id="password" label="Password" value={card.password} onChange={(e) => onUpdate(card.id, { password: e.target.value })}/>
-				<Button onClick={handleLogin}>Log in</Button>
+				<Button onClick={() => handleLogin(card)}>Log in</Button>
 			</div>
 		</CardFrame>
 	)
@@ -71,12 +70,11 @@ const PendingCard =({ card, setCards, onUpdate, handleLogin, onLoginSuccess }: P
 type PlayerCardProps = {
   card: PlayerCard;
   onUpdate: (id: string, updates: Partial<Pending>) => void;
-	handleLogin: () => void;
-  onLoginSuccess: (id: string, user: any) => void;
+	handleLogin: (card: Pending) => void;
 	setCards: React.Dispatch<React.SetStateAction<PlayerCard[]>>
 };
 
-const PlayerCardComponent = ({ card, onUpdate, handleLogin, onLoginSuccess, setCards }: PlayerCardProps) => {
+const PlayerCardComponent = ({ card, onUpdate, handleLogin, setCards }: PlayerCardProps) => {
   switch (card.type) {
     case "loggedIn":
       return <LoggedInCard card={card} />;
@@ -86,7 +84,6 @@ const PlayerCardComponent = ({ card, onUpdate, handleLogin, onLoginSuccess, setC
           card={card}
           onUpdate={onUpdate}
 					handleLogin={handleLogin}
-          onLoginSuccess={onLoginSuccess}
 					setCards={setCards}
         />
       );
@@ -133,14 +130,45 @@ const Players = () => {
 	  );
 	};
 
-	const handleLogIn = () => {
-		//TODO
-		console.log("Handle login");
+	const handleLogIn = async (card: Pending) => {
+		const { username, password } = card;
+		if (!card.password || !card.username) {
+			console.log("Both username and password needed");
+			return;
+		}
+    const res = await fetch(PROXY_URL + "/verify_player", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      console.error("Login failed:", data.error);
+      return;
+    }
+    console.log("Login success:", data);
+		onLoginSuccess({pendingId: card.id,
+  		userID: data.userID,
+  		username: data.username});
+    // data = { status: "verified", userID, username }
 	}
 
-	const onLoginSuccess = () => {
-		//TODO
-		console.log("Login was successfull, do something about it");
+	const onLoginSuccess = ({pendingId, userID, username}: {pendingId: string, userID: string, username: string}) => {
+		console.log("trying to change pending card to logged in");
+		setCards(prev =>
+        prev.map(card =>
+            card.id === pendingId
+                ? {
+                    type: "loggedIn",
+                    id: userID,
+                    name: username,
+                    avatarUrl: "",
+                  } satisfies LoggedIn
+                : card
+        )
+    );
 	}
 
 	return (
@@ -152,7 +180,6 @@ const Players = () => {
 			      card={card}
 			      onUpdate={updatePendingCard}
 						handleLogin={handleLogIn}
-			      onLoginSuccess={onLoginSuccess}
 						setCards={setCards}
 			    />
 			  ))}
