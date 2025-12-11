@@ -18,21 +18,22 @@ export interface User {
   username: string;
   displayName: string;
   avatarUrl: string;
-  friends: Friend[];
-  stats: UserStats | null;
+  // friends: Friend[];
+  // stats: UserStats | null;
   role: "full" | "partial";
 }
 
 interface UserContextType {
-  users: User[];
+  users: Record<string, User>;
 
-  loadUsers: (ids: number[]) => Promise<void>;
+  loadMe: () => Promise<void>;
+  loadUser: (username: string) => Promise<void>;
 
-  updateUser: (id: number, data: Partial<User>) => void;
-  setDisplayName: (id: number, displayName: string) => void;
-  setAvatar: (id: number, avatarUrl: string) => void;
-  setStats: (id: number, stats: UserStats) => void;
-  setFriends: (id: number, friends: Friend[]) => void;
+  updateUser: (username: string, data: Partial<User>) => void;
+  setDisplayName: (username: string, displayName: string) => void;
+  setAvatar: (username: string, avatarUrl: string) => void;
+  // setStats: (username: string, stats: UserStats) => void;
+  // setFriends: (username: string, friends: Friend[]) => void;
 
   clearUsers: () => void;
 }
@@ -40,87 +41,119 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | null>(null);
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<Record<string, User>>({});
 
-  async function fetchSingleUser(id: number): Promise<User | null> {
+  /************************** */
+  // Fetch /me (main user) 
+  /************************** */
+  
+  async function loadMe() {
     try {
-      const res = await fetch(`${PROXY_URL}/getplayers`, {
-        method: "POST",
+      const res = await fetch(PROXY_URL + "/me", {
         credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id }),
       });
 
       if (!res.ok) {
-        console.error("Failed to load user", id);
-        return null;
+        console.error("/me failed");
+        return;
+      }
+
+      const data = await res.json();
+      const username = data.username;
+
+      const user: User = {
+        id: data.id,
+        username,
+        displayName: data.displayName ?? data.username,
+        avatarUrl: data.avatarUrl,
+        // friends: data.friends ?? [],
+        // stats: data.stats ?? null,
+        role: "full",
+      };
+
+      setUsers((prev) => ({ ...prev, [username]: user }));
+    } catch (e) {
+      console.error("Error loading /me", e);
+    }
+  }
+
+  /****************************** */
+  // Fetch /users/:username (side profiles)
+  /****************************** */
+
+
+  async function loadUser(username: string) {
+    try {
+      const res = await fetch(`${PROXY_URL}/users/${username}`, {
+        credentials: "include",
+      });
+
+      if (!res.ok) {
+        console.error("Failed to load user", username);
+        return;
       }
 
       const data = await res.json();
 
-      return {
+      const user: User = {
         id: data.id,
         username: data.username,
         displayName: data.displayName ?? data.username,
         avatarUrl: data.avatarUrl,
-        friends: data.friends ?? [],
-        stats: data.stats ?? null,
-        role: "partial", // will adjust main user later
+        // friends: data.friends ?? [],
+        // stats: data.stats ?? null,
+        role: "partial",
       };
+
+      setUsers((prev) => ({ ...prev, [username]: user }));
     } catch (e) {
-      console.error("Error fetching user", id, e);
-      return null;
+      console.error("Error fetching user", username, e);
     }
   }
 
-  async function loadUsers(ids: number[]) {
-    const results = await Promise.all(ids.map(fetchSingleUser));
-    const clean = results.filter(Boolean) as User[];
+  // ------------------------
+  // Helpers
+  // ------------------------
 
-    // Mark the first one as main user
-    if (clean.length > 0) {
-      clean[0].role = "full";
-    }
 
-    setUsers(clean);
+  function updateUser(username: string, data: Partial<User>) {
+    setUsers((prev) => ({
+      ...prev,
+      [username]: { ...prev[username], ...data },
+    }));
   }
 
-  function updateUser(id: number, data: Partial<User>) {
-    setUsers((prev) =>
-      prev.map((u) => (u.id === id ? { ...u, ...data } : u))
-    );
+  function setDisplayName(username: string, displayName: string) {
+    updateUser(username, { displayName });
   }
 
-  function setDisplayName(id: number, displayName: string) {
-    updateUser(id, { displayName });
+  function setAvatar(username: string, avatarUrl: string) {
+    updateUser(username, { avatarUrl });
   }
 
-  function setAvatar(id: number, avatarUrl: string) {
-    updateUser(id, { avatarUrl });
-  }
+  // function setStats(username: string, stats: UserStats) {
+  //   updateUser(username, { stats });
+  // }
 
-  function setStats(id: number, stats: UserStats) {
-    updateUser(id, { stats });
-  }
-
-  function setFriends(id: number, friends: Friend[]) {
-    updateUser(id, { friends });
-  }
+  // function setFriends(username: string, friends: Friend[]) {
+  //   updateUser(username, { friends });
+  // }
 
   function clearUsers() {
-    setUsers([]);
+    setUsers({});
   }
 
   return (
     <UserContext.Provider
       value={{
         users,
-        loadUsers,
+        loadMe,
+        loadUser,
         updateUser,
         setDisplayName,
         setAvatar,
-        setStats,
-        setFriends,
+        // setStats,
+        // setFriends,
         clearUsers,
       }}
     >
@@ -131,6 +164,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
 export function useUser() {
   const context = useContext(UserContext);
-  if (!context) throw new Error("useUser must be used inside a UserProvider");
+  if (!context) throw new Error("useUser must be inside a UserProvider");
   return context;
 }
