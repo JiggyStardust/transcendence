@@ -1,33 +1,30 @@
 import { Button } from "../components/Button";
-import { FiUser } from "react-icons/fi";
 import Input from "../components/Input";
 import { PROXY_URL } from "../constants";
 import { useState } from "react";
 import { passwordRequirements } from "../constants/passwordRequirements";
 
-const ProfilePic = () => {
-
+const ProfilePic = ({ avatarUrl }: {avatarUrl: string | null}) => {
+	const timestamp = Date.now();
+	const imageUrl = avatarUrl 
+	  ? `${PROXY_URL + avatarUrl}?t=${timestamp}` 
+	  : PROXY_URL + "/uploads/avatars/default.jpeg";
+	// const imageUrl = avatarUrl ? PROXY_URL + avatarUrl : PROXY_URL + "/uploads/avatars/default.jpeg";
+	console.log("imageUrl: " + imageUrl);
 	return (
-		<div className="rounded-full border-4 p-2 w-[120px] h-[120px] flex items-center justify-center overflow-hidden">
-		  {/* {user?.image ? (
-		    <img
-		      src={user.image}
-		      alt="Profile"
-		      className="w-full h-full object-cover rounded-full"
-		    />
-		  ) : ( */}
-		    <FiUser size={120} />
-		  {/* )} */}
-		</div>
+		<img className="w-36 h-36 rounded-full object-cover"
+      src={imageUrl}
+      alt="Avatar"
+    />
 	)
 }
 
-const ProfileInfo = () => {
+const ProfileInfo = ({ user }: { user: User }) => {
 	return (
 		<div className="flex gap-8">
-			<ProfilePic />
+			<ProfilePic avatarUrl={user.avatarUrl}/>
 			<div className="flex flex-col gap-4 pt-4">
-				<h1 className="font-bold text-3xl">Username</h1>
+				<h1 className="font-bold text-3xl">{user.username}</h1>
 				<p>Some text</p>
 			</div>
 		</div>
@@ -38,6 +35,7 @@ interface User {
 	username: string;
   displayName: string;
   twoFactorEnabled: boolean;
+	avatarUrl: string | null;
 }
 
 interface SettingsProps {
@@ -89,14 +87,15 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 	    body: JSON.stringify({ displayName }),
 	  });
     const data = await res.json();
+		console.log("Display name response: " + data);
 		return (data);
   }
 
 	async function saveAvatar(file: File) {
-		const endpoint = `/${user.username}/avatar`;
+		const endpoint = `/users/${user.username}/avatar`;
 		const formData = new FormData();
-  	formData.append("file", file);
-		const res = await fetch(PROXY_URL + {endpoint}, {
+  	formData.append("avatar", file);
+		const res = await fetch(PROXY_URL + endpoint, {
 	    method: "POST",
 	    credentials: "include",
 	    body: formData,
@@ -107,21 +106,24 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 
 	async function saveSettings(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		//check if local user.displayName is different from context, only then do api call
-		const displayNameResponse = await saveDisplayName(user.displayName);
-	  if (displayNameResponse.error) {
-	    //alert of error
-	  } else {
-	    setUser({ ...user, displayName: displayNameResponse.displayName});
-	  }
+		if (mainUser.displayName != user.displayName) {
+			const displayNameResponse = await saveDisplayName(user.displayName);
+			if (displayNameResponse.error) {
+				//alert of error
+			} else {
+				setUser({ ...user, displayName: displayNameResponse.displayName});
+			}
+		}
 		if (file != null) {
 			const avatarResponse = await saveAvatar(file);
 			if (avatarResponse.error) {
 				//alert of error
 			}
-			// } else {
-			// 	setUser({ ...user, avatarURL: data.avatarURL });
-			// }
+			else {
+				setUser({ ...user, avatarUrl: avatarResponse.avatarURL });
+				setPreviewUrl("");
+				setFileName("");
+			}
 		}
 	}
 
@@ -151,11 +153,10 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 						onChange={handleFileChange}
 				  />
 					{previewUrl && (
-						<img
-							src={previewUrl} 
-							alt="Avatar preview"
-							className="size-16 rounded-full object-cover"
-						/>
+							<img className="w-16 h-16 rounded-full object-cover"
+								src={previewUrl} 
+								alt="Avatar preview"
+							/>
 					)}
 					{fileName && (
 		        <p>
@@ -187,10 +188,11 @@ const TwoFactorAuthSetting = ({ user, setUser }: SettingsProps) => {
 	  if (data.success) {
 			setQrModalOpen(false);
 			setUser(u => ({ ...u, twoFactorEnabled: true }))
+			console.log("Success: " + data);
 			//TODO some success message?
 		}
 		else {
-			console.log("Wrong code");	//TODO show error
+			console.log("Error: " + data.error);	//TODO show error
 		}
 	};
 
@@ -200,6 +202,9 @@ const TwoFactorAuthSetting = ({ user, setUser }: SettingsProps) => {
       credentials: "include",
     });
     const data = await res.json();
+		if (data.error) {
+			console.log("Error: " + data.error);
+		}
     setQr(data.qr);
     setQrModalOpen(true);
   }
@@ -267,27 +272,29 @@ const ChangePassword = () => {
 	const [passwordModalOpen, setPasswordModalOpen] = useState(false);
 
 	async function updatePassword() {
-		const res = await fetch(PROXY_URL + "/updatePassword", {
-      method: "POST",
-      credentials: "include",
-			headers: {
-  			"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-	      oldPassword,
-	      newPassword,
-	    }),
-    });
-    const data = await res.json();
-		if (data.success) {
-			setPasswordModalOpen(false);
-			//TODO some success message?
-		}
-		else {
-			setOldPassword("");
-			setNewPassword("");
-			//TODO show error
-			console.log("Updating password failed");
+		if (oldPassword && newPassword) {
+			const res = await fetch(PROXY_URL + "/updatePassword", {
+				method: "PATCH",
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					oldPassword,
+					newPassword,
+				}),
+			});
+			const data = await res.json();
+			if (data.success) {
+				setPasswordModalOpen(false);
+				//TODO some success message?
+			}
+			else {
+				setOldPassword("");
+				setNewPassword("");
+				//TODO show error
+				console.log("Error: " + data.error);
+			}
 		}
 	}
 
@@ -351,7 +358,7 @@ const PasswordModal = ({ oldPassword, setOldPassword, newPassword, setNewPasswor
 						Close
 					</Button>
 					<Button variant="primary" onClick={onSave}>
-						Verify
+						Save
 					</Button>
 				</div>
 			</div>
@@ -371,26 +378,27 @@ const AuthSettings = ({ user, setUser }: SettingsProps) => {
 	)
 }
 
+const mainUser = {
+	username: "maria1",
+  displayName: "aallotar",
+  twoFactorEnabled: false,
+	avatarUrl: null,
+}
+
 const Settings = ({}) => {
-	const [user, setUser] = useState({		//get actual data
-		username: "maria1",
-    displayName: "maria1",
-    twoFactorEnabled: false,
+	const [user, setUser] = useState<User>({		//get actual data
+		username: mainUser.username,
+    displayName: mainUser.displayName,
+    twoFactorEnabled: mainUser.twoFactorEnabled,
+		avatarUrl: null,
   });
 
 	return (
 		<div className="flex justify-center pt-6">
 			<div className="flex flex-col gap-12 w-3/5 min-w-xl max-w-6xl">
-				<ProfileInfo />
+				<ProfileInfo user={user} />
 				<ProfileSettings user={user} setUser={setUser} />
 				<AuthSettings user={user} setUser={setUser} />
-				
-				{/* <form onSubmit={saveSettings}>
-					<ProfileSettings user={user} setUser={setUser} />
-					<div className="flex justify-end">
-						<Button>Save</Button>
-					</div>
-				</form> */}
 			</div>
 		</div>
 	)
