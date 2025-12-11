@@ -222,5 +222,5 @@ export async function verify_player(req: FastifyRequest<{ Body: IAuthRequestBody
     status: "verified",
     userID: user.id,
     username: user.username
-  };
+  }; // also return displayName and avatarURL
 }
