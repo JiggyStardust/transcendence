@@ -11,8 +11,8 @@ export async function meRoutes(fastify: FastifyInstance) {
                 select: {
                     id: true,
                     username: true,
-                    displayname: true,
-                    avatarUrl: true,
+                    displayName: true,
+                    avatarURL: true,
                     createdAt: true,
                     updatedAt: true
                 },
