@@ -1,6 +1,7 @@
 import "fastify";
 import type { ExtendedPrismaClient } from "../database";
 import { FastifyRequest, FastifyReply } from "fastify";
+import { JwtPayload } from "@fastify/jwt";
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -17,3 +18,11 @@ declare module "fastify" {
   }
 }
 
+declare module "fastify" {
+  interface FastifyRequest {
+    user: {
+      userId: number;
+      username: string;
+    } & JwtPayload;
+  }
+}
