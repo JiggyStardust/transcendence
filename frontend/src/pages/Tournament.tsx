@@ -1,9 +1,6 @@
 // @ts-nocheck
 import { Button } from "../components/Button.tsx";
 import { useState } from "react";
-import { type User, useTournamentStore } from "../context/tournamentStore";
-
-
 
 const Match = ({game_number, player_1, player_2, active=true}: {game_number: string, player_1: string, player_2:string, active?: boolean}) => {
   return (
@@ -14,12 +11,12 @@ const Match = ({game_number, player_1, player_2, active=true}: {game_number: str
   )
 }
 
-const contextUsers: User[] = [
-  { username: "Alice" },
-  { username: "Bob" },
-  { username: "Charlie" },
-  { username: "Dana" }
-];
+// const contextUsers: User[] = [
+//   { username: "Alice" },
+//   { username: "Bob" },
+//   { username: "Charlie" },
+//   { username: "Dana" }
+// ];
 
 export default function Tournament() {
   // const [players, setPlayers] = useState<User[]>([
@@ -31,10 +28,6 @@ export default function Tournament() {
   // const [winner_1, setWinner_1] = useState("Winner of Game 1");
   // const [winner_2, setWinner_2] = useState("Winner of Game 2");
 
-  // Access Zustand store
-  useTournamentStore.getState().setPlayers(contextUsers)
-  const players = useTournamentStore((state) => state.players);
-  console.log(players);
 
   // players.sort( () => Math.random()-0.5 );
 
@@ -44,20 +37,20 @@ export default function Tournament() {
       <div className="flex flex-col items-start gap-4">
         <Match
           game_number="Game 1"
-          player_1={players[0].username}
-          player_2={players[1].username}
+          player_1={"PlayerA"}
+          player_2={"PlayerB"}
         />
         <Match
           game_number="Game 2"
-          player_1={players[2].username}
-          player_2={players[3].username}
+          player_1={"PlayerC"}
+          player_2={"PlayerD"}
         />
-        {/* <Match
+        {<Match
           game_number="Game 3"
-          player_1={winner_1}
-          player_2={winner_2}
+          player_1={"Winner of Game 1"}
+          player_2={"Winner of Game 2"}
           active={false}
-        /> */}
+        />}
       </div>
     </div>
     
