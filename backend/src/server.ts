@@ -10,6 +10,8 @@ import checkUsernameRoute from "./routes/checkUsername";
 import avatarRoutes from "./routes/avatar";
 import "dotenv/config";
 import fastifyCookie from "@fastify/cookie";
+import authPlugin from "./plugin/authPlugin";
+import fastifyJwt from "@fastify/jwt";
 
 const PORT = parseInt(process.env.BACKEND_PORT ?? "4000");
 const HOST = process.env.BACKEND_HOST || "localhost";
@@ -20,6 +22,15 @@ const fastify = Fastify({ logger: { level: "error" } });
 fastify.register(fastifyCookie, {
   secret: "a_random_secret_key" // used for signed cookies
 });
+
+ // register jwt plugin
+fastify.register(fastifyJwt, {
+  secret: process.env.JWT_SECRET!,
+});
+
+fastify.register(authPlugin);
+
+export default fastify;
 
 // register middleware
 // fastify.register(cors, { origin: true }); <-- old version. before cookies.

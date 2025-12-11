@@ -19,5 +19,27 @@ export class FriendController {
             return reply.badRequest(err.message);
         }
     };
+
+    getIncoming = async (req: any, reply: any) => {
+        const userId = req.user.id;
+        return reply.send(await this.service.getIncoming(userId));
+    };
+
+    getOutgoing = async (req: any, reply: any) => {
+        const userId = req.user.id;
+        return reply.send(await this.service.getOutgoing(userId));
+    };
+
+    accept = async (req: any, reply: any) => {
+        const userId = req.user.id;
+        const requestId = Number(req.params.id);
+
+        try {
+            await this.service.acceptRequest(userId, requestId);
+            return reply.send({ success: true });
+        } catch (err: any) {
+            return reply.badRequest(err.message);
+        }
+    };
 }
 
