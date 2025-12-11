@@ -49,6 +49,7 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 	const [fileName, setFileName] = useState("");
 	const [file, setFile] = useState<File | null>(null);
 	const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+	const [nameChanged, setNameChanged] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const selectedFile = e.target.files?.[0] || null;
@@ -74,6 +75,7 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 
 	function updateName(e: React.ChangeEvent<HTMLInputElement>) {
     setUser(u => ({ ...u, displayName: e.target.value }));
+		setNameChanged(true);
   }
 
 	async function saveDisplayName(displayName: string) {
@@ -164,7 +166,10 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 		      )}
 				</div>
 				<div className="absolute bottom-8 right-12">
-					<Button>Save</Button>
+					<Button
+						disabled={previewUrl || nameChanged ? false : true}>
+						Save
+					</Button>
 				</div>
 			</form>
 		</div>
