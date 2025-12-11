@@ -3,6 +3,7 @@ import Input from "../components/Input";
 import { PROXY_URL } from "../constants";
 import { useState } from "react";
 import { passwordRequirements } from "../constants/passwordRequirements";
+import { FiX } from "react-icons/fi";
 
 const ProfilePic = ({ avatarUrl }: {avatarUrl: string | null}) => {
 	const timestamp = Date.now();
@@ -73,13 +74,20 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
   	setPreviewUrl(url);
   };
 
+	const removeFile = () => {
+		console.log("Remove file clicked");
+		setFile(null);
+    setFileName("");
+		setPreviewUrl("");
+	}
+
 	function updateName(e: React.ChangeEvent<HTMLInputElement>) {
     setUser(u => ({ ...u, displayName: e.target.value }));
 		setNameChanged(true);
   }
 
 	async function saveDisplayName(displayName: string) {
-    const res = await fetch(PROXY_URL + "/updateDisplayName", {
+    const res = await fetch(PROXY_URL + "/user", {
 	    method: "PATCH",
 	    credentials: "include",
 	    headers: {
@@ -88,7 +96,7 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 	    body: JSON.stringify({ displayName }),
 	  });
     const data = await res.json();
-		console.log("Display name response: " + data);
+		console.log("Display name response: ", data);
 		return (data);
   }
 
@@ -110,9 +118,11 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 		if (mainUser.displayName != user.displayName) {
 			const displayNameResponse = await saveDisplayName(user.displayName);
 			if (displayNameResponse.error) {
+				//set state username not context username
 				//alert of error
 			} else {
 				setUser({ ...user, displayName: displayNameResponse.displayName});
+				setNameChanged(false);
 			}
 		}
 		if (file != null) {
@@ -129,9 +139,9 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 	}
 
 	return (
-		<div className="relative flex flex-col bg-stone-700/50 dark:bg-stone-500  rounded-3xl p-8">
+		<div className="relative flex flex-col bg-stone-700/50 dark:bg-stone-500 rounded-3xl p-8">
 			<h2 className="font-tomorrow font-bold text-xl text-stone-800 dark:text-vintage-yellow ">Public profile</h2>
-			<form className="flex flex-col gap-2 m-4" onSubmit={(e) => saveSettings(e)}>
+			<form className="flex flex-col gap-2 m-4 mb-1" onSubmit={(e) => saveSettings(e)}>
 				<Input
 					id="name"
 					label="Display name:"
@@ -139,10 +149,10 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 					tooltip="Name that is shown to other players"
 					onChange={(e) => updateName(e)}/>
 				<p className="mt-4">Change avatar:</p>
-				<div className="flex gap-4 items-center">
+				<div className="flex gap-6 items-center">
 				  <label
 				    htmlFor="avatar"
-				    className="w-30 px-4 py-2 font-tomorrow rounded-lg hover:bg-vintage-yellow/60 dark:bg-stone-600 bg-amber-50 dark:hover:bg-neutral-800">
+				    className="w-30 px-4 py-2 cursor-pointer font-tomorrow rounded-lg hover:bg-vintage-yellow/60 dark:bg-stone-600 bg-amber-50 dark:hover:bg-neutral-800">
 				    Choose File
 				  </label>
 				  <input
@@ -154,16 +164,17 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 						onChange={handleFileChange}
 				  />
 					{previewUrl && (
-							<img className="w-16 h-16 rounded-full object-cover"
+						 <div className="flex items-center gap-1">
+							<img className="w-12 h-12 rounded-full object-cover"
 								src={previewUrl} 
 								alt="Avatar preview"
 							/>
+							<p>{fileName}</p>
+							<button type="button" className="cursor-pointer m-2" onClick={() => removeFile()}>
+									<FiX size="30"/>
+							</button>
+						</div>
 					)}
-					{fileName && (
-		        <p>
-		          <span>{fileName}</span>
-		        </p>
-		      )}
 				</div>
 				<div className="absolute bottom-8 right-12">
 					<Button
