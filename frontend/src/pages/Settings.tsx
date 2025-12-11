@@ -9,7 +9,6 @@ const ProfilePic = ({ avatarUrl }: {avatarUrl: string | null}) => {
 	const imageUrl = avatarUrl 
 	  ? `${PROXY_URL + avatarUrl}?t=${timestamp}` 
 	  : PROXY_URL + "/uploads/avatars/default.jpeg";
-	// const imageUrl = avatarUrl ? PROXY_URL + avatarUrl : PROXY_URL + "/uploads/avatars/default.jpeg";
 	console.log("imageUrl: " + imageUrl);
 	return (
 		<img className="w-36 h-36 rounded-full object-cover"
@@ -79,7 +78,7 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 
 	async function saveDisplayName(displayName: string) {
     const res = await fetch(PROXY_URL + "/updateDisplayName", {
-	    method: "POST",
+	    method: "PATCH",
 	    credentials: "include",
 	    headers: {
 	      "Content-Type": "application/json",
