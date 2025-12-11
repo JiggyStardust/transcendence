@@ -38,15 +38,27 @@ const LoggedInCard = ({ card }: { card: LoggedIn }) => {
 
 type PendingCardProps = {
   card: Pending;
+	setCards: React.Dispatch<React.SetStateAction<PlayerCard[]>>
   onUpdate: (id: string, updates: Partial<Pending>) => void;
 	handleLogin: () => void;
   onLoginSuccess: (id: string, user: any) => void;
 };
 
-const PendingCard =({ card, onUpdate, handleLogin, onLoginSuccess }: PendingCardProps) => {
+const PendingCard =({ card, setCards, onUpdate, handleLogin, onLoginSuccess }: PendingCardProps) => {
+
+	const removeCard = (id: string) => {
+		console.log("remove card clicked");
+	  setCards(prevCards =>
+	    prevCards.filter(card => card.id !== id)
+	  );
+	};
+
 	return (
 		<CardFrame>
-			<button className="absolute top-8 right-8 cursor-pointer"><FiXCircle size="20" /></button>
+			<button className="absolute top-8 right-8 cursor-pointer"
+				onClick={() => removeCard(card.id)}>
+				<FiXCircle size="20" />
+			</button>
 			<div className="absolute bottom-10 inset-x-0 flex flex-col items-center">
 				<Input id="username" label="Username" value={card.username} onChange={(e) => onUpdate(card.id, { username: e.target.value })}/>
 				<Input type="password" id="password" label="Password" value={card.password} onChange={(e) => onUpdate(card.id, { password: e.target.value })}/>
@@ -61,9 +73,10 @@ type PlayerCardProps = {
   onUpdate: (id: string, updates: Partial<Pending>) => void;
 	handleLogin: () => void;
   onLoginSuccess: (id: string, user: any) => void;
+	setCards: React.Dispatch<React.SetStateAction<PlayerCard[]>>
 };
 
-const PlayerCardComponent = ({ card, onUpdate, handleLogin, onLoginSuccess }: PlayerCardProps) => {
+const PlayerCardComponent = ({ card, onUpdate, handleLogin, onLoginSuccess, setCards }: PlayerCardProps) => {
   switch (card.type) {
     case "loggedIn":
       return <LoggedInCard card={card} />;
@@ -74,6 +87,7 @@ const PlayerCardComponent = ({ card, onUpdate, handleLogin, onLoginSuccess }: Pl
           onUpdate={onUpdate}
 					handleLogin={handleLogin}
           onLoginSuccess={onLoginSuccess}
+					setCards={setCards}
         />
       );
   }
@@ -84,6 +98,8 @@ const AddCard = ({ onAdd }) => (
     <FiPlus size="128"/>
   </button>
 );
+
+var idCounter = 2;
 
 
 const Players = () => {
@@ -97,16 +113,16 @@ const Players = () => {
 	]);
 
 	const addCard = () => {
-    const nextId: string = String(cards.length + 1);
 	  setCards(prev => [
 	    ...prev,
 	    {
 	      type: "pending",
-	      id: nextId,
+	      id: idCounter.toString(),
 	      username: "",
 	      password: ""
 	    }
 	  ]);
+		idCounter++;
   };
 
 	const updatePendingCard = (id: string, updates: Partial<Pending>) => {
@@ -137,6 +153,7 @@ const Players = () => {
 			      onUpdate={updatePendingCard}
 						handleLogin={handleLogIn}
 			      onLoginSuccess={onLoginSuccess}
+						setCards={setCards}
 			    />
 			  ))}
 				{cards.length < 4 && 
