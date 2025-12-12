@@ -10,10 +10,12 @@ export interface IUploadAvatarParams {
 }
 
 // Derive extension from mimetype, not user-provided filename
-const MIMETYPE_TO_EXT: Record<string, string> = {
-  "image/png": ".png",
-  "image/jpeg": ".jpeg",
-  "image/jpg": ".jpg",
+const MIMETYPE: string[] = ["image/png", "image/jpeg", "image/jpg"];
+
+const EXT_TO_MIMETYPE: Record<string, string> = {
+  ".png": "image/png",
+  ".jpeg": "image/jpeg",
+  ".jpg": "image/jpeg",
 };
 
 export const uploadAvatarHandler = async (
@@ -42,14 +44,13 @@ export const uploadAvatarHandler = async (
 
   const mimetype = file.mimetype;
 
-  if (!(mimetype in MIMETYPE_TO_EXT)) {
+  if (!MIMETYPE.includes(mimetype)) {
     return reply.code(400).send({ error: "Invalid file type" });
   }
 
-  const expectedExt = MIMETYPE_TO_EXT[mimetype];
   const ext = path.extname(file.filename);
 
-  if (!ext || expectedExt !== ext) {
+  if (!ext || EXT_TO_MIMETYPE[ext] !== mimetype) {
     return reply.code(400).send({ error: "Invalid file type" });
   }
 
@@ -87,6 +88,17 @@ export const uploadAvatarHandler = async (
   } catch (err) {
     await fs.promises.unlink(newFilePath).catch(() => {});
     return reply.code(500).send({ error: "Failed to update avatar" });
+  }
+
+  if (result.data.avatarURL !== newAvatarUrl && result.data.avatarType === AvatarType.CUSTOM) {
+    const oldPath = path.join(process.cwd(), result.data.avatarURL);
+    try {
+      await fs.promises.unlink(oldPath);
+    } catch (err: any) {
+      if (err.code !== "ENOENT") {
+        console.error("Failed to delete old avatar:", err);
+      }
+    }
   }
 
   return reply.send({ avatarURL: newAvatarUrl });

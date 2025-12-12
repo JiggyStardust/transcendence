@@ -20,10 +20,10 @@ const fastify = Fastify({ logger: { level: "error" } });
 
 // register cookies
 fastify.register(fastifyCookie, {
-  secret: "a_random_secret_key" // used for signed cookies
+  secret: "a_random_secret_key", // used for signed cookies
 });
 
- // register jwt plugin
+// register jwt plugin
 fastify.register(fastifyJwt, {
   secret: process.env.JWT_SECRET!,
 });
@@ -36,7 +36,7 @@ export default fastify;
 // fastify.register(cors, { origin: true }); <-- old version. before cookies.
 fastify.register(cors, {
   origin: ["http://" + HOST + ":" + PORT],
-  credentials: true
+  credentials: true,
 });
 fastify.register(formbody);
 
@@ -51,10 +51,6 @@ fastify.register(import("@fastify/static"), {
   root: path.join(process.cwd(), "uploads"),
   prefix: "/uploads/",
 });
-
-
-// friend routes
-fastify.register(import("./routes/friends"), { prefix: "/api" });
 
 // register custom plugins
 fastify.register(databasePlugin);
