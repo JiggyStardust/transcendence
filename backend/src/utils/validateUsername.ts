@@ -1,4 +1,4 @@
-export const usernamePattern = /^[A-Za-z][A-Za-z0-9_]+$/;
+export const usernamePattern = /^[A-Za-z][A-Za-z0-9_]{2,19}$/;
 
 export const USERNAME_ERROR_MESSAGE =
   "Username must be 3–20 characters long and can contain only letters, numbers, and underscores";
