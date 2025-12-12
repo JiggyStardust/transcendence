@@ -181,7 +181,7 @@ const Players = () => {
                 type: "loggedIn",
                 id: String(user.id),
                 name: user.displayName,
-                avatarUrl: user.avatarUrl || "/fallback-avatar.png"
+                avatarUrl: user.avatarUrl
               } as LoggedIn
             : c
         )

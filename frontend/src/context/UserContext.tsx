@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 import { PROXY_URL } from "../constants";
 
 export interface Friend {
@@ -47,7 +47,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   // Fetch /me (main user) 
   /************************** */
   
- async function loadMe(): Promise<User | undefined> {
+const loadMe = useCallback(async (): Promise<User | undefined> => {
     try {
       const res = await fetch(PROXY_URL + "/me", {
         credentials: "include",
@@ -61,11 +61,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
       const data = await res.json();
       const username = data.username;
 
+      console.log("Loaded me:", data);
+      console.log("avatarUrl:", data.avatarURL);
+
       const user: User = {
         id: data.id,
-        username,
+        username: data.username,
         displayName: data.displayName ?? data.username,
-        avatarUrl: data.avatarUrl,
+        avatarUrl: PROXY_URL + data.avatarURL,
         role: "full",
       };
 
@@ -75,13 +78,15 @@ export function UserProvider({ children }: { children: ReactNode }) {
       console.error("Error loading /me", e);
       return undefined;
     }
-  }
+  },
+  []
+);
   /****************************** */
   // Fetch /users/:username (side profiles)
   /****************************** */
 
 
-  async function loadUser(username: string): Promise<User | undefined> {
+const loadUser = useCallback(async (username: string): Promise<User | undefined> => {
     try {
       const res = await fetch(`${PROXY_URL}/users/${username}`, {
         credentials: "include",
@@ -94,11 +99,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
       const data = await res.json();
 
+      console.log("Loaded me:", data);
+      console.log("avatarUrl:", data.avatarURL);
+
       const user: User = {
         id: data.id,
         username: data.username,
         displayName: data.displayName ?? data.username,
-        avatarUrl: data.avatarUrl,
+        avatarUrl: PROXY_URL + data.avatarURL,
         role: "partial",
       };
 
@@ -108,7 +116,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
       console.error("Error fetching user", username, e);
       return undefined;
     }
-  }
+  },
+  []
+);
 
   // ------------------------
   // Helpers
