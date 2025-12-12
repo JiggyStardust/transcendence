@@ -1,6 +1,8 @@
 import "fastify";
+import "@fastify/jwt"
 import type { ExtendedPrismaClient } from "../database";
 import { FastifyRequest, FastifyReply } from "fastify";
+import { JwtPayload } from "@fastify/jwt";
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -16,4 +18,16 @@ declare module "fastify" {
     ): Promise<void>;
   }
 }
+
+declare module "fastify" {
+  interface FastifyRequest {
+    user: {
+      id: number;
+      username: string;
+      displayName?: string;
+    } & JwtPayload;
+    jwtVerify: () => Promise<void>;
+  }
+}
+
 

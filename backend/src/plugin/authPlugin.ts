@@ -6,7 +6,6 @@ import {
 } from "fastify";
 
 
-
 const authPlugin: FastifyPluginAsync = async (fastify) => {
 
     // add authentication decorator
