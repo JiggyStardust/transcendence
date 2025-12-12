@@ -20,3 +20,6 @@ export const verifyToken: preHandlerHookHandler = (req, reply, done) => {
     reply.code(401).send({ error: "Invalid or expired token" });
   }
 };
+
+
+// I think this file can be deleted
