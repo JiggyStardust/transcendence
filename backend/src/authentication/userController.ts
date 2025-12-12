@@ -6,7 +6,7 @@ declare module "fastify" {
     interface FastifyRequest {
         user: {
             id: string;
-            displayname?: string;
+            displayName?: string;
             // whatever else is needed can be added here
         }
     }
@@ -15,7 +15,6 @@ declare module "fastify" {
 export async function updateDisplayName(request: FastifyRequest, reply: FastifyReply) {
     const { displayName } = request.body as { displayName?: string };
     const userID = Number(request.user.id);
-    
 
     try {
         await request.server.db.user.update({
