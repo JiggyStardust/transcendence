@@ -8,7 +8,6 @@ export default function BabylonGame() {
   const gameRef = useRef(null);
 
   useEffect(() => {
-    // Dynamically import your game modules
     const initGame = async () => {
       const { game } = await import('../game/game.js');
       const { parseUsername } = await import('../game/parseUsername.js');
@@ -27,8 +26,9 @@ export default function BabylonGame() {
 
       if (window.numberOfPlayers == 3)
         game.hasThirdPlayer = true;
+      
 
-      parseUsername(game);
+      parseUsername(game, gameState.players);
       await createScene(game);
 
       // Render loop
