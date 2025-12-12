@@ -161,7 +161,7 @@ const Players = () => {
   const handleLogIn = async (card: Pending) => {
     const { username, password } = card;
     if (!password || !username) {
-      // show error in the pending card
+      // show error in the pending card PLACEHOLDER -> need to match with Maria's errors later
       updatePendingCard(card.id, { error: "Both username and password needed" });
       return;
     }
@@ -186,7 +186,6 @@ const Players = () => {
         return;
       }
 
-      // replace the pending card with a loggedIn card using the loaded user
       setCards(prev =>
         prev.map(c =>
           c.id === card.id
@@ -219,7 +218,9 @@ const Players = () => {
         ))}
         {cards.length < 4 && <AddCard onAdd={addCard} />}
       </div>
-          {/* Centered Logout Button */}
+
+
+          {/* Logout Button PLACEHOLDER */}
       <div className="flex justify-center w-full">
         <LogoutButton />
       </div>
