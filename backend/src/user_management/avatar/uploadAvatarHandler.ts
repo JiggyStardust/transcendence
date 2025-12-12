@@ -10,7 +10,7 @@ export interface IUploadAvatarParams {
 }
 
 // Derive extension from mimetype, not user-provided filename
-const MIMETYPE: string[] = ["image/png", "image/jpeg", "image/jpg"];
+const MIMETYPE: string[] = ["image/png", "image/jpeg"];
 
 const EXT_TO_MIMETYPE: Record<string, string> = {
   ".png": "image/png",
