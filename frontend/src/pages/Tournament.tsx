@@ -1,35 +1,40 @@
 // @ts-nocheck
 import { Button } from "../components/Button.tsx";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useGame } from '../context/GameContext';
 
-const Match = ({game_number, player_1, player_2, active=true}: {game_number: string, player_1: string, player_2:string, active?: boolean}) => {
+const Match = ({game_number, player_1, player_2, active=true, onStartGame}: {game_number: string, player_1: string, player_2:string, active?: boolean, onStartGame?: () => void}) => {
   return (
     <div className="flex justify-center gap-7">
-      <Button to="/game" variant="primary" size="lg" disabled={!active}>{game_number}</Button>
+      <Button 
+        variant="primary" 
+        size="lg" 
+        disabled={!active}
+        onClick={onStartGame}
+      >
+        {game_number}
+      </Button>
       <p className="text-3xl">{player_1} vs. {player_2}</p>
     </div>
   )
 }
 
-// const contextUsers: User[] = [
-//   { username: "Alice" },
-//   { username: "Bob" },
-//   { username: "Charlie" },
-//   { username: "Dana" }
-// ];
-
 export default function Tournament() {
-  // const [players, setPlayers] = useState<User[]>([
-  //   { username: "Alice" },
-  //   { username: "Bob" },
-  //   { username: "Charlie" },
-  //   { username: "Dana" }
-  // ]);
-  // const [winner_1, setWinner_1] = useState("Winner of Game 1");
-  // const [winner_2, setWinner_2] = useState("Winner of Game 2");
+  const navigate = useNavigate();
+  const { gameState, setPlayers, setGameType } = useGame();
 
+  const handleStartGame = (player1: string, player2: string) => {
+    setGameType("tournament");
+    setPlayers([
+      { id: "1", displayName: player1 },
+      { id: "2", displayName: player2 }
+    ]);
 
-  // players.sort( () => Math.random()-0.5 );
+    setTimeout(() => {
+      navigate("/game");
+    }, 0);
+  };
 
   return (
     <div className="flex justify-center flex-col items-center gap-10">
@@ -39,20 +44,21 @@ export default function Tournament() {
           game_number="Game 1"
           player_1={"PlayerA"}
           player_2={"PlayerB"}
+          onStartGame={() => handleStartGame("PlayerA", "PlayerB")}
         />
         <Match
           game_number="Game 2"
           player_1={"PlayerC"}
           player_2={"PlayerD"}
+          onStartGame={() => handleStartGame("PlayerC", "PlayerD")}
         />
-        {<Match
+        <Match
           game_number="Game 3"
           player_1={"Winner of Game 1"}
           player_2={"Winner of Game 2"}
           active={false}
-        />}
+        />
       </div>
     </div>
-    
   )
 }

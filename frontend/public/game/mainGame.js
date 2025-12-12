@@ -12,10 +12,16 @@ import {gameOver} from "./gameOver.js";
 game.canvas = document.getElementById('renderCanvas');
 game.engine = new BABYLON.Engine(game.canvas, true);
 
+// Get entire game context from the global window object
+const gameContext = window.gameContext || { gameType: null, players: [] };
+console.log('Game Context:', gameContext);
+console.log('Game Type:', gameContext.gameType); // "regular", "multiplayer", or "tournament"
+console.log('Players:', gameContext.players);
+
 if (window.numberOfPlayers == 3)
   game.hasThirdPlayer = true;
 
-parseUsername(game);
+parseUsername(game, gameContext.players);
 await createScene(game);
 
 // Render loop

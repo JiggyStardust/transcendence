@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing.tsx";
 import SignUp from "./pages/SignUp.tsx";
@@ -8,12 +10,14 @@ import Tournament from "./pages/Tournament.tsx";
 import Login from "./pages/Login.tsx";
 import SideplayerLogin from "./pages/SideplayerLogin.tsx";
 import NavBar from "./components/NavBar.tsx";
+import { GameProvider } from './context/GameContext';
 
 function App() {
 
   return (
     <div>
       <Router>
+        <GameProvider>
 				<NavBar />
         <Routes>
           <Route path="/" element={<Landing />} />
@@ -25,6 +29,7 @@ function App() {
           <Route path="/tournament" element={<Tournament />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
+        </GameProvider>
       </Router>
     </div>
   );

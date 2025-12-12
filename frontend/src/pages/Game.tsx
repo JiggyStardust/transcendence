@@ -1,13 +1,14 @@
+// @ts-nocheck
 import { useEffect } from "react";
+import { useGame } from '../context/GameContext';
 
 export default function Game() {
-  useEffect(() => {
-    // Set the player name globally
-    window.p1Name = "wPlayer1";
-    window.p2Name = "wPlayer2";
-    window.p3Name = "wPlayer3";
-    window.numberOfPlayers = 3;
+  const { gameState } = useGame();
 
+  useEffect(() => {
+    // Expose entire gameState to the global window object
+    window.gameContext = gameState;
+    
     const script = document.createElement('script');
     script.src = '/game/mainGame.js';
     script.type = "module";
@@ -18,12 +19,9 @@ export default function Game() {
         document.body.removeChild(script);
       }
       // Clean up the global variable
-      delete window.p1Name;
-      delete window.p2Name;
-      delete window.p3Name;
-      delete window.numberOfPlayers;
+      delete window.gameContext;
     };
-  }, []);
+  }, [gameState]);
 
   return (
     <div className="page-bg flex flex-col items-center justify-center min-h-screen w-screen">

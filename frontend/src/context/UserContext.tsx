@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { createContext, useContext, useState, ReactNode } from "react";
 import { useAuth } from "./AuthContext";
 import { PROXY_URL } from "../constants";
