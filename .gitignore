@@ -40,3 +40,4 @@ build/
 # tests
 tmp*
 qr.html
+cookies.txt
