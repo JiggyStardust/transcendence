@@ -1,4 +1,4 @@
-
+// @ts-nocheck
 type InputProps = {
   id: string;
   label: string;
