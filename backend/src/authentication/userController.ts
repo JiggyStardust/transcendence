@@ -1,0 +1,56 @@
+import { FastifyRequest, FastifyReply } from "fastify";
+import "fastify";
+import bcrypt from "bcrypt";
+
+declare module "fastify" {
+    interface FastifyRequest {
+        user: {
+            id: string;
+            displayname?: string;
+            // whatever else is needed can be added here
+        }
+    }
+}
+
+export async function updateDisplayName(request: FastifyRequest, reply: FastifyReply) {
+    const { displayName } = request.body as { displayName?: string };
+    const userID = Number(request.user.id);
+    
+
+    try {
+        await request.server.db.user.update({
+            where: { id: userID },
+            data: { displayName },
+        });
+
+        return reply.send({ success: true });
+    } catch (err) {
+        return reply.code(500).send({ error: "Could not update display name"});
+    }
+}
+
+export async function updatePassword(request: FastifyRequest, reply: FastifyReply) {
+    const { oldPassword, newPassword } = request.body as {
+        oldPassword: string;
+        newPassword: string;
+    };
+
+    const user = await request.server.db.user.findUnique({
+        where: { id: request.user.id },
+    });
+
+    if (!user) return reply.code(404).send({ error: "User not found" });
+
+    const valid = await bcrypt.compare(oldPassword, user.password);
+
+    if (!valid) return reply.code(400).send({ error: "Incorrect password" });
+
+    const hashed = await bcrypt.hash(newPassword, 10);
+
+    await request.server.db.user.update({
+        where: { id: user.id },
+        data: { password: hashed },
+    });
+
+    return reply.send({ success: true });
+ }

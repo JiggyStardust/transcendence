@@ -1,4 +1,3 @@
-import { ThemeToggle } from "../components/ThemeToggle";
 import { useState } from "react";
 import Input from "../components/Input";
 import { Button} from "../components/Button";
@@ -118,7 +117,6 @@ export default function SignUp() {
 
 	return (
 		<div className="flex flex-col w-screen items-center justify-center min-h-screen transition-colors duration-300">
-			<h1 className="font-[Honk] text-[120px]">Ping of Pongs</h1>
 		  <p className="mt-10 text-lg text-center max-w-md">
  				This is where you SignUp!
 	 	  </p>
