@@ -9,3 +9,8 @@ export interface Toast {
 export interface ToastContextType {
   showToast: (message: string, type: ToastType) => void;
 }
+
+export type Status = {
+	type: "" | "ok" | "warning" | "error",
+	message: string;
+}

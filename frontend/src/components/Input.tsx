@@ -1,6 +1,7 @@
 import { FiCheck } from "react-icons/fi";
 import { FiAlertOctagon } from "react-icons/fi";
 import { FiXOctagon } from "react-icons/fi";
+import { type Status } from "../types/types";
 
 type InputProps = {
   id: string;
@@ -10,14 +11,13 @@ type InputProps = {
 	tooltip?: string;
 	autofocus?: boolean;
 	focusTooltip?: React.ReactNode;
-	status?: "ok" | "warning" | "error";
-	statusMessage?: string;
+	status?: Status;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   onBlur?: React.FocusEventHandler<HTMLInputElement>; // after we leave current field, this prop is activated
 };
 
-export default function Input({id, label, type = "text", value, tooltip, focusTooltip, autofocus=false, status, statusMessage, onChange, onBlur,}: InputProps) {
-	const statusIcons: Record<NonNullable<typeof status>, React.ReactNode> = {
+export default function Input({id, label, type = "text", value, tooltip, focusTooltip, autofocus=false, status, onChange, onBlur,}: InputProps) {
+	const statusIcons = {
 	  ok:   <FiCheck size="20" color="green" />,
 	  warning:<FiAlertOctagon size="20" color="orange"  />,
 	  error:  <FiXOctagon size="20" color="red" />
@@ -35,12 +35,12 @@ export default function Input({id, label, type = "text", value, tooltip, focusTo
 			      </div>
 			    )}
 			  </div>
-			  {status && (
+			  {status && status.type !== "" && (
 			    <div className="relative group/icon cursor-help">
-			      {statusIcons[status]}
-						{statusMessage && (
+			      {statusIcons[status.type]}
+						{status.message && (
 							<div className="absolute left-full top-1/2 ml-2 -translate-y-1/2 w-max px-2 py-1 text-sm bg-vintage-yellow dark:bg-stone-600 rounded shadow-lg opacity-0 group-hover/icon:opacity-100 transition">
-								{statusMessage}
+								{status.message}
 		      		</div>
 						)}
 			    </div>
