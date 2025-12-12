@@ -5,23 +5,41 @@ import { useGame } from '../context/GameContext';
 export default function Game() {
   const { gameState } = useGame();
 
+  // Update window.gameContext whenever gameState changes
   useEffect(() => {
-    // Expose entire gameState to the global window object
     window.gameContext = gameState;
-    
+  }, [gameState]);
+
+  // Load the game script only once when component mounts
+  useEffect(() => {
+    // Add a timestamp to force script reload
     const script = document.createElement('script');
-    script.src = '/game/mainGame.js';
+    script.src = `/game/mainGame.js?t=${Date.now()}`;
     script.type = "module";
-    document.body.appendChild(script);
+    
+    // Wait for canvas to be ready
+    const loadScript = () => {
+      document.body.appendChild(script);
+    };
+    
+    // Small delay to ensure canvas is mounted
+    const timer = setTimeout(loadScript, 10);
 
     return () => {
+      clearTimeout(timer);
       if (script.parentNode === document.body) {
         document.body.removeChild(script);
       }
       // Clean up the global variable
       delete window.gameContext;
+      
+      // Clean up Babylon engine if it exists
+      if (window.gameEngine) {
+        window.gameEngine.dispose();
+        delete window.gameEngine;
+      }
     };
-  }, [gameState]);
+  }, []); // Empty dependency array - run only once
 
   return (
     <div className="page-bg flex flex-col items-center justify-center min-h-screen w-screen">

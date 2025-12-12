@@ -11,6 +11,7 @@ import {gameOver} from "./gameOver.js";
 // Init
 game.canvas = document.getElementById('renderCanvas');
 game.engine = new BABYLON.Engine(game.canvas, true);
+window.gameEngine = game.engine;
 
 // Get entire game context from the global window object
 const gameContext = window.gameContext || { gameType: null, players: [] };
