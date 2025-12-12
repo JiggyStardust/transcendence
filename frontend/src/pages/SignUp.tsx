@@ -20,8 +20,6 @@ export default function SignUp() {
 	
 		e.preventDefault();
 
-		e.preventDefault();
-
     const res = await fetch(PROXY_URL + "/signup", {
       method: "POST",
       headers: {

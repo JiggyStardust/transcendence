@@ -1,8 +1,10 @@
+// Players.tsx
 import { Button } from "../components/Button";
 import Input from "../components/Input";
 import { PROXY_URL } from "../constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiPlus, FiXCircle } from "react-icons/fi";
+import { useUser } from "../context/UserContext"; // <-- use user context
 
 type LoggedIn = {
   type: "loggedIn";
@@ -21,57 +23,57 @@ type Pending = {
 
 type PlayerCard = LoggedIn | Pending;
 
-const CardFrame = ({ children, className = "" }) => (
+const CardFrame = ({ children, className = "" }: any) => (
   <div className={`relative p-4 w-72 h-80 border flex-shrink-0 snap-start rounded-xl shadow-lg ${className}`}>
     {children}
   </div>
 );
 
 const LoggedInCard = ({ card }: { card: LoggedIn }) => {
-	return (
-		<CardFrame className="flex flex-col items-center justify-center gap-4">
-			<img src={card.avatarUrl} className="size-28 object-cover rounded-full"/>
-			<p className="bolded text-2xl">{card.name}</p>
-		</CardFrame>
-	)
+  return (
+    <CardFrame className="flex flex-col items-center justify-center gap-4">
+      <img src={card.avatarUrl || "/fallback-avatar.png"} className="w-28 h-28 object-cover rounded-full" alt={card.name}/>
+      <p className="font-semibold text-2xl">{card.name}</p>
+    </CardFrame>
+  )
 }
 
 type PendingCardProps = {
   card: Pending;
-	setCards: React.Dispatch<React.SetStateAction<PlayerCard[]>>
+  setCards: React.Dispatch<React.SetStateAction<PlayerCard[]>>
   onUpdate: (id: string, updates: Partial<Pending>) => void;
-	handleLogin: (player: Pending) => void;
+  handleLogin: (player: Pending) => void;
 };
 
-const PendingCard =({ card, setCards, onUpdate, handleLogin}: PendingCardProps) => {
+const PendingCard = ({ card, setCards, onUpdate, handleLogin}: PendingCardProps) => {
 
-	const removeCard = (id: string) => {
-		console.log("remove card clicked");
-	  setCards(prevCards =>
-	    prevCards.filter(card => card.id !== id)
-	  );
-	};
+  const removeCard = (id: string) => {
+    setCards(prevCards =>
+      prevCards.filter(c => c.id !== id)
+    );
+  };
 
-	return (
-		<CardFrame>
-			<button className="absolute top-8 right-8 cursor-pointer"
-				onClick={() => removeCard(card.id)}>
-				<FiXCircle size="20" />
-			</button>
-			<div className="absolute bottom-10 inset-x-0 flex flex-col items-center">
-				<Input id="username" label="Username" value={card.username} onChange={(e) => onUpdate(card.id, { username: e.target.value })}/>
-				<Input type="password" id="password" label="Password" value={card.password} onChange={(e) => onUpdate(card.id, { password: e.target.value })}/>
-				<Button onClick={() => handleLogin(card)}>Log in</Button>
-			</div>
-		</CardFrame>
-	)
+  return (
+    <CardFrame>
+      <button className="absolute top-4 right-4 cursor-pointer"
+        onClick={() => removeCard(card.id)}>
+        <FiXCircle size={20} />
+      </button>
+      <div className="absolute bottom-6 inset-x-0 flex flex-col items-center gap-3 px-4">
+        <Input id={"username-" + card.id} label="Username" value={card.username} onChange={(e) => onUpdate(card.id, { username: e.target.value })}/>
+        <Input type="password" id={"password-" + card.id} label="Password" value={card.password} onChange={(e) => onUpdate(card.id, { password: e.target.value })}/>
+        <Button onClick={() => handleLogin(card)}>Log in</Button>
+        {card.error && <p className="text-red-500 text-sm mt-2">{card.error}</p>}
+      </div>
+    </CardFrame>
+  )
 }
 
 type PlayerCardProps = {
   card: PlayerCard;
   onUpdate: (id: string, updates: Partial<Pending>) => void;
-	handleLogin: (card: Pending) => void;
-	setCards: React.Dispatch<React.SetStateAction<PlayerCard[]>>
+  handleLogin: (card: Pending) => void;
+  setCards: React.Dispatch<React.SetStateAction<PlayerCard[]>>
 };
 
 const PlayerCardComponent = ({ card, onUpdate, handleLogin, setCards }: PlayerCardProps) => {
@@ -83,112 +85,129 @@ const PlayerCardComponent = ({ card, onUpdate, handleLogin, setCards }: PlayerCa
         <PendingCard
           card={card}
           onUpdate={onUpdate}
-					handleLogin={handleLogin}
-					setCards={setCards}
+          handleLogin={handleLogin}
+          setCards={setCards}
         />
       );
   }
 };
 
-const AddCard = ({ onAdd }) => (
+const AddCard = ({ onAdd }: { onAdd: () => void }) => (
   <button onClick={onAdd} className="flex items-center justify-center w-72 h-80 border flex-shrink-0 snap-start rounded-xl shadow-lg cursor-pointer">
-    <FiPlus size="128"/>
+    <FiPlus size={128}/>
   </button>
 );
 
-var idCounter = 2;
-
+let idCounter = 2;
 
 const Players = () => {
-	const [cards, setCards] = useState<PlayerCard[]>([
-	  {
-	    type: "loggedIn",
-	    id: "1",							//change to real data
-	    name: "Maria",
-	    avatarUrl: "../src/assets/pong-thumbnail.png"
-	  }
-	]);
+  const [cards, setCards] = useState<PlayerCard[]>([]); // start empty
+  const { loadMe, loadUser } = useUser();
 
-	const addCard = () => {
-	  setCards(prev => [
-	    ...prev,
-	    {
-	      type: "pending",
-	      id: idCounter.toString(),
-	      username: "",
-	      password: ""
-	    }
-	  ]);
-		idCounter++;
+  // When component mounts, load /me and add the main player's card if present.
+  useEffect(() => {
+    (async () => {
+      const me = await loadMe();
+      if (me) {
+        const mainCard: LoggedIn = {
+          type: "loggedIn",
+          id: String(me.id),
+          name: me.displayName,
+          avatarUrl: me.avatarUrl
+        }
+        setCards(prev => {
+          // don't duplicate if already present
+          const exists = prev.some(c => c.type === "loggedIn" && c.id === String(me.id));
+          return exists ? prev : [mainCard, ...prev];
+        });
+      }
+    })();
+  }, [loadMe]);
+
+  const addCard = () => {
+    setCards(prev => [
+      ...prev,
+      {
+        type: "pending",
+        id: idCounter.toString(),
+        username: "",
+        password: ""
+      }
+    ]);
+    idCounter++;
   };
 
-	const updatePendingCard = (id: string, updates: Partial<Pending>) => {
-	  setCards(prev =>
-	    prev.map(card =>
-	      card.id === id ? { ...card, ...updates } : card
-	    )
-	  );
-	};
+  const updatePendingCard = (id: string, updates: Partial<Pending>) => {
+    setCards(prev =>
+      prev.map(card =>
+        card.id === id ? { ...card, ...updates } : card
+      )
+    );
+  };
 
-	const handleLogIn = async (card: Pending) => {
-		const { username, password } = card;
-		if (!card.password || !card.username) {
-			console.log("Both username and password needed");
-			return;
-		}
-    const res = await fetch(PROXY_URL + "/verify_player", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ username, password })
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      console.error("Login failed:", data.error);
+  const handleLogIn = async (card: Pending) => {
+    const { username, password } = card;
+    if (!password || !username) {
+      // show error in the pending card
+      updatePendingCard(card.id, { error: "Both username and password needed" });
       return;
     }
-    console.log("Login success:", data);
-		onLoginSuccess({pendingId: card.id,
-  		userID: data.userID,
-  		username: data.username});
-    // data = { status: "verified", userID, username }
-	}
+    try {
+      const res = await fetch(PROXY_URL + "/verify_player", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        console.error("Login failed:", data.error);
+        updatePendingCard(card.id, { error: data.error || "Login failed" });
+        return;
+      }
+      // verify_player returned success. Now load the side player's full profile from /users/:username
+      const user = await loadUser(data.username);
+      if (!user) {
+        updatePendingCard(card.id, { error: "Failed to load user profile" });
+        return;
+      }
 
-	const onLoginSuccess = ({pendingId, userID, username}: {pendingId: string, userID: string, username: string}) => {
-		console.log("trying to change pending card to logged in");
-		setCards(prev =>
-        prev.map(card =>
-            card.id === pendingId
-                ? {
-                    type: "loggedIn",
-                    id: userID,
-                    name: username,
-                    avatarUrl: "",
-                  } satisfies LoggedIn
-                : card
+      // replace the pending card with a loggedIn card using the loaded user
+      setCards(prev =>
+        prev.map(c =>
+          c.id === card.id
+            ? {
+                type: "loggedIn",
+                id: String(user.id),
+                name: user.displayName,
+                avatarUrl: user.avatarUrl || "/fallback-avatar.png"
+              } as LoggedIn
+            : c
         )
-    );
-	}
+      );
+    } catch (err) {
+      console.error("Error handling login:", err);
+      updatePendingCard(card.id, { error: "Unexpected error" });
+    }
+  };
 
-	return (
-	  <main>
-	    <div className="flex gap-12 p-12 justify-start overflow-x-auto flex-nowrap no-scrollbar snap-x snap-mandatory scroll-pl-12">
-				{cards.map(card => (
-			    <PlayerCardComponent
-			      key={card.id}
-			      card={card}
-			      onUpdate={updatePendingCard}
-						handleLogin={handleLogIn}
-						setCards={setCards}
-			    />
-			  ))}
-				{cards.length < 4 && 
-					<AddCard onAdd={addCard} />
-				}
-			</div>
-	  </main>
-	);
+  return (
+    <main>
+      <div className="flex gap-12 p-12 justify-start overflow-x-auto flex-nowrap no-scrollbar snap-x snap-mandatory scroll-pl-12">
+        {cards.map(card => (
+          <PlayerCardComponent
+            key={card.id}
+            card={card}
+            onUpdate={updatePendingCard}
+            handleLogin={handleLogIn}
+            setCards={setCards}
+          />
+        ))}
+        {cards.length < 4 && <AddCard onAdd={addCard} />}
+      </div>
+    </main>
+  );
 }
 
 export default Players;

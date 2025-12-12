@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
-import { useAuth } from "./AuthContext";
 import { PROXY_URL } from "../constants";
 
 export interface Friend {
@@ -27,8 +26,8 @@ export interface User {
 interface UserContextType {
   users: Record<string, User>;
 
-  loadMe: () => Promise<void>;
-  loadUser: (username: string) => Promise<void>;
+  loadMe: () => Promise<User | undefined>;
+  loadUser: (username: string) => Promise<User | undefined>;
 
   updateUser: (username: string, data: Partial<User>) => void;
   setDisplayName: (username: string, displayName: string) => void;
@@ -48,7 +47,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   // Fetch /me (main user) 
   /************************** */
   
-  async function loadMe() {
+ async function loadMe(): Promise<User | undefined> {
     try {
       const res = await fetch(PROXY_URL + "/me", {
         credentials: "include",
@@ -56,7 +55,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
       if (!res.ok) {
         console.error("/me failed");
-        return;
+        return undefined;
       }
 
       const data = await res.json();
@@ -67,23 +66,22 @@ export function UserProvider({ children }: { children: ReactNode }) {
         username,
         displayName: data.displayName ?? data.username,
         avatarUrl: data.avatarUrl,
-        // friends: data.friends ?? [],
-        // stats: data.stats ?? null,
         role: "full",
       };
 
       setUsers((prev) => ({ ...prev, [username]: user }));
+      return user;
     } catch (e) {
       console.error("Error loading /me", e);
+      return undefined;
     }
   }
-
   /****************************** */
   // Fetch /users/:username (side profiles)
   /****************************** */
 
 
-  async function loadUser(username: string) {
+  async function loadUser(username: string): Promise<User | undefined> {
     try {
       const res = await fetch(`${PROXY_URL}/users/${username}`, {
         credentials: "include",
@@ -91,7 +89,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
       if (!res.ok) {
         console.error("Failed to load user", username);
-        return;
+        return undefined;
       }
 
       const data = await res.json();
@@ -101,14 +99,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
         username: data.username,
         displayName: data.displayName ?? data.username,
         avatarUrl: data.avatarUrl,
-        // friends: data.friends ?? [],
-        // stats: data.stats ?? null,
         role: "partial",
       };
 
       setUsers((prev) => ({ ...prev, [username]: user }));
+      return user;
     } catch (e) {
       console.error("Error fetching user", username, e);
+      return undefined;
     }
   }
 
