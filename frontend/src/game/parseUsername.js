@@ -1,4 +1,4 @@
-import { useGame } from '../src/context/GameContext';
+
 
 function truncate(str, maxLength) {
   if (str.length <= maxLength)
@@ -18,19 +18,19 @@ function reduceSize(str) {
     return 4;
 }
 
-export function parseUsername(game, players) {
+export function parseUsername(game) {
   const maxLength = 9;
-  console.log(players);
+  // console.log(players);
   
-  if (players.length >= 2) {
-    game.username.p1 = players[0].displayName;
-    game.username.p2 = players[1].displayName;
-  }
+  // if (players.length >= 2) {
+  //   game.username.p1 = players[0].displayName;
+  //   game.username.p2 = players[1].displayName;
+  // }
   
-  if (players.length >= 3) {
-    game.username.p3 = players[2].displayName;
-    game.hasThirdPlayer = true;
-  }
+  // if (players.length >= 3) {
+  //   game.username.p3 = players[2].displayName;
+  //   game.hasThirdPlayer = true;
+  // }
   
   game.username.p1Display = game.username.p1.toUpperCase();
   game.username.p1Display = truncate(game.username.p1Display, maxLength - reduceSize(game.username.p1Display));

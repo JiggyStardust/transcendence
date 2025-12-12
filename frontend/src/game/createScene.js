@@ -1,4 +1,7 @@
 
+import scoreboardFont from '../assets/Score_Board_Regular.json';
+import impactFont from '../assets/Impact_Regular.json';
+
 function getKeyboardInput(game) {
   const inputMap = {};
   game.scene.actionManager = new BABYLON.ActionManager(game.scene);
@@ -381,8 +384,8 @@ export async function createScene(game) {
 
   game.scene = new BABYLON.Scene(game.engine);
   game.scene.clearColor = new BABYLON.Color4(0, 0, 0, 0);
-  font.scoreboard = await (await fetch("game/assets/Score_Board_Regular.json")).json();
-  font.impact = await (await fetch("game/assets/Impact_Regular.json")).json();
+  font.scoreboard = scoreboardFont;
+  font.impact = impactFont;
   
   createCamera(game);
   createLights(game);

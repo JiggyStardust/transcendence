@@ -6,6 +6,7 @@ import SignUp from "./pages/SignUp.tsx";
 import Testing from "./pages/Testing.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import Game from "./pages/Game.tsx";
+import BabylonGame from "./components/BabylonGame.tsx";
 import Tournament from "./pages/Tournament.tsx";
 import Login from "./pages/Login.tsx";
 import SideplayerLogin from "./pages/SideplayerLogin.tsx";
@@ -25,9 +26,9 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
 	    	  <Route path="/testing" element={<Testing />} />
-          <Route path="/game" element={<Game />} />
           <Route path="/tournament" element={<Tournament />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/game" element={<BabylonGame />} />
         </Routes>
         </GameProvider>
       </Router>
