@@ -20,7 +20,7 @@ const fastify = Fastify({ logger: { level: "error" } });
 
 // register cookies
 fastify.register(fastifyCookie, {
-  secret: "a_random_secret_key" // used for signed cookies
+  secret: process.env.COOKIE_SECRET
 });
 
  // register jwt plugin
@@ -37,11 +37,11 @@ fastify.register(authPlugin);
 export default fastify;
 
 // register middleware
-// fastify.register(cors, { origin: true }); <-- old version. before cookies.
 fastify.register(cors, {
   origin: ["http://" + HOST + ":" + PORT],
   credentials: true
 });
+
 fastify.register(formbody);
 
 // register other plugins
@@ -57,10 +57,6 @@ fastify.register(import("@fastify/static"), {
   prefix: "/uploads/",
 });
 
-
-// friend routes
-fastify.register(import("./routes/friends/friendRoutes"), { prefix: "/api" });
-
 // register custom plugins
 fastify.register(databasePlugin);
 
@@ -69,6 +65,10 @@ fastify.register(userRoutes);
 fastify.register(authRoutes);
 fastify.register(checkUsernameRoute, { prefix: "/users" });
 fastify.register(avatarRoutes, { prefix: "/users" });
+
+// friend routes
+fastify.register(import("./routes/friends/friendRoutes"), { prefix: "/api" });
+
 
 // declare a basic route
 fastify.get("/", async (request, reply) => {
@@ -82,7 +82,7 @@ fastify.get("/health", async (request, reply) => {
 //run the server
 const start = async () => {
   try {
-    fastify.listen({ host: HOST, port: PORT });
+    await fastify.listen({ host: HOST, port: PORT });
     console.log("Server running on http://" + HOST + ":" + PORT);
   } catch (err) {
     fastify.log.error(err);
