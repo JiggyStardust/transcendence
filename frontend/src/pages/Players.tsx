@@ -4,7 +4,21 @@ import Input from "../components/Input";
 import { PROXY_URL } from "../constants";
 import { useEffect, useState } from "react";
 import { FiPlus, FiXCircle } from "react-icons/fi";
-import { useUser } from "../context/UserContext"; // <-- use user context
+import { useUser } from "../context/UserContext";
+import { useAuth } from "../context/AuthContext";
+
+// This is temporary to demonstrate logout functionality / see if it works. Will be put to NavBar later.
+const LogoutButton = () => {
+  const { logout } = useAuth();
+  return (
+    <button
+      onClick={logout}
+      className="mt-4 px-6 py-2 rounded-lg border border-stone-700 text-stone-700 dark:text-stone-200 hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors"
+    >
+      Log Out
+    </button>
+  );
+};
 
 type LoggedIn = {
   type: "loggedIn";
@@ -48,6 +62,7 @@ type PendingCardProps = {
 const PendingCard = ({ card, setCards, onUpdate, handleLogin}: PendingCardProps) => {
 
   const removeCard = (id: string) => {
+    console.log("remove card clicked");
     setCards(prevCards =>
       prevCards.filter(c => c.id !== id)
     );
@@ -101,10 +116,9 @@ const AddCard = ({ onAdd }: { onAdd: () => void }) => (
 let idCounter = 2;
 
 const Players = () => {
-  const [cards, setCards] = useState<PlayerCard[]>([]); // start empty
+  const [cards, setCards] = useState<PlayerCard[]>([]);
   const { loadMe, loadUser } = useUser();
 
-  // When component mounts, load /me and add the main player's card if present.
   useEffect(() => {
     (async () => {
       const me = await loadMe();
@@ -116,7 +130,6 @@ const Players = () => {
           avatarUrl: me.avatarUrl
         }
         setCards(prev => {
-          // don't duplicate if already present
           const exists = prev.some(c => c.type === "loggedIn" && c.id === String(me.id));
           return exists ? prev : [mainCard, ...prev];
         });
@@ -205,6 +218,10 @@ const Players = () => {
           />
         ))}
         {cards.length < 4 && <AddCard onAdd={addCard} />}
+      </div>
+          {/* Centered Logout Button */}
+      <div className="flex justify-center w-full">
+        <LogoutButton />
       </div>
     </main>
   );

@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { PROXY_URL } from "../constants";
 
 // below we define what values or functions are accessed with AuthContext
 
@@ -13,13 +14,42 @@ const AuthContext = createContext<AuthContextType | null>(null); // is first ini
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
+  // This check is here, so after refresh we see if we are still online in backend (have cookies/tokens)
+  // This is because we don't have online-status setup in backend yet. So we see if mainuser can fetch with /me,
+  // which is only possible when main user is online/has tokens set.
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch(PROXY_URL + "/me", { credentials: "include" });
+        if (res.ok) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (err) {
+        console.error("Error checking auth status:", err);
+        setIsAuthenticated(false);
+      }
+    })();
+  }, []);
+
+
   function login() {
     // cookies are set in the backend, no storing tokens anymore
     setIsAuthenticated(true);
   }
 
-  function logout() {
-    // no logout endpoint in the backend yet, we just set as false in the front (cookies should be deleted in the back)
+  async function logout() {
+    // THIS WILL BE ADDED AFTER BACKEND HAS /logout ENDPOINT
+
+    try {
+      await fetch(PROXY_URL + "/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
     setIsAuthenticated(false);
   }
 
