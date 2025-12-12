@@ -12,6 +12,10 @@ export interface Player {
 export interface GameState {
   gameType: GameType | null;
   players: Player[];
+  gameNumber: number;
+  game1Winner: string | null;
+  game2Winner: string | null;
+  game3Winner: string | null;
 }
 
 interface GameContextType {
@@ -21,6 +25,9 @@ interface GameContextType {
   setPlayers: (players: Player[]) => void;
   addPlayer: (player: Player) => void;
   removePlayer: (playerId: string) => void;
+  clearPlayers: () => void;
+  setGameNumber: (gameNumber: number) => void;
+  setGameWinner: (gameNumber: 1 | 2 | 3, winner: string) => void;
   
   updateGameState: (data: Partial<GameState>) => void;
   clearGame: () => void;
@@ -31,6 +38,10 @@ const GameContext = createContext<GameContextType | null>(null);
 const initialGameState: GameState = {
   gameType: null,
   players: [],
+  gameNumber: 0,
+  game1Winner: null,
+  game2Winner: null,
+  game3Winner: null,
 };
 
 export function GameProvider({ children }: { children: ReactNode }) {
@@ -62,6 +73,24 @@ export function GameProvider({ children }: { children: ReactNode }) {
     }));
   }
 
+  function clearPlayers() {
+    updateGameState({ players: [] });
+  }
+
+  function setGameNumber(gameNumber: number) {
+    updateGameState({ gameNumber });
+  }
+
+  function setGameWinner(gameNumber: 1 | 2 | 3, winner: string) {
+    if (gameNumber === 1) {
+      updateGameState({ game1Winner: winner });
+    } else if (gameNumber === 2) {
+      updateGameState({ game2Winner: winner });
+    } else if (gameNumber === 3) {
+      updateGameState({ game3Winner: winner });
+    }
+  }
+
   function clearGame() {
     setGameState(initialGameState);
   }
@@ -74,6 +103,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
         setPlayers,
         addPlayer,
         removePlayer,
+        clearPlayers,
+        setGameNumber,
+        setGameWinner,
         updateGameState,
         clearGame,
       }}

@@ -22,10 +22,12 @@ const Match = ({game_number, player_1, player_2, active=true, onStartGame}: {gam
 
 export default function Tournament() {
   const navigate = useNavigate();
-  const { gameState, setPlayers, setGameType } = useGame();
+  const { gameState, setPlayers, setGameType, clearPlayers , setGameNumber} = useGame();
 
-  const handleStartGame = (player1: string, player2: string) => {
+  const handleStartGame = (gameNumber: Int, player1: string, player2: string) => {
+    clearPlayers();
     setGameType("tournament");
+    setGameNumber(gameNumber);
     setPlayers([
       { id: "1", displayName: player1 },
       { id: "2", displayName: player2 }
@@ -44,13 +46,13 @@ export default function Tournament() {
           game_number="Game 1"
           player_1={"PlayerA"}
           player_2={"PlayerB"}
-          onStartGame={() => handleStartGame("PlayerA", "PlayerB")}
+          onStartGame={() => handleStartGame(1, "PlayerA", "PlayerB")}
         />
         <Match
           game_number="Game 2"
           player_1={"PlayerC"}
           player_2={"PlayerD"}
-          onStartGame={() => handleStartGame("PlayerC", "PlayerD")}
+          onStartGame={() => handleStartGame(2, "PlayerC", "PlayerD")}
         />
         <Match
           game_number="Game 3"

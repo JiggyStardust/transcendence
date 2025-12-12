@@ -26,6 +26,7 @@ export const game = {
 	arrowLeftText: null,
 	gameOverFinalText: null,
 	gameOverScoreText: null,
+	infoSaved: false,
 	winnerText: null,
 	p1NameText: null,
 	p2NameText: null,
@@ -55,7 +56,7 @@ export const game = {
 	score: {
 		p1: 0,
 		p2: 0,
-		max: 7
+		max: 1
 	},
 
 	pointScored: {

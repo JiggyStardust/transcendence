@@ -18,6 +18,7 @@ export default function BabylonGame() {
       const { pointScored } = await import('../game/pointScored.js');
       const { reset } = await import('../game/reset.js');
       const { gameOver } = await import('../game/gameOver.js');
+      const { saveGame } = await import('../game/saveGame.tsx');
 
       // Init
       game.canvas = canvasRef.current;
@@ -27,9 +28,12 @@ export default function BabylonGame() {
       if (window.numberOfPlayers == 3)
         game.hasThirdPlayer = true;
       
-
       parseUsername(game, gameState.players);
       await createScene(game);
+
+      game.score.p1 = 0;
+      game.score.p2 = 0;
+      game.currentState = game.state.start;
 
       // Render loop
       game.engine.runRenderLoop(function () {
@@ -49,6 +53,7 @@ export default function BabylonGame() {
             reset(game);
             break;
           case game.state.gameOver:
+            saveGame(game, gameState);
             gameOver(game);
             break;
         }
