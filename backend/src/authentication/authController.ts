@@ -174,17 +174,6 @@ export async function login(req: FastifyRequest<{ Body: IAuthRequestBody }>, rep
   });
   const refreshToken = generateRefreshToken({ id: user.id });
 
-  // TODO:
-  // - store refresh token as deterministic hash (SHA256)
-  // - [ security ] set the refresh token in an HttpOnly cookie
-  // - short-lived tocken in json - OK
- /* reply.send({
-    userId: user.id,
-    username: user.username,
-    accessToken,
-    refreshToken, // should be set as HttpOnly cookie
-  });*/
-
   reply
     .setCookie("accessToken", accessToken, {
       httpOnly: true,
@@ -223,4 +212,12 @@ export async function verify_player(req: FastifyRequest<{ Body: IAuthRequestBody
     userID: user.id,
     username: user.username
   }; // also return displayName and avatarURL
+}
+
+export async function logout(req: FastifyRequest, reply: FastifyReply) {
+  
+  reply
+    .clearCookie("accessToken", { path: "/" })
+    .clearCookie("refreshToken", { path: "/" })
+    .send({ message: "Logged out!" })
 }

@@ -51,6 +51,7 @@ fastify.register(import("@fastify/multipart"), {
     files: 1, // only 1 file allowed
   },
 });
+
 fastify.register(import("@fastify/static"), {
   root: path.join(process.cwd(), "uploads"),
   prefix: "/uploads/",
@@ -58,7 +59,7 @@ fastify.register(import("@fastify/static"), {
 
 
 // friend routes
-//fastify.register(import("./routes/friends"), { prefix: "/api" });
+fastify.register(import("./routes/friends/friendRoutes"), { prefix: "/api" });
 
 // register custom plugins
 fastify.register(databasePlugin);
