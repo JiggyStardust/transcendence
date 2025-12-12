@@ -6,10 +6,10 @@ import { AuthProvider } from "./context/AuthContext";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-		<div className='bg-light-bg dark:bg-dark-bg text-black dark:text-white'>
-    <AuthProvider>
-			<App />
-		</AuthProvider>	
-	</div>
-  </StrictMode>,
+		<div className='bg-light-bg dark:bg-dark-bg text-stone-900 dark:text-stone-200 min-h-screen accent-vintage-red dark:accent-vintage-yellow selection:bg-vintage-yellow/70 dark:selection:bg-vintage-red/30'>
+	    <AuthProvider>
+				<App />
+			</AuthProvider>	
+		</div>
+  </StrictMode>
 )
