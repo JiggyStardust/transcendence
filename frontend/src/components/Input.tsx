@@ -18,9 +18,9 @@ type InputProps = {
 
 export default function Input({id, label, type = "text", value, tooltip, focusTooltip, autofocus=false, status, onChange, onBlur,}: InputProps) {
 	const statusIcons = {
-	  ok:   <FiCheck size="20" color="green" />,
-	  warning:<FiAlertOctagon size="20" color="orange"  />,
-	  error:  <FiXOctagon size="20" color="red" />
+	  ok: <FiCheck size="20" color="green" />,
+	  warning: <FiAlertOctagon size="20" color="orange"  />,
+	  error: <FiXOctagon size="20" color="red" />
 	};
 	return (
 		<div className="flex flex-col gap-1 text-black dark:text-white">
@@ -55,7 +55,6 @@ export default function Input({id, label, type = "text", value, tooltip, focusTo
 					onChange={onChange}
 					autoFocus={autofocus}
 					onBlur={onBlur}/>
-				{/* tooltip on focus and positioned to the right (used by SignUp's password requirements) */}
 				{focusTooltip && (
 					<div className="absolute top-1/2 left-full ml-4 transform -translate-y-1/2 px-3 py-2 w-64 text-sm bg-gray-800 text-white rounded-md shadow-lg border border-gray-600 hidden group-focus-within:block">
 						{focusTooltip}

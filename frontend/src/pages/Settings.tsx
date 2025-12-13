@@ -4,6 +4,15 @@ import { PROXY_URL } from "../constants";
 import { useState } from "react";
 import { passwordRequirements } from "../constants/passwordRequirements";
 import { FiX } from "react-icons/fi";
+import { useAppToast } from "../context/ToastContext";
+import { type Status } from "../types/types";
+
+interface User {
+	username: string;
+  displayName: string;
+  twoFactorEnabled: boolean;
+	avatarUrl: string | null;
+}
 
 const ProfilePic = ({ avatarUrl }: {avatarUrl: string | null}) => {
 	const timestamp = Date.now();
@@ -31,13 +40,6 @@ const ProfileInfo = ({ user }: { user: User }) => {
 	)
 }
 
-interface User {
-	username: string;
-  displayName: string;
-  twoFactorEnabled: boolean;
-	avatarUrl: string | null;
-}
-
 interface SettingsProps {
   user: User;
   setUser: React.Dispatch<React.SetStateAction<User>>;
@@ -51,6 +53,10 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 	const [file, setFile] = useState<File | null>(null);
 	const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 	const [nameChanged, setNameChanged] = useState(false);
+	const { showToast } = useAppToast();
+	
+	const [displayNameStatus, setDisplayNameStatus] = useState<Status | null>(null);
+	const [avatarFileStatus, setAvatarFileStatus] = useState<Status | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const selectedFile = e.target.files?.[0] || null;
@@ -59,13 +65,11 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 		}
 		const fileSizeMB = selectedFile.size / (1024 * 1024);
 		if (fileSizeMB > MAX_FILE_SIZE_MB) {
-			console.log("File size too big");
-	    //show error
+			setAvatarFileStatus({type: "error", message: "File size too big, must be under 2MB"})
 	    return;
 	  }
 		if (!ACCEPTED_TYPES.includes(selectedFile.type)) {
-			console.log("Wrong file type");
-	    //show error
+			setAvatarFileStatus({type: "error", message: "Wrong file type, accepted types: png, jpg, jpeg"})
 	    return;
 	  }
 		setFile(selectedFile);
@@ -79,11 +83,20 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 		setFile(null);
     setFileName("");
 		setPreviewUrl("");
+		setAvatarFileStatus(null)
 	}
 
 	function updateName(e: React.ChangeEvent<HTMLInputElement>) {
     setUser(u => ({ ...u, displayName: e.target.value }));
 		setNameChanged(true);
+		const len = e.target.value.length;
+		if (e.target.value === "") {
+			setDisplayNameStatus({type: "error", message: "Display name can not be empty"});
+		} else if (len < 3 || len > 20) {
+			setDisplayNameStatus({type: "error", message: "Display name must be between 3 and 20 characters"});
+		} else {
+			setDisplayNameStatus(null);
+		}
   }
 
 	async function saveDisplayName(displayName: string) {
@@ -119,8 +132,10 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 			const displayNameResponse = await saveDisplayName(user.displayName);
 			if (displayNameResponse.error) {
 				//set state username not context username
-				//alert of error
+				showToast("Error: " + displayNameResponse.error, "error")
+				setDisplayNameStatus({type: "", message: ""});
 			} else {
+				showToast("Success: display name updated successfully", "success");
 				setUser({ ...user, displayName: displayNameResponse.displayName});
 				setNameChanged(false);
 			}
@@ -128,9 +143,11 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 		if (file != null) {
 			const avatarResponse = await saveAvatar(file);
 			if (avatarResponse.error) {
-				//alert of error
+				setDisplayNameStatus({type: "", message: ""});
+				//set page error
 			}
 			else {
+				showToast("Success: avatar updated successfully", "success");
 				setUser({ ...user, avatarUrl: avatarResponse.avatarURL });
 				setPreviewUrl("");
 				setFileName("");
@@ -147,6 +164,7 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 					label="Display name:"
 					value={user.displayName}
 					tooltip="Name that is shown to other players"
+					status={displayNameStatus || undefined}
 					onChange={(e) => updateName(e)}/>
 				<p className="mt-4">Change avatar:</p>
 				<div className="flex gap-6 items-center">
@@ -178,7 +196,7 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 				</div>
 				<div className="absolute bottom-8 right-12">
 					<Button
-						disabled={previewUrl || nameChanged ? false : true}>
+						disabled={previewUrl || (nameChanged && displayNameStatus?.type !== "error") ? false : true}>
 						Save
 					</Button>
 				</div>
