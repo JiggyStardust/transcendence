@@ -179,17 +179,6 @@ export async function login(req: FastifyRequest<{ Body: IAuthRequestBody }>, rep
   });
   const refreshToken = generateRefreshToken({ id: user.id });
 
-  // TODO:
-  // - store refresh token as deterministic hash (SHA256)
-  // - [ security ] set the refresh token in an HttpOnly cookie
-  // - short-lived tocken in json - OK
- /* reply.send({
-    userId: user.id,
-    username: user.username,
-    accessToken,
-    refreshToken, // should be set as HttpOnly cookie
-  });*/
-
   reply
     .setCookie("accessToken", accessToken, {
       httpOnly: true,
@@ -213,6 +202,14 @@ export async function verify_player(req: FastifyRequest<{ Body: IAuthRequestBody
 
   if (!username || !password) {
     return reply.code(400).send({ error: "Username and password are required" });
+  }
+
+  if (!validatePassword(password)) {
+    return reply.code(400).send({ error: PASSWORD_ERROR_MESSAGE });
+  }
+
+  if (!validateUsername(username)) {
+    return reply.code(400).send({ error: USERNAME_ERROR_MESSAGE });
   }
 
   const result = await req.server.db.getUser(username);
