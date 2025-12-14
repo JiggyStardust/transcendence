@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
 import { generateAccessToken, generateRefreshToken, generate2FASecret, verify2FAToken } from "./authService";
 import type { FastifyReply, FastifyRequest } from "fastify";
-import type { IUserData } from "../database/types";
 import speakeasy from "speakeasy";
 import { validatePassword, PASSWORD_ERROR_MESSAGE } from "utils/validatePassword";
 import { validateUsername, USERNAME_ERROR_MESSAGE } from "utils/validateUsername";
@@ -255,10 +254,18 @@ export async function verify_player(req: FastifyRequest<{ Body: IAuthGuestReques
     return reply.code(400).send({ error: "guestList must be number[]" });
   }
 
-  const result = await req.server.db.getUser(username);
-  if (!result.ok) return reply.code(401).send({ error: "Invalid username or password" });
+  const user = await req.server.db.user.findUnique({
+    where: { username },
+    select: {
+      id: true,
+      username: true,
+      displayName: true,
+      avatarURL: true,
+      passwordHash: true,
+    },
+  });
 
-  const user: IUserData = result.data;
+  if (!user) return reply.code(401).send({ error: "Invalid username or password" });
 
   if (guestList.includes(user.id)) reply.code(400).send({ error: "Guest already exists" });
 
@@ -269,5 +276,7 @@ export async function verify_player(req: FastifyRequest<{ Body: IAuthGuestReques
     status: "verified",
     userID: user.id,
     username: user.username,
-  }; // also return displayName and avatarURL
+    displayName: user.displayName,
+    avatarURL: user.avatarURL,
+  };
 }
