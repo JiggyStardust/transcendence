@@ -21,6 +21,12 @@ export interface IAuthRequestBody {
   password: string;
 }
 
+export interface IAuthGuestRequestBody {
+  username: string;
+  password: string;
+  guestList: number[];
+}
+
 /** Enable 2FA – you don’t actually need a body here */
 export interface IEnable2FARequestBody {}
 
@@ -117,7 +123,6 @@ export async function verify2FALogin(req: AuthenticatedRequest<IVerify2FALoginBo
   if (!verified) return reply.code(401).send({ error: "Invalid 2FA code" });
   const jwtToken = generateAccessToken({ id: user.id, username: user.username });
 
-  // TODO: seems Refresh token is missing for 2FA
   reply.send({ token: jwtToken });
 }
 
@@ -197,8 +202,8 @@ export async function login(req: FastifyRequest<{ Body: IAuthRequestBody }>, rep
     .send({ message: "Logged in!" })
 }
 
-export async function verify_player(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
-  const { username, password } = req.body;
+export async function verify_player(req: FastifyRequest<{ Body: IAuthGuestRequestBody }>, reply: FastifyReply) {
+  const { username, password, guestList } = req.body;
 
   if (!username || !password) {
     return reply.code(400).send({ error: "Username and password are required" });
@@ -212,10 +217,16 @@ export async function verify_player(req: FastifyRequest<{ Body: IAuthRequestBody
     return reply.code(400).send({ error: USERNAME_ERROR_MESSAGE });
   }
 
+  if (!Array.isArray(guestList) || !guestList.every(n => typeof n === "number")) {
+    return reply.code(400).send({ error: "guestList must be number[]" });
+  }
+
   const result = await req.server.db.getUser(username);
   if (!result.ok) return reply.code(401).send({ error: "Invalid username or password" });
 
   const user: IUserData = result.data;
+
+  if (guestList.includes(user.id)) reply.code(400).send({ error: "Guest already exists" });
 
   const valid = await bcrypt.compare(password, user.passwordHash);
   if (!valid) return reply.code(401).send({ error: "Invalid username or password" });
