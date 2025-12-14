@@ -242,14 +242,6 @@ export async function verify_player(req: FastifyRequest<{ Body: IAuthGuestReques
     return reply.code(400).send({ error: "Username and password are required" });
   }
 
-  if (!validatePassword(password)) {
-    return reply.code(400).send({ error: PASSWORD_ERROR_MESSAGE });
-  }
-
-  if (!validateUsername(username)) {
-    return reply.code(400).send({ error: USERNAME_ERROR_MESSAGE });
-  }
-
   if (!Array.isArray(guestList) || !guestList.every((n) => typeof n === "number")) {
     return reply.code(400).send({ error: "guestList must be number[]" });
   }
