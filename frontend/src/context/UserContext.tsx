@@ -1,17 +1,17 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 import { PROXY_URL } from "../constants";
 
-export interface Friend {
-  id: number;
-  displayName: string;
-  avatarUrl: string;
-}
+// export interface Friend {
+//   id: number;
+//   displayName: string;
+//   avatarUrl: string;
+// }
 
-export interface UserStats {
-  matchesPlayed: number;
-  wins: number;
-  losses: number;
-}
+// export interface UserStats {
+//   matchesPlayed: number;
+//   wins: number;
+//   losses: number;
+// }
 
 export interface User {
   id: number;
@@ -20,7 +20,7 @@ export interface User {
   avatarUrl: string;
   // friends: Friend[];
   // stats: UserStats | null;
-  role: "full" | "partial";
+  // role: "full" | "partial";
 }
 
 interface UserContextType {
@@ -69,7 +69,7 @@ const loadMe = useCallback(async (): Promise<User | undefined> => {
         username: data.username,
         displayName: data.displayName ?? data.username,
         avatarUrl: PROXY_URL + data.avatarURL,
-        role: "full",
+        // role: "full",
       };
 
       setUsers((prev) => ({ ...prev, [username]: user }));
@@ -107,7 +107,7 @@ const loadUser = useCallback(async (username: string): Promise<User | undefined>
         username: data.username,
         displayName: data.displayName ?? data.username,
         avatarUrl: PROXY_URL + data.avatarURL,
-        role: "partial",
+        // role: "partial",
       };
 
       setUsers((prev) => ({ ...prev, [username]: user }));

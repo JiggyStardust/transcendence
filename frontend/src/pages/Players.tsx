@@ -33,7 +33,7 @@ type Pending = {
   username?: string;
   password?: string;
   error?: string;
-};
+}; 
 
 type PlayerCard = LoggedIn | Pending;
 
@@ -46,7 +46,7 @@ const CardFrame = ({ children, className = "" }: any) => (
 const LoggedInCard = ({ card }: { card: LoggedIn }) => {
   return (
     <CardFrame className="flex flex-col items-center justify-center gap-4">
-      <img src={card.avatarUrl} className="w-28 h-28 object-cover rounded-full" alt={card.name}/>
+      <img src={card.avatarUrl} className="w-28 h-28 object-cover rounded-full" alt={"Avatar Image of " + card.name}/>
       <p className="font-semibold text-2xl">{card.name}</p>
     </CardFrame>
   )

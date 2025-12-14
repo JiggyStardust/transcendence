@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 import { PROXY_URL } from "../constants";
 
 // below we define what values or functions are accessed with AuthContext
