@@ -4,7 +4,7 @@ import { useGame } from '../../src/context/GameContext';
 
 export default function BabylonGame() {
   const canvasRef = useRef(null);
-  const { gameState, updateGameState } = useGame();
+  const { gameState, updateGameState , setGameWinner} = useGame();
   const gameRef = useRef(null);
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export default function BabylonGame() {
             reset(game);
             break;
           case game.state.gameOver:
-            saveGame(game, gameState);
+            saveGame(game, gameState, setGameWinner);
             gameOver(game);
             break;
         }

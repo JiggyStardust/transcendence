@@ -24,6 +24,7 @@ export default function Tournament() {
   const navigate = useNavigate();
   const { gameState, setPlayers, setGameType, clearPlayers , setGameNumber} = useGame();
 
+
   const handleStartGame = (gameNumber: Int, player1: string, player2: string) => {
     clearPlayers();
     setGameType("tournament");
