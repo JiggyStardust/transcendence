@@ -29,8 +29,8 @@ const userRoutes: FastifyPluginAsync = async (fastify): Promise<void> => {
       }
     });
 
-  fastify.patch("/user", { preHandler: [fastify.authenticate] }, updateDisplayName);
-  fastify.patch("/user/password", { preHandler: [fastify.authenticate] }, updatePassword);
+  fastify.patch("/user", { preHandler: [verifyToken] }, updateDisplayName);
+  fastify.patch("/user/password", { preHandler: [verifyToken] }, updatePassword);
 
   return;
 };
