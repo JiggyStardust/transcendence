@@ -5,6 +5,7 @@ import type { IUserData } from "../database/types";
 import speakeasy from "speakeasy";
 import { validatePassword, PASSWORD_ERROR_MESSAGE } from "utils/validatePassword";
 import { validateUsername, USERNAME_ERROR_MESSAGE } from "utils/validateUsername";
+import { UserStatus } from "@prisma/client";
 
 export interface IUserPayload {
   id: string;
@@ -123,6 +124,15 @@ export async function verify2FALogin(req: AuthenticatedRequest<IVerify2FALoginBo
   if (!verified) return reply.code(401).send({ error: "Invalid 2FA code" });
   const jwtToken = generateAccessToken({ id: user.id, username: user.username });
 
+  try {
+    await req.server.db.user.update({
+      where: { id: user.id },
+      data: { status: UserStatus.ONLINE },
+    });
+  } catch (err) {
+    return reply.code(500).send({ error: "Failed set online status" });
+  }
+
   reply.send({ token: jwtToken });
 }
 
@@ -184,22 +194,46 @@ export async function login(req: FastifyRequest<{ Body: IAuthRequestBody }>, rep
   });
   const refreshToken = generateRefreshToken({ id: user.id });
 
+  try {
+    await req.server.db.user.update({
+      where: { id: user.id },
+      data: { status: UserStatus.ONLINE },
+    });
+  } catch (err) {
+    return reply.code(500).send({ error: "Failed set online status" });
+  }
+
   reply
     .setCookie("accessToken", accessToken, {
       httpOnly: true,
       secure: true,
-      //sameSite: "Strict",
-      maxAge: 15 * 60 * 1000,
-      path: "/"
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: "/",
     })
     .setCookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
-      //sameSite: "Strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: "/"
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: "/",
     })
-    .send({ message: "Logged in!" })
+    .send({ message: "Logged in!" });
+}
+
+export async function logout(req: FastifyRequest, reply: FastifyReply) {
+  try {
+    await req.server.db.user.update({
+      where: { id: req.user.id },
+      data: { status: UserStatus.OFFLINE },
+    });
+  } catch (err) {
+    return reply.code(500).send({ error: "Failed set online status" });
+  }
+  reply
+    .clearCookie("accessToken", { path: "/", sameSite: "lax", secure: true })
+    .clearCookie("refreshToken", { path: "/", sameSite: "lax", secure: true })
+    .send({ message: "Logged out" });
 }
 
 export async function verify_player(req: FastifyRequest<{ Body: IAuthGuestRequestBody }>, reply: FastifyReply) {
@@ -217,7 +251,7 @@ export async function verify_player(req: FastifyRequest<{ Body: IAuthGuestReques
     return reply.code(400).send({ error: USERNAME_ERROR_MESSAGE });
   }
 
-  if (!Array.isArray(guestList) || !guestList.every(n => typeof n === "number")) {
+  if (!Array.isArray(guestList) || !guestList.every((n) => typeof n === "number")) {
     return reply.code(400).send({ error: "guestList must be number[]" });
   }
 
@@ -234,6 +268,6 @@ export async function verify_player(req: FastifyRequest<{ Body: IAuthGuestReques
   return {
     status: "verified",
     userID: user.id,
-    username: user.username
+    username: user.username,
   }; // also return displayName and avatarURL
 }

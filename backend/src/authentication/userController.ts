@@ -4,16 +4,6 @@ import bcrypt from "bcrypt";
 import { validatePassword, PASSWORD_ERROR_MESSAGE } from "utils/validatePassword";
 import { validateUsername, USERNAME_ERROR_MESSAGE } from "utils/validateUsername";
 
-declare module "fastify" {
-    interface FastifyRequest {
-        user: {
-            id: string;
-            displayName?: string;
-            // whatever else is needed can be added here
-        }
-    }
-}
-
 export async function updateDisplayName(request: FastifyRequest, reply: FastifyReply) {
     const { displayName } = request.body as { displayName?: string };
     const userID = Number(request.user.id);
