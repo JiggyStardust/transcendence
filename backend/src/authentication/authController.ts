@@ -4,6 +4,7 @@ import type { FastifyReply, FastifyRequest } from "fastify";
 import type { IUserData } from "../database/types";
 import speakeasy from "speakeasy";
 import { validatePassword, PASSWORD_ERROR_MESSAGE } from "utils/validatePassword";
+import { validateUsername, USERNAME_ERROR_MESSAGE } from "utils/validateUsername";
 
 export interface IUserPayload {
   id: string;
@@ -131,6 +132,10 @@ export async function signup(req: FastifyRequest<{ Body: IAuthRequestBody }>, re
     return reply.code(400).send({ error: PASSWORD_ERROR_MESSAGE });
   }
 
+  if (!validateUsername(username)) {
+    return reply.code(400).send({ error: USERNAME_ERROR_MESSAGE });
+  }
+
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const result = await req.server.db.createUser(username, hashedPassword);
@@ -205,7 +210,7 @@ export async function login(req: FastifyRequest<{ Body: IAuthRequestBody }>, rep
 
 export async function verify_player(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
   const { username, password } = req.body;
- 
+
   if (!username || !password) {
     return reply.code(400).send({ error: "Username and password are required" });
   }
