@@ -1,17 +1,23 @@
-// import framework and instantiate it
+import "dotenv/config";
+import path from "path";
+
 import Fastify from "fastify";
+
 import cors from "@fastify/cors";
 import formbody from "@fastify/formbody";
-import path from "path";
+import fastifyJwt from "@fastify/jwt";
+import fastifyCookie from "@fastify/cookie";
+
+import authPlugin from "./plugin/authPlugin";
 import databasePlugin from "./plugin/database";
+
 import userRoutes from "./routes/users";
 import authRoutes from "./routes/auth";
 import checkUsernameRoute from "./routes/checkUsername";
 import avatarRoutes from "./routes/avatar";
-import "dotenv/config";
-import fastifyCookie from "@fastify/cookie";
-import authPlugin from "./plugin/authPlugin";
-import fastifyJwt from "@fastify/jwt";
+import friendsRoutes from "./routes/friendRoutes";
+import meRoutes from "./routes/me";
+import publicProfileRoutes from "./routes/publicProfileRoutes";
 
 const PORT = parseInt(process.env.BACKEND_PORT ?? "4000");
 const HOST = process.env.BACKEND_HOST || "localhost";
@@ -23,7 +29,7 @@ fastify.register(fastifyCookie, {
   secret: process.env.COOKIE_SECRET
 });
 
- // register jwt plugin
+// register jwt plugin
 fastify.register(fastifyJwt, {
   secret: process.env.JWT_SECRET!,
   cookie: {
@@ -39,7 +45,7 @@ export default fastify;
 // register middleware
 fastify.register(cors, {
   origin: ["http://" + HOST + ":" + PORT],
-  credentials: true
+  credentials: true,
 });
 
 fastify.register(formbody);
@@ -65,15 +71,9 @@ fastify.register(userRoutes);
 fastify.register(authRoutes);
 fastify.register(checkUsernameRoute, { prefix: "/users" });
 fastify.register(avatarRoutes, { prefix: "/users" });
-
-// friend routes
-fastify.register(import("./routes/friends/friendRoutes"), { prefix: "/api" });
-
-
-// declare a basic route
-fastify.get("/", async (request, reply) => {
-  return { message: "Hello PingPong!" };
-});
+fastify.register(friendsRoutes, { prefix: "/friends" });
+fastify.register(meRoutes); // endpoint => /me
+fastify.register(publicProfileRoutes); // endpoint => users/:username GET /api/users/maria
 
 fastify.get("/health", async (request, reply) => {
   return { ok: true };

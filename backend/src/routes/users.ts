@@ -15,9 +15,7 @@ const userRoutes: FastifyPluginAsync = async (fastify): Promise<void> => {
     fastify.patch("/user", { preHandler: [fastify.authenticate] }, updateDisplayName);
     fastify.patch("/user/password", { preHandler: [fastify.authenticate] }, updatePassword);
 
-    fastify.register(meRoutes); // endpoint => /me
-    fastify.register(publicProfileRoutes); // endpoint => users/:username GET /api/users/maria
-    return;
-}
+  return;
+};
 
 export default userRoutes;
