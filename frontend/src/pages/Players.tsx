@@ -63,13 +63,13 @@ const PendingCard = ({
 
     <div className="absolute bottom-6 inset-x-0 flex flex-col items-center gap-3 px-4">
       <Input
-        id={`username-$(card.id)`}
+        id={`username-${card.id}`}
         label="Username"
         value={card.username}
         onChange={e => onUpdate(card.id, { username: e.target.value })}
       />
       <Input
-        id={`username-$(card.id)`}
+        id={`username-${card.id}`}
         type="password"
         label="Password"
         value={card.password}
@@ -81,7 +81,7 @@ const PendingCard = ({
   </CardFrame>
 );
 
-/* Helpers */
+/* Helpers to store already logged in users in localstore */
 
 const SIDE_PLAYERS_KEY = "sidePlayers";
 
@@ -174,6 +174,7 @@ export default function Players() {
     const data = await res.json();
 
     if (!res.ok) {
+      console.log(data.error);
       updatePending(card.id, { error: data.error ?? "Login failed" });
       return;
     }
