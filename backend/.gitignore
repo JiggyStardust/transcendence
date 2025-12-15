@@ -61,3 +61,5 @@ profile*
 !package-lock.json
 
 cookies.txt
+uploads/avatars/*
+!uploads/avatars/default.png

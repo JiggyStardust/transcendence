@@ -1,10 +1,11 @@
 import bcrypt from "bcrypt";
 import { generateAccessToken, generateRefreshToken, generate2FASecret, verify2FAToken } from "./authService";
 import type { FastifyReply, FastifyRequest } from "fastify";
-import type { IUserData } from "../database/types";
 import speakeasy from "speakeasy";
 import { validatePassword, PASSWORD_ERROR_MESSAGE } from "utils/validatePassword";
 import { validateUsername, USERNAME_ERROR_MESSAGE } from "utils/validateUsername";
+import { UserStatus } from "@prisma/client";
+import { IUserData } from "database/types";
 
 export interface IUserPayload {
   id: string;
@@ -19,6 +20,12 @@ export type AuthenticatedRequest<TBody> = FastifyRequest<{ Body: TBody }> & {
 export interface IAuthRequestBody {
   username: string;
   password: string;
+}
+
+export interface IAuthGuestRequestBody {
+  username: string;
+  password: string;
+  guestList: number[];
 }
 
 /** Enable 2FA – you don’t actually need a body here */
@@ -117,7 +124,15 @@ export async function verify2FALogin(req: AuthenticatedRequest<IVerify2FALoginBo
   if (!verified) return reply.code(401).send({ error: "Invalid 2FA code" });
   const jwtToken = generateAccessToken({ id: user.id, username: user.username });
 
-  // TODO: seems Refresh token is missing for 2FA
+  try {
+    await req.server.db.user.update({
+      where: { id: user.id },
+      data: { status: UserStatus.ONLINE },
+    });
+  } catch (err) {
+    return reply.code(500).send({ error: "Failed to set online status" });
+  }
+
   reply.send({ token: jwtToken });
 }
 
@@ -179,46 +194,73 @@ export async function login(req: FastifyRequest<{ Body: IAuthRequestBody }>, rep
   });
   const refreshToken = generateRefreshToken({ id: user.id });
 
-  // TODO:
-  // - store refresh token as deterministic hash (SHA256)
-  // - [ security ] set the refresh token in an HttpOnly cookie
-  // - short-lived tocken in json - OK
- /* reply.send({
-    userId: user.id,
-    username: user.username,
-    accessToken,
-    refreshToken, // should be set as HttpOnly cookie
-  });*/
+  try {
+    await req.server.db.user.update({
+      where: { id: user.id },
+      data: { status: UserStatus.ONLINE },
+    });
+  } catch (err) {
+    return reply.code(500).send({ error: "Failed to set online status" });
+  }
 
   reply
     .setCookie("accessToken", accessToken, {
       httpOnly: true,
       secure: true,
-      //sameSite: "Strict",
-      maxAge: 15 * 60 * 1000,
-      path: "/"
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: "/",
     })
     .setCookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
-      //sameSite: "Strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: "/"
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: "/",
     })
-    .send({ message: "Logged in!" })
+    .send({ message: "Logged in!" });
 }
 
-export async function verify_player(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
-  const { username, password } = req.body;
+export async function logout(req: FastifyRequest, reply: FastifyReply) {
+  try {
+    await req.server.db.user.update({
+      where: { id: req.user.id },
+      data: { status: UserStatus.OFFLINE },
+    });
+  } catch (err) {
+    return reply
+      .clearCookie("accessToken", { path: "/", sameSite: "lax", secure: true })
+      .clearCookie("refreshToken", { path: "/", sameSite: "lax", secure: true })
+      .code(500)
+      .send({ error: "Failed to set offline status" });
+  }
+  reply
+    .clearCookie("accessToken", { path: "/", sameSite: "lax", secure: true })
+    .clearCookie("refreshToken", { path: "/", sameSite: "lax", secure: true })
+    .send({ message: "Logged out" });
+}
+
+export async function verify_player(req: FastifyRequest<{ Body: IAuthGuestRequestBody }>, reply: FastifyReply) {
+  const { username, password, guestList } = req.body;
 
   if (!username || !password) {
     return reply.code(400).send({ error: "Username and password are required" });
   }
 
-  const result = await req.server.db.getUser(username);
-  if (!result.ok) return reply.code(401).send({ error: "Invalid username or password" });
+  const user = await req.server.db.user.findUnique({
+    where: { username },
+    select: {
+      id: true,
+      username: true,
+      displayName: true,
+      avatarURL: true,
+      passwordHash: true,
+    },
+  });
 
-  const user: IUserData = result.data;
+  if (!user) return reply.code(401).send({ error: "Invalid username or password" });
+
+  if (guestList.includes(user.id)) return reply.code(400).send({ error: "Guest already exists" });
 
   const valid = await bcrypt.compare(password, user.passwordHash);
   if (!valid) return reply.code(401).send({ error: "Invalid username or password" });
@@ -226,8 +268,10 @@ export async function verify_player(req: FastifyRequest<{ Body: IAuthRequestBody
   return {
     status: "verified",
     userID: user.id,
-    username: user.username
-  }; // also return displayName and avatarURL
+    username: user.username,
+    displayName: user.displayName,
+    avatarURL: user.avatarURL,
+  };
 }
 
 export async function logout(req: FastifyRequest, reply: FastifyReply) {
