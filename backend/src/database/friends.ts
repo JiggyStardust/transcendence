@@ -6,7 +6,7 @@ export interface IFriend {
   username: string;
   displayName: string;
   avatarURL: string;
-  status: UserStatus;
+  status: UserStatus | "UNKNOWN";
 }
 
 const USER_SELECT = {
@@ -40,7 +40,7 @@ export interface ISearchResult {
   userID: number;
   displayName: string;
   avatarURL: string;
-  status: UserStatus | "UKNOWN";
+  status: UserStatus | "UNKNOWN";
   friendshipStatus: TFriendshipStatus;
 }
 
@@ -230,9 +230,27 @@ export class FriendService {
       }),
     ]);
 
-    const accepted = friends.map((r: any) => r.friend as IFriend);
-    const pendingIncoming = incoming.map((r: any) => r.user as IFriend);
-    const pendingOutgoing = outgoing.map((r: any) => r.friend as IFriend);
+    const accepted = friends.map((r: any) => ({
+      userID: r.friend.id,
+      username: r.friend.username,
+      displayName: r.friend.displayName,
+      avatarURL: r.friend.avatarURL,
+      status: r.friend.status,
+    }));
+    const pendingIncoming = incoming.map((r: any) => ({
+      userID: r.user.id,
+      username: r.user.username,
+      displayName: r.user.displayName,
+      avatarURL: r.user.avatarURL,
+      status: "UNKNOWN",
+    }));
+    const pendingOutgoing = outgoing.map((r: any) => ({
+      userID: r.friend.id,
+      username: r.friend.username,
+      displayName: r.friend.displayName,
+      avatarURL: r.friend.avatarURL,
+      status: "UNKNOWN",
+    }));
 
     return { accepted, pendingIncoming, pendingOutgoing };
   }
@@ -261,33 +279,49 @@ export class FriendService {
         NOT: { id: userID },
       },
       select: USER_SELECT,
+      orderBy: { displayName: "asc" },
       take: 20,
     });
 
-    const results: ISearchResult[] = await Promise.all(
-      users.map(async (user: any) => {
-        const friendshipStatus = await this.friendshipStatus(userID, user.id);
+    const userIds = users.map((user: any) => user.id);
 
-        const friend: IFriend = {
-          userID: user.id,
-          username: user.username,
-          displayName: user.displayName,
-          status: user.status,
-          avatarURL: user.avatarURL,
-        };
+    const friendships = await this.fastify.db.friend.findMany({
+      where: {
+        OR: [
+          ...userIds.map((id: number) => ({ userID: userID, friendID: id })),
+          ...userIds.map((id: number) => ({ userID: id, friendID: userID })),
+        ],
+      },
+      select: { userID: true, friendID: true, status: true },
+    });
 
-        const searchRes: ISearchResult = {
-          userID: friend.userID,
-          displayName: friend.displayName,
-          avatarURL: friend.avatarURL,
-          status: friendshipStatus === FriendStatus.ACCEPTED ? friend.status : "UKNOWN",
-          friendshipStatus,
-        };
+    const friendshipMap = new Map<number, { userID: number; friendID: number; status: FriendStatus }>();
+    for (const f of friendships) {
+      const otherId = f.userID === userID ? f.friendID : f.userID;
+      friendshipMap.set(otherId, f);
+    }
 
-        return searchRes;
-      }),
-    );
+    const results: ISearchResult[] = users.map((user: any) => {
+      const f = friendshipMap.get(user.id);
+      let friendshipStatus: TFriendshipStatus;
+      if (!f) {
+        friendshipStatus = FriendshipStatus.DEFAULT;
+      } else if (f.status === FriendStatus.ACCEPTED) {
+        friendshipStatus = FriendshipStatus.ACCEPTED;
+      } else {
+        friendshipStatus = f.userID === userID ? FriendshipStatus.PENDING_OUTGOING : FriendshipStatus.PENDING_INCOMING;
+      }
 
+      const searchRes: ISearchResult = {
+        userID: user.userID,
+        displayName: user.displayName,
+        avatarURL: user.avatarURL,
+        status: friendshipStatus === FriendStatus.ACCEPTED ? user.status : "UKNOWN",
+        friendshipStatus,
+      };
+
+      return searchRes;
+    });
     return results;
   }
 }
