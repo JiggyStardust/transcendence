@@ -1,5 +1,19 @@
 import { FastifyInstance } from "fastify";
-import { FriendStatus } from "@prisma/client";
+import { FriendStatus, UserStatus } from "@prisma/client";
+
+export interface IFriend {
+  userID: number;
+  username: string;
+  displayName: string;
+  avatarURL: string;
+  status: UserStatus;
+}
+
+export interface IListFriends {
+  accepted: IFriend[];
+  pendingIncoming: IFriend[];
+  pendingOutgoing: IFriend[];
+}
 
 export class FriendService {
   constructor(private fastify: FastifyInstance) {}
@@ -168,5 +182,36 @@ export class FriendService {
     });
 
     return true;
+  }
+
+  async listAllRequest(userID: number): Promise<IListFriends> {
+    const userSelect = {
+      id: true,
+      username: true,
+      displayName: true,
+      status: true,
+      avatarURL: true,
+    } as const;
+
+    const [friends, incoming, outgoing] = await Promise.all([
+      this.fastify.db.friend.findMany({
+        where: { userID, status: FriendStatus.ACCEPTED },
+        select: { friend: { select: userSelect } },
+      }),
+      this.fastify.db.friend.findMany({
+        where: { friendID: userID, status: FriendStatus.PENDING },
+        select: { user: { select: userSelect } },
+      }),
+      this.fastify.db.friend.findMany({
+        where: { userID, status: FriendStatus.PENDING },
+        select: { friend: { select: userSelect } },
+      }),
+    ]);
+
+    const accepted = friends.map((r: any) => r.friend as IFriend);
+    const pendingIncoming = incoming.map((r: any) => r.user as IFriend);
+    const pendingOutgoing = outgoing.map((r: any) => r.friend as IFriend);
+
+    return { accepted, pendingIncoming, pendingOutgoing };
   }
 }

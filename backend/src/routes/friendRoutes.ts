@@ -9,4 +9,6 @@ export default async function friendsRoutes(fastify: FastifyInstance) {
   fastify.post("/:friendID/accept", { preHandler: verifyToken, handler: handler.accept });
   fastify.post("/:friendID/reject", { preHandler: verifyToken, handler: handler.reject });
   fastify.delete("/:friendID/delete", { preHandler: verifyToken, handler: handler.delete });
+
+  fastify.get("/all", { preHandler: verifyToken, handler: handler.listAll });
 }

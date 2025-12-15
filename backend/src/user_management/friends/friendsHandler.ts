@@ -4,23 +4,14 @@ import { FriendService } from "../../database/friends";
 const REGEX_ONLY_DIGITS = /^\d+$/;
 const INVALID_URL_OR_PROPS = "Invalid values: friend or user ID isn't a number";
 
-const validateInput = (fromUserID: string, toUserID: string): { fromUserID: number; toUserID: number } | undefined => {
-  const parsedFrom = parseInt(fromUserID, 10);
+const validateInput = (toUserID: string): number | undefined => {
   const parsedTo = parseInt(toUserID, 10);
 
-  if (
-    isNaN(parsedFrom) ||
-    isNaN(parsedTo) ||
-    !REGEX_ONLY_DIGITS.test(fromUserID) ||
-    !REGEX_ONLY_DIGITS.test(toUserID)
-  ) {
+  if (isNaN(parsedTo) || !REGEX_ONLY_DIGITS.test(toUserID)) {
     return undefined;
   }
 
-  return {
-    fromUserID: parsedFrom,
-    toUserID: parsedTo,
-  };
+  return parsedTo;
 };
 
 export class FriendHandler {
@@ -31,14 +22,15 @@ export class FriendHandler {
   }
 
   connect = async (req: FastifyRequest<{ Params: { friendID: string } }>, reply: FastifyReply) => {
-    const props = validateInput(req.user.id, req.params.friendID);
+    const fromUserID = req.user.id;
+    const toUserID = validateInput(req.params.friendID);
 
-    if (props === undefined) {
+    if (toUserID === undefined) {
       return reply.code(400).send({ error: INVALID_URL_OR_PROPS });
     }
 
     try {
-      const res = await this.service.connectRequest(props.fromUserID, props.toUserID);
+      const res = await this.service.connectRequest(fromUserID, toUserID);
       return reply.send(res);
     } catch (err: any) {
       return reply.code(400).send({ error: err.message });
@@ -46,14 +38,15 @@ export class FriendHandler {
   };
 
   accept = async (req: FastifyRequest<{ Params: { friendID: string } }>, reply: FastifyReply) => {
-    const props = validateInput(req.user.id, req.params.friendID);
+    const fromUserID = req.user.id;
+    const toUserID = validateInput(req.params.friendID);
 
-    if (props === undefined) {
+    if (toUserID === undefined) {
       return reply.code(400).send({ error: INVALID_URL_OR_PROPS });
     }
 
     try {
-      await this.service.acceptRequest(props.fromUserID, props.toUserID);
+      await this.service.acceptRequest(fromUserID, toUserID);
       return reply.send({ success: true });
     } catch (err: any) {
       return reply.code(400).send({ error: err.message });
@@ -61,14 +54,15 @@ export class FriendHandler {
   };
 
   reject = async (req: FastifyRequest<{ Params: { friendID: string } }>, reply: FastifyReply) => {
-    const props = validateInput(req.user.id, req.params.friendID);
+    const fromUserID = req.user.id;
+    const toUserID = validateInput(req.params.friendID);
 
-    if (props === undefined) {
+    if (toUserID === undefined) {
       return reply.code(400).send({ error: INVALID_URL_OR_PROPS });
     }
 
     try {
-      await this.service.rejectRequest(props.fromUserID, props.toUserID);
+      await this.service.rejectRequest(fromUserID, toUserID);
       return reply.send({ success: true });
     } catch (err: any) {
       return reply.code(400).send({ error: err.message });
@@ -76,15 +70,25 @@ export class FriendHandler {
   };
 
   delete = async (req: FastifyRequest<{ Params: { friendID: string } }>, reply: FastifyReply) => {
-    const props = validateInput(req.user.id, req.params.friendID);
+    const fromUserID = req.user.id;
+    const toUserID = validateInput(req.params.friendID);
 
-    if (props === undefined) {
+    if (toUserID === undefined) {
       return reply.code(400).send({ error: INVALID_URL_OR_PROPS });
     }
 
     try {
-      await this.service.deleteRequest(props.fromUserID, props.toUserID);
+      await this.service.deleteRequest(fromUserID, toUserID);
       return reply.send({ success: true });
+    } catch (err: any) {
+      return reply.code(400).send({ error: err.message });
+    }
+  };
+
+  listAll = async (req: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const friends = await this.service.listAllRequest(req.user.id);
+      return reply.send({ success: true, data: friends });
     } catch (err: any) {
       return reply.code(400).send({ error: err.message });
     }
