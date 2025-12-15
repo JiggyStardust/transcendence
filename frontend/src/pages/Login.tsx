@@ -16,7 +16,7 @@ export default function Login() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/sideplayer-login"); // or "/dashboard", whichever you want
+      navigate("/players");
     }
   }, [isAuthenticated, navigate]);
 
@@ -69,7 +69,7 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <Button type="submit">Login</Button>
+        <Button>Login</Button>
       </form>
 
     </div>
