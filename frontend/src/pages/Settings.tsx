@@ -36,7 +36,7 @@ const ProfileInfo = ({ user }: { user: User }) => {
 			<ProfilePic avatarUrl={user.avatarUrl} avatarUpdatedAt={user.avatarUpdatedAt}/>
 			<div className="flex flex-col gap-4 pt-4">
 				<h1 className="font-bold text-3xl">{user.username}</h1>
-				<p>Some text</p>
+				<p>Some text???</p>
 			</div>
 		</div>
 	)
@@ -421,29 +421,23 @@ const AuthSettings = ({ user, setUser }: SettingsProps) => {
 }
 
 const Settings = ({}) => {
-	const { loadMe } = useUser();
+	const { mainUser } = useUser();
+	if (!mainUser) {
+		return (
+			<div>
+				<h1>
+					No user logged in
+				</h1>
+			</div>
+		)
+	}
 	const [user, setUser] = useState<User>({
-		username: "",
-		displayName: "",
+		username: mainUser.username,
+		displayName: mainUser.displayName,
 		twoFactorEnabled: false, // this needs to be in user context
-		avatarUrl: null,
+		avatarUrl: mainUser.avatarUrl,
 		avatarUpdatedAt: Date.now(),
 	});
-	
-	useEffect(() => {
-		(async () => {
-			const me = await loadMe();
-			if (me) {
-				setUser({
-					username: me.username,
-					displayName: me.displayName,
-					twoFactorEnabled: false, // this needs to be in user context
-					avatarUrl: me.avatarUrl,
-					avatarUpdatedAt: Date.now(),
-				})
-			}
-		})();
-	}, [loadMe]);
 
 	useEffect(() => {
 	  console.log("Avatar URL:", user.avatarUrl);
