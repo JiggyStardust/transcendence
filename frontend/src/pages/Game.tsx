@@ -19,7 +19,6 @@ const GameRedirect = () => {
     }, 0);
   };
 
-  conso
   handleStartGame("regular", "RegularA", "RegularB");
 
   useEffect(() => {
