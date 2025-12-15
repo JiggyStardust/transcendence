@@ -16,6 +16,9 @@ const EXT_TO_MIMETYPE: Record<string, string> = {
   ".png": "image/png",
   ".jpeg": "image/jpeg",
   ".jpg": "image/jpeg",
+  ".PNG": "image/png",
+  ".JPEG": "image/jpeg",
+  ".JPG": "image/jpeg",
 };
 
 export const uploadAvatarHandler = async (
