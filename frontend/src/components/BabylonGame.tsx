@@ -3,22 +3,55 @@ import { useEffect, useRef, useState } from 'react';
 import { useGame } from '../../src/context/GameContext';
 
 export default function BabylonGame() {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { gameState, updateGameState, setGameWinner } = useGame();
   const gameRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
   const initializedRef = useRef(false);
 
   useEffect(() => {
-    // Ensure canvas is mounted before initializing
     if (!canvasRef.current) return;
-    
-    // Prevent double initialization in development mode (React StrictMode)
+
+    // Prevent double initialization in React StrictMode
     if (initializedRef.current) return;
     initializedRef.current = true;
 
     let isMounted = true;
-    
+
+    /* ===============================
+       🚫 PREVENT PAGE SCROLLING
+    =============================== */
+
+    const preventScrollKeys = (e: KeyboardEvent) => {
+      const keys = [
+        'ArrowUp',
+        'ArrowDown',
+        'ArrowLeft',
+        'ArrowRight',
+        'Space',
+      ];
+
+      if (
+        keys.includes(e.code) &&
+        document.activeElement === canvasRef.current
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    const preventScrollWheel = (e: WheelEvent) => {
+      if (document.activeElement === canvasRef.current) {
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener('keydown', preventScrollKeys, { passive: false });
+    window.addEventListener('wheel', preventScrollWheel, { passive: false });
+
+    /* ===============================
+       🎮 GAME INITIALIZATION
+    =============================== */
+
     const initGame = async () => {
       try {
         const { game } = await import('../game/game.js');
@@ -32,22 +65,20 @@ export default function BabylonGame() {
         const { gameOver } = await import('../game/gameOver.js');
         const { saveGame } = await import('../game/saveGame.tsx');
 
-        // Check if component is still mounted
-        if (!isMounted || !canvasRef.current)
-          return;
+        if (!isMounted || !canvasRef.current) return;
 
-        // Init
+        // Init Babylon
         game.canvas = canvasRef.current;
         game.engine = new BABYLON.Engine(game.canvas, true);
         gameRef.current = game;
 
-        if (window.numberOfPlayers == 3)
+        if (window.numberOfPlayers === 3) {
           game.hasThirdPlayer = true;
-        
+        }
+
         parseUsername(game, gameState.players);
         await createScene(game);
 
-        // Check again after async operation
         if (!isMounted) {
           game.engine.dispose();
           return;
@@ -59,16 +90,14 @@ export default function BabylonGame() {
         game.currentState = game.state.start;
 
         // Render loop
-        game.engine.runRenderLoop(function () {
+        game.engine.runRenderLoop(() => {
           if (!isMounted) return;
-          
+
           game.canvas.focus();
-          
-          // Check if scene is ready
-          if (!game.scene || !game.scene.isReady())
-            return;
-          
-          switch(game.currentState) {
+
+          if (!game.scene || !game.scene.isReady()) return;
+
+          switch (game.currentState) {
             case game.state.start:
               reset(game);
               break;
@@ -87,51 +116,60 @@ export default function BabylonGame() {
               gameOver(game);
               break;
           }
+
           updateScoreText(game);
           game.scene.render();
         });
 
-        // Window Resize
+        // Resize handler
         const handleResize = () => {
           if (game.engine) {
             game.engine.resize();
           }
         };
-        window.addEventListener("resize", handleResize);
 
+        window.addEventListener('resize', handleResize);
         setIsLoading(false);
 
         return () => {
-          window.removeEventListener("resize", handleResize);
+          window.removeEventListener('resize', handleResize);
           if (game.engine) {
             game.engine.stopRenderLoop();
             game.engine.dispose();
           }
         };
       } catch (error) {
-        console.error("Failed to initialize game:", error);
+        console.error('Failed to initialize game:', error);
         setIsLoading(false);
       }
     };
 
-    const cleanup = initGame();
+    const cleanupPromise = initGame();
 
     return () => {
       isMounted = false;
       initializedRef.current = false;
-      cleanup.then(cleanupFn => cleanupFn && cleanupFn());
+
+      window.removeEventListener('keydown', preventScrollKeys);
+      window.removeEventListener('wheel', preventScrollWheel);
+
+      cleanupPromise?.then((cleanup) => cleanup && cleanup());
     };
   }, []);
 
   return (
     <div className="page-bg flex flex-col items-center justify-center min-h-screen w-screen">
       {isLoading && (
-        <div className="absolute text-black text-2xl">Loading game...</div>
+        <div className="absolute text-black text-2xl">
+          Loading game...
+        </div>
       )}
-      <canvas 
-        ref={canvasRef} 
-        width="1280" 
-        height="720" 
+
+      <canvas
+        ref={canvasRef}
+        tabIndex={0}
+        width="1280"
+        height="720"
         id="renderCanvas"
         style={{ display: isLoading ? 'none' : 'block' }}
       />
