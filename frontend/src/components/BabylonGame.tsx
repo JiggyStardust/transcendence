@@ -80,11 +80,23 @@ export default function BabylonGame() {
           if (!game.scene || !game.scene.isReady()) return;
 
           switch (game.currentState) {
-            case game.state.start: reset(game); break;
-            case game.state.playing: applyCollision(game); moveSphere(game); break;
-            case game.state.pointScored: pointScored(game); break;
-            case game.state.reset: reset(game); break;
-            case game.state.gameOver: saveGame(game, gameState, setGameWinner); gameOver(game); break;
+            case game.state.start: 
+              reset(game);
+              break;
+            case game.state.playing:
+              applyCollision(game);
+              moveSphere(game);
+              break;
+            case game.state.pointScored:
+              pointScored(game);
+              break;
+            case game.state.reset:
+              reset(game);
+              break;
+            case game.state.gameOver:
+              saveGame(game, gameState, setGameWinner);
+              gameOver(game);
+              break;
           }
 
           updateScoreText(game);
