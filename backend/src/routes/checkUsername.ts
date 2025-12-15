@@ -45,7 +45,6 @@ const checkUsernameOpts: RouteShorthandOptions<
 
 const checkUsernameHandler = async (req: FastifyRequest<{ Querystring: CheckUsernameQuery }>, reply: FastifyReply) => {
   const { username } = req.query;
-  const user: DbResult<IUserData> = await req.server.db.getUser(username);
   const conflict = await req.server.db.user.findFirst({
     where: {
       OR: [{ username }, { displayName: username }],
