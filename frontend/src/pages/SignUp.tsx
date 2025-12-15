@@ -142,7 +142,7 @@ export default function SignUp() {
 
 	return (
 		<div className="flex flex-col items-center justify-center gap-4 mt-36">
-			<h2 className="font-tomorrow font-bold text-3xl text-stone-800 dark:text-vintage-yellow ">Please sign up!</h2>
+			<h2 className="font-tomorrow font-bold text-3xl text-vintage-red dark:text-vintage-yellow ">Please sign up!</h2>
 			<div className="flex flex-col items-center bg-stone-700/50 dark:bg-stone-500 rounded-3xl p-8 gap-4">
 				<form onSubmit={handleSignUp} className="flex flex-col items-center gap-4">
 					<Input 
