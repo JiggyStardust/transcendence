@@ -165,6 +165,7 @@ const Players = () => {
       updatePendingCard(card.id, { error: "Both username and password needed" });
       return;
     }
+    //TODO: if the username who tries to log in is already in usercontext, show error (this will be handled only in the frontend)
     try {
       const res = await fetch(PROXY_URL + "/verify_player", {
         method: "POST",

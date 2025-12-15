@@ -11,6 +11,6 @@ export interface ToastContextType {
 }
 
 export type Status = {
-	type: "" | "ok" | "warning" | "error",
+	type: "ok" | "warning" | "error",
 	message: string;
 }

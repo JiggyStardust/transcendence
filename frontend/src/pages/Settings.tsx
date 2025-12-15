@@ -133,7 +133,7 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 			if (displayNameResponse.error) {
 				//set state username not context username
 				showToast("Error: " + displayNameResponse.error, "error")
-				setDisplayNameStatus({type: "", message: ""});
+				setDisplayNameStatus(null);
 			} else {
 				showToast("Success: display name updated successfully", "success");
 				setUser({ ...user, displayName: displayNameResponse.displayName});
@@ -143,7 +143,7 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 		if (file != null) {
 			const avatarResponse = await saveAvatar(file);
 			if (avatarResponse.error) {
-				setDisplayNameStatus({type: "", message: ""});
+				setDisplayNameStatus(null);
 				//set page error
 			}
 			else {

@@ -4,6 +4,7 @@ import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from "./context/AuthContext";
 import { UserProvider } from "./context/UserContext";
+import { ToastProvider } from './context/ToastContext.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
