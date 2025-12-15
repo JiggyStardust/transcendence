@@ -5,14 +5,18 @@ import { Button } from "../components/Button";
 import Input from "../components/Input";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useAppToast } from "../context/ToastContext";
+import { type Status } from "../types/types";
 
 export default function Login() {
-  const [information, setInformation] = useState<string>(""); // adding <string> is optional
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [usernameStatus, setUsernameStatus] = useState<Status | null>(null);
+  const [passwordStatus, setPasswordStatus] = useState<Status | null>(null);
 
   const navigate = useNavigate();
   const { login, isAuthenticated } = useAuth();
+  const { showToast } = useAppToast();
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -21,57 +25,73 @@ export default function Login() {
   }, [isAuthenticated, navigate]);
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault(); // to prevent browsers default behaviour with forms (reloading the page), optional?
+    e.preventDefault();
 
     const res = await fetch(PROXY_URL + "/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-      credentials: "include" // for the cookies
+      credentials: "include",
+      body: JSON.stringify({ username, password })
     });
 
-    // const data = await res.json();
+    const data = await res.json();
 
     if (!res.ok) {
-      setInformation("Login failed!");
+      showToast("Login failed: " + data.error, "error");
       setUsername("");
       setPassword("");
       return;
     }
-
     login();
-
     navigate("/dashboard");
   }
 
+  function handleUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
+	  const username = e.target.value;
+	  console.log(username);
+	  setUsername(username);
+	  if (username === "") {
+			setUsernameStatus({type: "warning", message: "Username can not be empty."});
+	  } else {
+			setUsernameStatus(null);
+	  }
+	}
+
+ 	function handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
+		const password = e.target.value;
+		setPassword(password);
+		console.log(password);
+		if (password === "") {
+			setPasswordStatus({type: "warning", message: "Password can not be empty"});
+		} else {
+			setPasswordStatus(null);
+		}
+	}
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen w-screen">
-      <p className="mt-4 text-lg text-center max-w-md">This is where you Login!</p>
-      <form
-        onSubmit={handleLogin}
-        className="px-4 py-8 border border-white rounded-lg"
-      >
-        <p>{information}</p>
-
-        <Input
-          id="username"
-          label="Username:"
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-
-        <Input
-          id="password"
-          label="Password:"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <Button>Login</Button>
-      </form>
-
+    <div className="flex flex-col items-center justify-center gap-4 mt-36">
+			<h2 className="font-tomorrow font-bold text-3xl text-stone-800 dark:text-vintage-yellow ">Login to play!</h2>
+			<div className="flex flex-col items-center bg-stone-700/50 dark:bg-stone-500 rounded-3xl p-8 gap-4">
+        <form className="flex flex-col items-center gap-4" onSubmit={handleLogin}>
+          <Input
+            id="username"
+            label="Username:"
+            type="text"
+            value={username}
+            status={usernameStatus || undefined}
+            onChange={handleUsernameChange}
+          />
+          <Input
+            id="password"
+            label="Password:"
+            type="password"
+            value={password}
+            status={passwordStatus || undefined}
+            onChange={handlePasswordChange}
+          />
+          <Button disabled={ username === "" || password === "" }>Login</Button>
+        </form>
+      </div>
     </div>
   );
 }
