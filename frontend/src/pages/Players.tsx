@@ -8,6 +8,7 @@ import { useUser } from "../context/UserContext";
 import { useAuth } from "../context/AuthContext";
 import { useAppToast } from "../context/ToastContext";
 import type { User } from "../context/UserContext";
+import type { Status } from "../types/types";
 
 type LoggedIn = {
   type: "loggedIn";
@@ -21,7 +22,7 @@ type Pending = {
   id: string;
   username?: string;
   password?: string;
-  error?: string;
+  status?: Status;
 };
 
 type PlayerCard = LoggedIn | Pending;
@@ -40,7 +41,7 @@ const LoggedInCard = ({ card }: { card: LoggedIn }) => (
         src={card.avatarUrl}
         className="w-28 h-28 rounded-full object-cover"
         alt={`Avatar of ${card.name}`}
-      />
+        />
       <p className="text-2xl font-semibold">{card.name}</p>
     </div>
   </CardFrame>
@@ -67,17 +68,18 @@ const PendingCard = ({
         id={`username-${card.id}`}
         label="Username"
         value={card.username}
-        onChange={e => onUpdate(card.id, { username: e.target.value })}
-      />
+        status={card.status?.type === "error" ? card.status : undefined}
+        onChange={e => onUpdate(card.id, { username: e.target.value, status: undefined, })}
+        />
       <Input
         id={`username-${card.id}`}
         type="password"
         label="Password"
         value={card.password}
-        onChange={e => onUpdate(card.id, { password: e.target.value })}
-      />
+        status={card.status?.type === "error" ? card.status : undefined}
+        onChange={e => onUpdate(card.id, { password: e.target.value, status: undefined, })}
+        />
       <Button onClick={() => onLogin(card)}>Log in</Button>
-      {card.error && <p className="text-red-500 text-sm">{card.error}</p>}
     </div>
   </CardFrame>
 );
@@ -107,22 +109,23 @@ export default function Players() {
   const { loadMe, loadUser, users, clearUsers } = useUser();
   const { logout } = useAuth();
   const [cards, setCards] = useState<PlayerCard[]>([]);
-
+  const { showToast } = useAppToast();
+  
   /* Restore main + side players on entry                            */
-
+  
   useEffect(() => {
     (async () => {
       const me = await loadMe();
       if (!me) return;
-
+      
       for (const username of getStoredSidePlayers()) {
         await loadUser(username);
       }
     })();
   }, [loadMe, loadUser]);
-
+  
   /* Build cards from UserContext                                   */
-
+  
   useEffect(() => {
     const loggedInCards: LoggedIn[] = Object.values(users).map((user: User) => ({
       type: "loggedIn",
@@ -130,11 +133,11 @@ export default function Players() {
       name: user.displayName,
       avatarUrl: user.avatarUrl,
     }));
-
+    
     setCards(loggedInCards);
   }, [users]);
-
-
+  
+  
   const addPendingCard = () => {
     setCards(prev => [
       ...prev,
@@ -153,8 +156,12 @@ export default function Players() {
   };
 
   const handleLogin = async (card: Pending) => {
-    if (!card.username || !card.password) {
-      updatePending(card.id, { error: "Username and password required" });
+    if (!card.username) {
+      updatePending(card.id, { status: {type: "error", message: "Username required",}, });
+      return;
+    }
+    if (!card.password) {
+      updatePending(card.id, { status: {type: "error", message: "Password required",}, });
       return;
     }
 
@@ -172,16 +179,19 @@ export default function Players() {
       }),
     });
 
+
     const data = await res.json();
 
     if (!res.ok) {
-      console.log(data.error);
-      updatePending(card.id, { error: data.error ?? "Login failed" });
+      console.log("response:" + data.error);
+      showToast(data.error, "error");
+      removePending(card.id);
       return;
     }
 
     storeSidePlayer(data.username);
     await loadUser(data.username);
+    showToast(data.username + " joined the game!", "success");
   };
 
   const handleLogout = () => {
