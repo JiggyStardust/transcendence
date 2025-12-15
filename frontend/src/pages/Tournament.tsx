@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { useGame } from '../context/GameContext';
 import { useEffect } from "react";
 
-
-
 const Match = ({game_number, player_1, player_2, active=true, onStartGame, winner}: {game_number: string, player_1: string, player_2:string, active?: boolean, onStartGame?: () => void, winner?: string | null}) => {
   return (
     <div className="flex justify-center gap-7">

@@ -30,7 +30,6 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/game" element={<BabylonGame />} />
           <Route path="/profile_settings" element={<ProfileSettings />} />
-          <Route path="/game" element={<Game />} />
           <Route path="/players" element={<Players />} />
         </Routes>
         </GameProvider>

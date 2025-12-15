@@ -6,9 +6,7 @@ export default function Game() {
   const { gameState } = useGame();
 
   // Update window.gameContext whenever gameState changes
-  useEffect(() => {
-    window.gameContext = gameState;
-  }, [gameState]);
+  useEffect(() => {}, [gameState]);
 
   // Load the game script only once when component mounts
   useEffect(() => {
@@ -30,20 +28,27 @@ export default function Game() {
       if (script.parentNode === document.body) {
         document.body.removeChild(script);
       }
-      // Clean up the global variable
-      delete window.gameContext;
-      
-      // Clean up Babylon engine if it exists
-      if (window.gameEngine) {
-        window.gameEngine.dispose();
-        delete window.gameEngine;
-      }
     };
-  }, []); // Empty dependency array - run only once
+  }, []);                 
 
   return (
     <div className="page-bg flex flex-col items-center justify-center min-h-screen w-screen">
-      <canvas width="1280" height="720" id="renderCanvas"></canvas>
+      {isLoading && (
+        <div className="absolute text-black text-2xl">
+          Loading game...
+        </div>
+      )}
+      <canvas
+        ref={canvasRef}
+        tabIndex={0}
+        width="1280"
+        height="720"
+        id="renderCanvas"
+        style={{
+          display: isLoading ? 'none' : 'block',
+          outline: 'none'
+        }}
+      />
     </div>
   );
 }
