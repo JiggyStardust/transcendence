@@ -12,16 +12,12 @@ export default function BabylonGame() {
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    // Prevent double initialization in React StrictMode
+    // Prevent double initialization
     if (initializedRef.current) return;
     initializedRef.current = true;
-
     let isMounted = true;
 
-    /* ===============================
-       🚫 PREVENT PAGE SCROLLING
-    =============================== */
-
+    // Prevent page from scrolling
     const preventScrollKeys = (e: KeyboardEvent) => {
       const keys = [
         'ArrowUp',
@@ -48,10 +44,7 @@ export default function BabylonGame() {
     window.addEventListener('keydown', preventScrollKeys, { passive: false });
     window.addEventListener('wheel', preventScrollWheel, { passive: false });
 
-    /* ===============================
-       🎮 GAME INITIALIZATION
-    =============================== */
-
+    // Initialize Game
     const initGame = async () => {
       try {
         const { game } = await import('../game/game.js');
@@ -171,7 +164,9 @@ export default function BabylonGame() {
         width="1280"
         height="720"
         id="renderCanvas"
-        style={{ display: isLoading ? 'none' : 'block' }}
+        style={{
+          display: isLoading ? 'none' : 'block',
+          outline: 'none'}}
       />
     </div>
   );
