@@ -315,7 +315,7 @@ const ChangePassword = () => {
 
 	async function updatePassword() {
 		if (oldPassword && newPassword) {
-			const res = await fetch(PROXY_URL + "/updatePassword", {
+			const res = await fetch(PROXY_URL + "/user/password", {
 				method: "PATCH",
 				credentials: "include",
 				headers: {
