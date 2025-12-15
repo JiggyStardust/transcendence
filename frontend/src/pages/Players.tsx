@@ -6,6 +6,7 @@ import Input from "../components/Input";
 import { PROXY_URL } from "../constants";
 import { useUser } from "../context/UserContext";
 import { useAuth } from "../context/AuthContext";
+import { useAppToast } from "../context/ToastContext";
 import type { User } from "../context/UserContext";
 
 type LoggedIn = {
