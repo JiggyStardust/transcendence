@@ -46,7 +46,13 @@ const checkUsernameOpts: RouteShorthandOptions<
 const checkUsernameHandler = async (req: FastifyRequest<{ Querystring: CheckUsernameQuery }>, reply: FastifyReply) => {
   const { username } = req.query;
   const user: DbResult<IUserData> = await req.server.db.getUser(username);
-  const available = !user.ok;
+  const conflict = await req.server.db.user.findFirst({
+    where: {
+      OR: [{ username }, { displayName: username }],
+    },
+    select: { id: true },
+  });
+  const available = conflict === null;
   return { available };
 };
 

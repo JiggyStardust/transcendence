@@ -17,6 +17,7 @@ export const searchFriendsOpts: RouteShorthandOptions<
         search: {
           type: "string",
           minLength: 1,
+          maxLength: 100,
         },
       },
       required: ["search"],
