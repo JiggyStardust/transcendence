@@ -16,7 +16,7 @@ export const searchFriendsOpts: RouteShorthandOptions<
       properties: {
         search: {
           type: "string",
-          minLength: 3,
+          minLength: 1,
         },
       },
       required: ["search"],
