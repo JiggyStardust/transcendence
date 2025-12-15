@@ -21,11 +21,15 @@ declare module "fastify" {
 
 declare module "fastify" {
   interface FastifyRequest {
-    user: {
-      id: number;
-      username: string;
-      displayName?: string;
-    } & JwtPayload;
+    user: 
+      | ( JwtPayload& {
+        id: number;
+        username: string;
+        displayName?: string;
+    })
+    | string
+    | object
+    | Buffer
     jwtVerify: () => Promise<void>;
   }
 }

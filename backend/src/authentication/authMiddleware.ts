@@ -3,6 +3,7 @@
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../constants";
 import type { preHandlerHookHandler } from "fastify";
+import { FastifyRequest } from "fastify";
 
 // TODO: review and test this function before use
 export const verifyToken: preHandlerHookHandler = (req, reply, done) => {
@@ -14,7 +15,7 @@ export const verifyToken: preHandlerHookHandler = (req, reply, done) => {
   }
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    (req as any).user = decoded; // is any okay here?
+    (req as FastifyRequest).user = decoded; // is any okay here?
     done();
   } catch (err) {
     reply.code(401).send({ error: "Invalid or expired token" });

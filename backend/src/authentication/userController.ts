@@ -1,20 +1,22 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import "fastify";
 import bcrypt from "bcrypt";
+import { validatePassword, PASSWORD_ERROR_MESSAGE } from "utils/validatePassword";
 
-declare module "fastify" {
-    interface FastifyRequest {
-        user: {
-            id: string;
-            displayName?: string;
+//declare module "fastify" {
+  //  interface FastifyRequest {
+    //    user: {
+      //      id: string;
+        //    displayName?: string;
             // whatever else is needed can be added here
-        }
-    }
-}
+        //}
+   // }
+//}
 
 export async function updateDisplayName(request: FastifyRequest, reply: FastifyReply) {
     const { displayName } = request.body as { displayName?: string };
-    const userID = Number(request.user.id);
+    
+    const userID = request.user.id;
 
     try {
         await request.server.db.user.update({
@@ -44,6 +46,9 @@ export async function updatePassword(request: FastifyRequest, reply: FastifyRepl
 
     if (!valid) return reply.code(400).send({ error: "Incorrect password" });
 
+    if (!validatePassword(newPassword)) {
+        return reply.code(400).send({ error: PASSWORD_ERROR_MESSAGE });
+  }
     const hashed = await bcrypt.hash(newPassword, 10);
 
     await request.server.db.user.update({

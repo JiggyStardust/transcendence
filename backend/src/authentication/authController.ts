@@ -115,10 +115,35 @@ export async function verify2FALogin(req: AuthenticatedRequest<IVerify2FALoginBo
   });
 
   if (!verified) return reply.code(401).send({ error: "Invalid 2FA code" });
-  const jwtToken = generateAccessToken({ id: user.id, username: user.username });
+  //const jwtToken = generateAccessToken({ id: user.id, username: user.username });
+
+  // does a cookie need to be generated here?
+
+  const accessToken = generateAccessToken({
+    id: user.id,
+    username: user.username,
+  });
+  const refreshToken = generateRefreshToken({ id: user.id });
+
+  reply
+    .setCookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: true,
+      //sameSite: "Strict",
+      maxAge: 15 * 60 * 1000,
+      path: "/"
+    })
+    .setCookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      //sameSite: "Strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/"
+    })
+    .send({ message: "Logged in!" })
 
   // TODO: seems Refresh token is missing for 2FA
-  reply.send({ token: jwtToken });
+  //reply.send({ token: jwtToken });
 }
 
 export async function signup(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
