@@ -1,24 +1,12 @@
-// Players.tsx
+// pages/Players.tsx
+import { useEffect, useState } from "react";
+import { FiPlus, FiXCircle } from "react-icons/fi";
 import { Button } from "../components/Button";
 import Input from "../components/Input";
 import { PROXY_URL } from "../constants";
-import { useEffect, useState } from "react";
-import { FiPlus, FiXCircle } from "react-icons/fi";
 import { useUser } from "../context/UserContext";
 import { useAuth } from "../context/AuthContext";
-
-// This is temporary to demonstrate logout functionality / see if it works. Will be put to NavBar later.
-const LogoutButton = () => {
-  const { logout } = useAuth();
-  return (
-    <button
-      onClick={logout}
-      className="mt-4 px-6 py-2 rounded-lg border border-stone-700 text-stone-700 dark:text-stone-200 hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors"
-    >
-      Log Out
-    </button>
-  );
-};
+import type { User } from "../context/UserContext";
 
 type LoggedIn = {
   type: "loggedIn";
@@ -37,202 +25,203 @@ type Pending = {
 
 type PlayerCard = LoggedIn | Pending;
 
-const CardFrame = ({ children, className = "" }: any) => (
-  <div className={`relative p-4 w-72 h-80 border flex-shrink-0 snap-start rounded-xl shadow-lg ${className}`}>
+
+const CardFrame = ({ children }: { children: React.ReactNode }) => (
+  <div className="relative p-4 w-72 h-80 border rounded-xl shadow-lg flex-shrink-0">
     {children}
   </div>
 );
 
-const LoggedInCard = ({ card }: { card: LoggedIn }) => {
-  return (
-    <CardFrame className="flex flex-col items-center justify-center gap-4">
-      <img src={card.avatarUrl} className="w-28 h-28 object-cover rounded-full" alt={"Avatar Image of " + card.name}/>
-      <p className="font-semibold text-2xl">{card.name}</p>
-    </CardFrame>
-  )
-}
+const LoggedInCard = ({ card }: { card: LoggedIn }) => (
+  <CardFrame>
+    <div className="flex flex-col items-center justify-center h-full gap-4">
+      <img
+        src={card.avatarUrl}
+        className="w-28 h-28 rounded-full object-cover"
+        alt={`Avatar of ${card.name}`}
+      />
+      <p className="text-2xl font-semibold">{card.name}</p>
+    </div>
+  </CardFrame>
+);
 
-type PendingCardProps = {
+const PendingCard = ({
+  card,
+  onUpdate,
+  onLogin,
+  onRemove,
+}: {
   card: Pending;
-  setCards: React.Dispatch<React.SetStateAction<PlayerCard[]>>
   onUpdate: (id: string, updates: Partial<Pending>) => void;
-  handleLogin: (player: Pending) => void;
-};
+  onLogin: (card: Pending) => void;
+  onRemove: (id: string) => void;
+}) => (
+  <CardFrame>
+    <button className="absolute top-4 right-4" onClick={() => onRemove(card.id)}>
+      <FiXCircle size={20} />
+    </button>
 
-const PendingCard = ({ card, setCards, onUpdate, handleLogin}: PendingCardProps) => {
+    <div className="absolute bottom-6 inset-x-0 flex flex-col items-center gap-3 px-4">
+      <Input
+        id={`username-$(card.id)`}
+        label="Username"
+        value={card.username}
+        onChange={e => onUpdate(card.id, { username: e.target.value })}
+      />
+      <Input
+        id={`username-$(card.id)`}
+        type="password"
+        label="Password"
+        value={card.password}
+        onChange={e => onUpdate(card.id, { password: e.target.value })}
+      />
+      <Button onClick={() => onLogin(card)}>Log in</Button>
+      {card.error && <p className="text-red-500 text-sm">{card.error}</p>}
+    </div>
+  </CardFrame>
+);
 
-  const removeCard = (id: string) => {
-    console.log("remove card clicked");
-    setCards(prevCards =>
-      prevCards.filter(c => c.id !== id)
+/* Helpers */
+
+const SIDE_PLAYERS_KEY = "sidePlayers";
+
+const getStoredSidePlayers = (): string[] =>
+  JSON.parse(localStorage.getItem(SIDE_PLAYERS_KEY) ?? "[]");
+
+const storeSidePlayer = (username: string) => {
+  const existing = getStoredSidePlayers();
+  if (!existing.includes(username)) {
+    localStorage.setItem(
+      SIDE_PLAYERS_KEY,
+      JSON.stringify([...existing, username])
     );
-  };
-
-  return (
-    <CardFrame>
-      <button className="absolute top-4 right-4 cursor-pointer"
-        onClick={() => removeCard(card.id)}>
-        <FiXCircle size={20} />
-      </button>
-      <div className="absolute bottom-6 inset-x-0 flex flex-col items-center gap-3 px-4">
-        <Input id={"username-" + card.id} label="Username" value={card.username} onChange={(e) => onUpdate(card.id, { username: e.target.value })}/>
-        <Input type="password" id={"password-" + card.id} label="Password" value={card.password} onChange={(e) => onUpdate(card.id, { password: e.target.value })}/>
-        <Button onClick={() => handleLogin(card)}>Log in</Button>
-        {card.error && <p className="text-red-500 text-sm mt-2">{card.error}</p>}
-      </div>
-    </CardFrame>
-  )
-}
-
-type PlayerCardProps = {
-  card: PlayerCard;
-  onUpdate: (id: string, updates: Partial<Pending>) => void;
-  handleLogin: (card: Pending) => void;
-  setCards: React.Dispatch<React.SetStateAction<PlayerCard[]>>
-};
-
-const PlayerCardComponent = ({ card, onUpdate, handleLogin, setCards }: PlayerCardProps) => {
-  switch (card.type) {
-    case "loggedIn":
-      return <LoggedInCard card={card} />;
-    case "pending":
-      return (
-        <PendingCard
-          card={card}
-          onUpdate={onUpdate}
-          handleLogin={handleLogin}
-          setCards={setCards}
-        />
-      );
   }
 };
 
-const AddCard = ({ onAdd }: { onAdd: () => void }) => (
-  <button onClick={onAdd} className="flex items-center justify-center w-72 h-80 border flex-shrink-0 snap-start rounded-xl shadow-lg cursor-pointer">
-    <FiPlus size={128}/>
-  </button>
-);
+/* Main Component */
 
-let idCounter = 2;
+let idCounter = 1;
 
-const Players = () => {
+export default function Players() {
+  const { loadMe, loadUser, users, clearUsers } = useUser();
+  const { logout } = useAuth();
   const [cards, setCards] = useState<PlayerCard[]>([]);
-  const { loadMe, loadUser } = useUser();
+
+  /* Restore main + side players on entry                            */
 
   useEffect(() => {
     (async () => {
       const me = await loadMe();
-      if (me) {
-        const mainCard: LoggedIn = {
-          type: "loggedIn",
-          id: String(me.id),
-          name: me.displayName,
-          avatarUrl: me.avatarUrl
-        }
-        setCards(prev => {
-          const exists = prev.some(c => c.type === "loggedIn" && c.id === String(me.id));
-          return exists ? prev : [mainCard, ...prev];
-        });
+      if (!me) return;
+
+      for (const username of getStoredSidePlayers()) {
+        await loadUser(username);
       }
     })();
-  }, [loadMe]);
+  }, [loadMe, loadUser]);
 
-  const addCard = () => {
+  /* Build cards from UserContext                                   */
+
+  useEffect(() => {
+    const loggedInCards: LoggedIn[] = Object.values(users).map((user: User) => ({
+      type: "loggedIn",
+      id: String(user.id),
+      name: user.displayName,
+      avatarUrl: user.avatarUrl,
+    }));
+
+    setCards(loggedInCards);
+  }, [users]);
+
+
+  const addPendingCard = () => {
     setCards(prev => [
       ...prev,
-      {
-        type: "pending",
-        id: idCounter.toString(),
-        username: "",
-        password: ""
-      }
+      { type: "pending", id: String(++idCounter) },
     ]);
-    idCounter++;
   };
 
-  const updatePendingCard = (id: string, updates: Partial<Pending>) => {
+  const updatePending = (id: string, updates: Partial<Pending>) => {
     setCards(prev =>
-      prev.map(card =>
-        card.id === id ? { ...card, ...updates } : card
-      )
+      prev.map(c => (c.id === id ? { ...c, ...updates } : c))
     );
   };
 
-  const handleLogIn = async (card: Pending) => {
-    const { username, password } = card;
-    if (!password || !username) {
-      // show error in the pending card PLACEHOLDER -> need to match with Maria's errors later
-      updatePendingCard(card.id, { error: "Both username and password needed" });
+  const removePending = (id: string) => {
+    setCards(prev => prev.filter(c => c.id !== id));
+  };
+
+  const handleLogin = async (card: Pending) => {
+    if (!card.username || !card.password) {
+      updatePending(card.id, { error: "Username and password required" });
       return;
     }
 
-    // guestList is an array of ids of players who already logged in
     const guestList = cards
       .filter((c): c is LoggedIn => c.type === "loggedIn")
       .map(c => Number(c.id));
-    
-    try {
-      const res = await fetch(PROXY_URL + "/verify_player", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password, guestList}),
-      });
 
-      const data = await res.json();
+    const res = await fetch(PROXY_URL + "/verify_player", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: card.username,
+        password: card.password,
+        guestList,
+      }),
+    });
 
-      if (!res.ok) {
-        console.error("Login failed:", data.error);
-        updatePendingCard(card.id, { error: data.error || "Login failed" });
-        return;
-      }
-      // verify_player returned success. Now load the side player's full profile from /users/:username
-      
-      const user = await loadUser(data.username);
-      if (!user) {
-        updatePendingCard(card.id, { error: "Failed to load user profile" });
-        return;
-      }
+    const data = await res.json();
 
-      setCards(prev =>
-        prev.map(c =>
-          c.id === card.id
-            ? {
-                type: "loggedIn",
-                id: String(user.id),
-                name: user.displayName,
-                avatarUrl: user.avatarUrl
-              } as LoggedIn
-            : c
-        )
-      );
-    } catch (err) {
-      console.error("Error handling login:", err);
-      updatePendingCard(card.id, { error: "Unexpected error" });
+    if (!res.ok) {
+      updatePending(card.id, { error: data.error ?? "Login failed" });
+      return;
     }
+
+    storeSidePlayer(data.username);
+    await loadUser(data.username);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem(SIDE_PLAYERS_KEY);
+    clearUsers();
+    logout();
   };
 
   return (
     <main>
-      <div className="flex gap-12 p-12 justify-start overflow-x-auto flex-nowrap no-scrollbar snap-x snap-mandatory scroll-pl-12">
-        {cards.map(card => (
-          <PlayerCardComponent
-            key={card.id}
-            card={card}
-            onUpdate={updatePendingCard}
-            handleLogin={handleLogIn}
-            setCards={setCards}
-          />
-        ))}
-        {cards.length < 4 && <AddCard onAdd={addCard} />}
+      <div className="flex gap-12 p-12 overflow-x-auto">
+        {cards.map(card =>
+          card.type === "loggedIn" ? (
+            <LoggedInCard key={card.id} card={card} />
+          ) : (
+            <PendingCard
+              key={card.id}
+              card={card}
+              onUpdate={updatePending}
+              onLogin={handleLogin}
+              onRemove={removePending}
+            />
+          )
+        )}
+        {cards.length < 4 && (
+          <button
+            onClick={addPendingCard}
+            className="w-72 h-80 border rounded-xl flex items-center justify-center"
+          >
+            <FiPlus size={96} />
+          </button>
+        )}
       </div>
 
-
-          {/* Logout Button PLACEHOLDER */}
-      <div className="flex justify-center w-full">
-        <LogoutButton />
+      <div className="flex justify-center mt-6">
+        <button
+          onClick={handleLogout}
+          className="px-6 py-2 border rounded-lg"
+        >
+          Log out
+        </button>
       </div>
     </main>
   );
 }
-
-export default Players;
