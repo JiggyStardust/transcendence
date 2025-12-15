@@ -8,7 +8,7 @@ export const navLinkStyles = cva(
     variants: {
       active: {
         true: "text-vintage-yellow dark:text-vintage-yellow font-extrabold",
-        false: "text-neutral-900 dark:text-white font-normal",
+        false: "font-normal",
       },
     }
   }
@@ -20,11 +20,12 @@ export default function NavBar() {
 			<span className="text-lg font-extrabold font-tomorrow text-vintage-yellow">
 				<NavLink to="/">Ping of Pongs</NavLink>
 			</span>
-			<div className="flex gap-5 items-center">
+			<div className="flex gap-5 items-center no-scrollbar overflow-x-auto">
 				<NavLink to="/testing" className={({ isActive }) => navLinkStyles({ active: isActive })}>Testing</NavLink>
 				<NavLink to="/settings" className={({ isActive }) => navLinkStyles({ active: isActive })}>Settings</NavLink>
 				<NavLink to="/login" className={({ isActive }) => navLinkStyles({ active: isActive })}>Log in</NavLink>
 				<NavLink to="/game" className={({ isActive }) => navLinkStyles({ active: isActive })}>Game</NavLink>
+				<NavLink to="/players" className={({ isActive }) => navLinkStyles({ active: isActive })}>Players</NavLink>
 				<ThemeToggle />
 			</div>
 		</nav>
