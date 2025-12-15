@@ -7,10 +7,15 @@ export default function BabylonGame() {
   const { gameState, updateGameState, setGameWinner } = useGame();
   const gameRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
+  const initializedRef = useRef(false);
 
   useEffect(() => {
-    // Ensure canvas is mounted before initializing a
+    // Ensure canvas is mounted before initializing
     if (!canvasRef.current) return;
+    
+    // Prevent double initialization in development mode (React StrictMode)
+    if (initializedRef.current) return;
+    initializedRef.current = true;
 
     let isMounted = true;
     
@@ -28,7 +33,8 @@ export default function BabylonGame() {
         const { saveGame } = await import('../game/saveGame.tsx');
 
         // Check if component is still mounted
-        if (!isMounted || !canvasRef.current) return;
+        if (!isMounted || !canvasRef.current)
+          return;
 
         // Init
         game.canvas = canvasRef.current;
@@ -58,7 +64,8 @@ export default function BabylonGame() {
           game.canvas.focus();
           
           // Check if scene is ready
-          if (!game.scene || !game.scene.isReady()) return;
+          if (!game.scene || !game.scene.isReady())
+            return;
           
           switch(game.currentState) {
             case game.state.start:
@@ -110,9 +117,10 @@ export default function BabylonGame() {
 
     return () => {
       isMounted = false;
+      initializedRef.current = false;
       cleanup.then(cleanupFn => cleanupFn && cleanupFn());
     };
-  }, [gameState.players, gameState.gameNumber, setGameWinner]);
+  }, []);
 
   return (
     <div className="page-bg flex flex-col items-center justify-center min-h-screen w-screen">
