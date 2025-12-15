@@ -3,6 +3,7 @@ import { Button } from "../components/Button.tsx";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from '../context/GameContext';
+import { useEffect } from "react";
 
 
 
@@ -50,6 +51,20 @@ export default function Tournament() {
   // Check if game 3 should be active (both game 1 and 2 are complete)
   const isGame3Active = gameState.game1Winner && gameState.game2Winner;
 
+  // Warn user on page refresh or tab close
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "Refreshing will reset tournament data!";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
   return (
     <div className="flex justify-center flex-col items-center gap-10">
       <h1 className="mt-4 font-press text-7xl text-vintage-red dark:text-vintage-yellow [word-spacing:-30px] tracking-[-0.1em]">Tournament</h1>
@@ -78,5 +93,5 @@ export default function Tournament() {
         />
       </div>
     </div>
-  )
+  );
 }

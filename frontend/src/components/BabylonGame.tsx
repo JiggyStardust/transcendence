@@ -5,44 +5,38 @@ import { useGame } from '../../src/context/GameContext';
 export default function BabylonGame() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { gameState, updateGameState, setGameWinner } = useGame();
-  const gameRef = useRef(null);
+  const gameRef = useRef<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const initializedRef = useRef(false);
 
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    // Prevent double initialization
     if (initializedRef.current) return;
     initializedRef.current = true;
     let isMounted = true;
 
     // Prevent page from scrolling
     const preventScrollKeys = (e: KeyboardEvent) => {
-      const keys = [
-        'ArrowUp',
-        'ArrowDown',
-        'ArrowLeft',
-        'ArrowRight',
-        'Space',
-      ];
-
-      if (
-        keys.includes(e.code) &&
-        document.activeElement === canvasRef.current
-      ) {
+      const keys = ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'];
+      if (keys.includes(e.code) && document.activeElement === canvasRef.current) {
         e.preventDefault();
       }
     };
 
     const preventScrollWheel = (e: WheelEvent) => {
-      if (document.activeElement === canvasRef.current) {
-        e.preventDefault();
-      }
+      if (document.activeElement === canvasRef.current) e.preventDefault();
     };
 
     window.addEventListener('keydown', preventScrollKeys, { passive: false });
     window.addEventListener('wheel', preventScrollWheel, { passive: false });
+
+    // Warn user before refresh/close
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "Refreshing will reset your game progress!";
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     // Initialize Game
     const initGame = async () => {
@@ -60,14 +54,11 @@ export default function BabylonGame() {
 
         if (!isMounted || !canvasRef.current) return;
 
-        // Init Babylon
         game.canvas = canvasRef.current;
         game.engine = new BABYLON.Engine(game.canvas, true);
         gameRef.current = game;
 
-        if (window.numberOfPlayers === 3) {
-          game.hasThirdPlayer = true;
-        }
+        if (window.numberOfPlayers === 3) game.hasThirdPlayer = true;
 
         parseUsername(game, gameState.players);
         await createScene(game);
@@ -82,54 +73,31 @@ export default function BabylonGame() {
         game.infoSaved = false;
         game.currentState = game.state.start;
 
-        // Render loop
         game.engine.runRenderLoop(() => {
           if (!isMounted) return;
 
           game.canvas.focus();
-
           if (!game.scene || !game.scene.isReady()) return;
 
           switch (game.currentState) {
-            case game.state.start:
-              reset(game);
-              break;
-            case game.state.playing:
-              applyCollision(game);
-              moveSphere(game);
-              break;
-            case game.state.pointScored:
-              pointScored(game);
-              break;
-            case game.state.reset:
-              reset(game);
-              break;
-            case game.state.gameOver:
-              saveGame(game, gameState, setGameWinner);
-              gameOver(game);
-              break;
+            case game.state.start: reset(game); break;
+            case game.state.playing: applyCollision(game); moveSphere(game); break;
+            case game.state.pointScored: pointScored(game); break;
+            case game.state.reset: reset(game); break;
+            case game.state.gameOver: saveGame(game, gameState, setGameWinner); gameOver(game); break;
           }
 
           updateScoreText(game);
           game.scene.render();
         });
 
-        // Resize handler
-        const handleResize = () => {
-          if (game.engine) {
-            game.engine.resize();
-          }
-        };
-
+        const handleResize = () => { if (game.engine) game.engine.resize(); };
         window.addEventListener('resize', handleResize);
         setIsLoading(false);
 
         return () => {
           window.removeEventListener('resize', handleResize);
-          if (game.engine) {
-            game.engine.stopRenderLoop();
-            game.engine.dispose();
-          }
+          if (game.engine) { game.engine.stopRenderLoop(); game.engine.dispose(); }
         };
       } catch (error) {
         console.error('Failed to initialize game:', error);
@@ -145,6 +113,7 @@ export default function BabylonGame() {
 
       window.removeEventListener('keydown', preventScrollKeys);
       window.removeEventListener('wheel', preventScrollWheel);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
 
       cleanupPromise?.then((cleanup) => cleanup && cleanup());
     };
@@ -157,7 +126,6 @@ export default function BabylonGame() {
           Loading game...
         </div>
       )}
-
       <canvas
         ref={canvasRef}
         tabIndex={0}
@@ -166,7 +134,8 @@ export default function BabylonGame() {
         id="renderCanvas"
         style={{
           display: isLoading ? 'none' : 'block',
-          outline: 'none'}}
+          outline: 'none'
+        }}
       />
     </div>
   );
