@@ -7,7 +7,7 @@ type InputProps = {
 	tooltip?: string;
 	focusTooltip?: React.ReactNode;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
-	onFocus?: React.FocusEvent<HTMLInputElement>;
+	onFocus?: React.FocusEventHandler<HTMLInputElement>;
   onBlur?: React.FocusEventHandler<HTMLInputElement>; // after we leave current field, this prop is activated
 };
 
