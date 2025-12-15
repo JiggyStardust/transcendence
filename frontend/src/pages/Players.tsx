@@ -33,7 +33,7 @@ type Pending = {
   username?: string;
   password?: string;
   error?: string;
-}; 
+};
 
 type PlayerCard = LoggedIn | Pending;
 
@@ -165,21 +165,28 @@ const Players = () => {
       updatePendingCard(card.id, { error: "Both username and password needed" });
       return;
     }
+
+    // guestList is an array of ids of players who already logged in
+    const guestList = cards
+      .filter((c): c is LoggedIn => c.type === "loggedIn")
+      .map(c => Number(c.id));
+    
     try {
       const res = await fetch(PROXY_URL + "/verify_player", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ username, password })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password, guestList}),
       });
+
       const data = await res.json();
+
       if (!res.ok) {
         console.error("Login failed:", data.error);
         updatePendingCard(card.id, { error: data.error || "Login failed" });
         return;
       }
       // verify_player returned success. Now load the side player's full profile from /users/:username
+      
       const user = await loadUser(data.username);
       if (!user) {
         updatePendingCard(card.id, { error: "Failed to load user profile" });
