@@ -51,7 +51,6 @@ model User {
   isDeleted           Boolean         @default(false)
 
   // --- Other relations
-  createdTournaments  Tournament[]    @relation("TournamentCreator")
   matchesWon          Match[]         @relation("MatchWinner")
   matchParticipants   MatchParticipant[]
   friendsAsUser       Friend[]        @relation("Friends_user")
@@ -74,31 +73,15 @@ model Friend {
   @@index([friendID])
 }
 
-model Tournament {
-  id         Int       @id @default(autoincrement())
-  name       String
-  createdBy  Int
-  startDate  DateTime
-  endDate    DateTime
-
-  creator    User      @relation("TournamentCreator", fields: [createdBy], references: [id], onDelete: Cascade)
-  matches    Match[]
-
-  @@index([createdBy])
-}
-
 model Match {
   id            Int        @id @default(autoincrement())
-  tournamentId  Int?
   winnerId      Int?
   startedAt     DateTime?
   endedAt       DateTime?
 
-  tournament    Tournament? @relation(fields: [tournamentId], references: [id], onDelete: SetNull)
   winner        User?       @relation("MatchWinner", fields: [winnerId], references: [id], onDelete: SetNull)
   participants  MatchParticipant[]
 
-  @@index([tournamentId])
   @@index([winnerId])
 }
 

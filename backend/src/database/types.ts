@@ -27,6 +27,14 @@ export interface IUserProfile {
   avatarType: AvatarType;
 }
 
+export interface IMatchData {
+  id: number;
+  startedAt: Date;
+  endedAt: Date;
+  winnerId: number;
+  participants: { userId: number; score: number; isWinner: boolean }[];
+}
+
 // Uniform DB return type: { ok: boolean, data: T | string }
 export type DbOk<T> = { ok: true; data: T };
 export type DbErr = { ok: false; data: string };
