@@ -5,6 +5,7 @@ import speakeasy from "speakeasy";
 import { validatePassword, PASSWORD_ERROR_MESSAGE } from "utils/validatePassword";
 import { validateUsername, USERNAME_ERROR_MESSAGE } from "utils/validateUsername";
 import { UserStatus } from "@prisma/client";
+import { IUserData } from "database/types";
 
 export interface IUserPayload {
   id: string;
@@ -129,7 +130,7 @@ export async function verify2FALogin(req: AuthenticatedRequest<IVerify2FALoginBo
       data: { status: UserStatus.ONLINE },
     });
   } catch (err) {
-    return reply.code(500).send({ error: "Failed set online status" });
+    return reply.code(500).send({ error: "Failed to set online status" });
   }
 
   reply.send({ token: jwtToken });
@@ -199,7 +200,7 @@ export async function login(req: FastifyRequest<{ Body: IAuthRequestBody }>, rep
       data: { status: UserStatus.ONLINE },
     });
   } catch (err) {
-    return reply.code(500).send({ error: "Failed set online status" });
+    return reply.code(500).send({ error: "Failed to set online status" });
   }
 
   reply
@@ -227,7 +228,11 @@ export async function logout(req: FastifyRequest, reply: FastifyReply) {
       data: { status: UserStatus.OFFLINE },
     });
   } catch (err) {
-    return reply.code(500).send({ error: "Failed set online status" });
+    return reply
+      .clearCookie("accessToken", { path: "/", sameSite: "lax", secure: true })
+      .clearCookie("refreshToken", { path: "/", sameSite: "lax", secure: true })
+      .code(500)
+      .send({ error: "Failed to set offline status" });
   }
   reply
     .clearCookie("accessToken", { path: "/", sameSite: "lax", secure: true })
@@ -240,10 +245,6 @@ export async function verify_player(req: FastifyRequest<{ Body: IAuthGuestReques
 
   if (!username || !password) {
     return reply.code(400).send({ error: "Username and password are required" });
-  }
-
-  if (!Array.isArray(guestList) || !guestList.every((n) => typeof n === "number")) {
-    return reply.code(400).send({ error: "guestList must be number[]" });
   }
 
   const user = await req.server.db.user.findUnique({
@@ -259,7 +260,7 @@ export async function verify_player(req: FastifyRequest<{ Body: IAuthGuestReques
 
   if (!user) return reply.code(401).send({ error: "Invalid username or password" });
 
-  if (guestList.includes(user.id)) reply.code(400).send({ error: "Guest already exists" });
+  if (guestList.includes(user.id)) return reply.code(400).send({ error: "Guest already exists" });
 
   const valid = await bcrypt.compare(password, user.passwordHash);
   if (!valid) return reply.code(401).send({ error: "Invalid username or password" });

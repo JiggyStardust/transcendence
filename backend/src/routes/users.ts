@@ -33,8 +33,6 @@ const userRoutes: FastifyPluginAsync = async (fastify): Promise<void> => {
 
   fastify.patch("/user", { preHandler: [verifyToken] }, updateDisplayName);
   fastify.patch("/user/password", { preHandler: [verifyToken] }, updatePassword);
-
-  return;
 };
 
 export default userRoutes;
