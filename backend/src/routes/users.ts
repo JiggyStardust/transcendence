@@ -1,8 +1,7 @@
 import { signup, login, verify_player, logout } from "../authentication/authController";
 import { updateDisplayName, updatePassword } from "../authentication/userController";
 import type { FastifyPluginAsync } from "fastify";
-import meRoutes from "./me";
-import publicProfileRoutes from "./publicProfileRoutes";
+import { verifyToken } from "../authentication/authMiddleware";
 
 const userRoutes: FastifyPluginAsync = async (fastify): Promise<void> => {
   // public routes
@@ -12,10 +11,30 @@ const userRoutes: FastifyPluginAsync = async (fastify): Promise<void> => {
    fastify.post("/logout", logout);
 
   // protected routes
-  fastify.patch("/user", { preHandler: [fastify.authenticate] }, updateDisplayName);
-  fastify.patch("/user/password", { preHandler: [fastify.authenticate] }, updatePassword);
+  fastify.post("/verify_player", {
+    preHandler: [verifyToken],
+    handler: verify_player,
+    schema: {
+      body: {
+        type: "object",
+        required: ["username", "password", "guestList"],
+        properties: {
+          username: { type: "string" },
+          password: { type: "string" },
+          guestList: {
+            type: "array",
+            items: { type: "integer" },
+          },
+        },
+        additionalProperties: false,
+      },
+    },
+  });
 
-  return;
+  fastify.post("/logout", { preHandler: [verifyToken], handler: logout });
+
+  fastify.patch("/user", { preHandler: [verifyToken] }, updateDisplayName);
+  fastify.patch("/user/password", { preHandler: [verifyToken] }, updatePassword);
 };
 
 export default userRoutes;
