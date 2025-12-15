@@ -25,7 +25,7 @@ export default function NavBar() {
 				<NavLink to="/testing" className={({ isActive }) => navLinkStyles({ active: isActive })}>Testing</NavLink>
 				<NavLink to="/profile_settings" className={({ isActive }) => navLinkStyles({ active: isActive })}>Profile settings</NavLink>
 				<NavLink to="/login" className={({ isActive }) => navLinkStyles({ active: isActive })}>Log in</NavLink>
-				<NavLink to="/game" className={({ isActive }) => navLinkStyles({ active: isActive })}>Game</NavLink>
+				<NavLink to="/gameRedirect" className={({ isActive }) => navLinkStyles({ active: isActive })}>Game</NavLink>
 				<NavLink to="/tournament" className={({ isActive }) => navLinkStyles({ active: isActive })}>Tournament</NavLink>
 				<NavLink to="/players" className={({ isActive }) => navLinkStyles({ active: isActive })}>Players</NavLink>
 				<ThemeToggle />
