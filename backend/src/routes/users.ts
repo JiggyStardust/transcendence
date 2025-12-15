@@ -7,8 +7,6 @@ const userRoutes: FastifyPluginAsync = async (fastify): Promise<void> => {
   // public routes
   fastify.post("/signup", signup);
   fastify.post("/login", login);
-  fastify.post("/verify_player", verify_player);
-   fastify.post("/logout", logout);
 
   // protected routes
   fastify.post("/verify_player", {
