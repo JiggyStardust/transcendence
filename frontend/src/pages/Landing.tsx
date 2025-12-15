@@ -11,7 +11,10 @@ export default function Landing() {
       <img src={ pongImg } alt="A photo of our game" className="rounded-xl shadow-lg w-1/2"/>
       <div className="space-x-4 flex align-center">
         <Button to="/signup" variant="primary">
-          <IoMdPersonAdd className="text-vintage-red" /> Sign Up
+          <span className="text-vintage-red">
+            <IoMdPersonAdd />
+          </span>
+          Sign Up
         </Button>
       </div>
     </div>

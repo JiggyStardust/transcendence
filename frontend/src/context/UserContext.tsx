@@ -1,120 +1,169 @@
-import { createContext, useContext, useState, ReactNode } from "react";
-import { useAuth } from "./AuthContext";
+import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 import { PROXY_URL } from "../constants";
 
-// For friend list, not sure if this is the info we want
-export interface Friend {
-  id: number;
-  displayName: string;
-  avatarUrl?: string | null;
-}
+// export interface Friend {
+//   id: number;
+//   displayName: string;
+//   avatarUrl: string;
+// }
 
-// a placeholder for game stats, not sure if this is what we want/what we're going to have in database
-export interface UserStats {
-  matchesPlayed: number;
-  wins: number;
-  losses: number;
-}
+// export interface UserStats {
+//   matchesPlayed: number;
+//   wins: number;
+//   losses: number;
+// }
 
 export interface User {
   id: number;
-  username: string; // not sure if we need this at all 
+  username: string;
   displayName: string;
-  avatarUrl: string | null;
-  friends: Friend[];
-  stats: UserStats | null;
-	role: "full" | "partial"; // we have a main user logged in (full) and others have partial (no profile editing)
+  avatarUrl: string;
+  // friends: Friend[];
+  // stats: UserStats | null;
+  // role: "full" | "partial";
 }
 
 interface UserContextType {
-  user: User | null;
-  users: User[];
+  users: Record<string, User>;
 
-  loadUser: () => Promise<void>;
+  loadMe: () => Promise<User | undefined>;
+  loadUser: (username: string) => Promise<User | undefined>;
 
-  updateUser: (data: Partial<User>) => void;
-  setDisplayname: (dispayName: string) => void;
-  setAvatar: (avatarUrl: string | null) => void;
-  setStats: (stats: UserStats) => void;
-  setFriends: (friends: Friend[]) => void;
+  updateUser: (username: string, data: Partial<User>) => void;
+  setDisplayName: (username: string, displayName: string) => void;
+  setAvatar: (username: string, avatarUrl: string) => void;
+  // setStats: (username: string, stats: UserStats) => void;
+  // setFriends: (username: string, friends: Friend[]) => void;
 
-  clearUser: () => void;
+  clearUsers: () => void;
 }
 
 const UserContext = createContext<UserContextType | null>(null);
 
-export function UserProvider({ children }: { children: ReactNode }) { // anything react can render
-  const { accessToken } = useAuth();
-  const [user, setUser] = useState<User | null>(null);
+export function UserProvider({ children }: { children: ReactNode }) {
+  const [users, setUsers] = useState<Record<string, User>>({});
 
-  // Fetch user profile from backend
-  async function loadUser() {
-    if (!accessToken) return;
+  /************************** */
+  // Fetch /me (main user) 
+  /************************** */
+  
+const loadMe = useCallback(async (): Promise<User | undefined> => {
+    try {
+      const res = await fetch(PROXY_URL + "/me", {
+        credentials: "include",
+      });
 
-    const res = await fetch(PROXY_URL + "/me", { // not really sure what this API would be called
-      headers: {
-        Authorization: `Bearer ${accessToken}`
+      if (!res.ok) {
+        console.error("/me failed");
+        return undefined;
       }
-    });
 
-    if (!res.ok) {
-      console.error("Failed to load user profile");
-      return;
+      const data = await res.json();
+      const username = data.username;
+
+      console.log("Loaded me:", data);
+      console.log("avatarUrl:", data.avatarURL);
+
+      const user: User = {
+        id: data.id,
+        username: data.username,
+        displayName: data.displayName ?? data.username,
+        avatarUrl: PROXY_URL + data.avatarURL,
+        // role: "full",
+      };
+
+      setUsers((prev) => ({ ...prev, [username]: user }));
+      return user;
+    } catch (e) {
+      console.error("Error loading /me", e);
+      return undefined;
     }
+  },
+  []
+);
+  /****************************** */
+  // Fetch /users/:username (side profiles)
+  /****************************** */
 
-    const data = await res.json();
 
-    // Expecting backend response to match User structure later on.
-    setUser({
-      id: data.id,
-      username: data.username,
-      displayName: data.displayName ?? data.username, // if undefined, use the value on the right (username)
-      avatarUrl: data.avatarUrl ?? null, // we might have a default pic then?
-      friends: data.friends ?? [],
-      stats: data.stats ?? null
-    });
+const loadUser = useCallback(async (username: string): Promise<User | undefined> => {
+    try {
+      const res = await fetch(`${PROXY_URL}/users/${username}`, {
+        credentials: "include",
+      });
+
+      if (!res.ok) {
+        console.error("Failed to load user", username);
+        return undefined;
+      }
+
+      const data = await res.json();
+
+      console.log("Loaded me:", data);
+      console.log("avatarUrl:", data.avatarURL);
+
+      const user: User = {
+        id: data.id,
+        username: data.username,
+        displayName: data.displayName ?? data.username,
+        avatarUrl: PROXY_URL + data.avatarURL,
+        // role: "partial",
+      };
+
+      setUsers((prev) => ({ ...prev, [username]: user }));
+      return user;
+    } catch (e) {
+      console.error("Error fetching user", username, e);
+      return undefined;
+    }
+  },
+  []
+);
+
+  // ------------------------
+  // Helpers
+  // ------------------------
+
+
+  function updateUser(username: string, data: Partial<User>) {
+    setUsers((prev) => ({
+      ...prev,
+      [username]: { ...prev[username], ...data },
+    }));
   }
 
-// Update only specific fields (patch)
-function updateUser(data: Partial<User>) {
-  setUser((prev: User) => {
-    if (!prev) {
-			return prev; // No user loaded yet
-		}
-    return { ...prev, ...data };
-  });
-}
-
-  function setDisplayName(displayName: string) {
-    updateUser({ displayName });
+  function setDisplayName(username: string, displayName: string) {
+    updateUser(username, { displayName });
   }
 
-  function setAvatar(avatarUrl: string | null) {
-    updateUser({ avatarUrl });
+  function setAvatar(username: string, avatarUrl: string) {
+    updateUser(username, { avatarUrl });
   }
 
-  function setStats(stats: UserStats) {
-    updateUser({ stats });
-  }
+  // function setStats(username: string, stats: UserStats) {
+  //   updateUser(username, { stats });
+  // }
 
-  function setFriends(friends: Friend[]) {
-    updateUser({ friends });
-  }
+  // function setFriends(username: string, friends: Friend[]) {
+  //   updateUser(username, { friends });
+  // }
 
-  function clearUser() { // clear on logout
-    setUser(null);
+  function clearUsers() {
+    setUsers({});
   }
 
   return (
     <UserContext.Provider
       value={{
-        user,
+        users,
+        loadMe,
         loadUser,
+        updateUser,
         setDisplayName,
         setAvatar,
-        setStats,
-        setFriends,
-        clearUser,
+        // setStats,
+        // setFriends,
+        clearUsers,
       }}
     >
       {children}
@@ -124,8 +173,6 @@ function updateUser(data: Partial<User>) {
 
 export function useUser() {
   const context = useContext(UserContext);
-  if (!context) {
-    throw new Error("useUser must be used inside a UserProvider");
-  }
+  if (!context) throw new Error("useUser must be inside a UserProvider");
   return context;
 }
