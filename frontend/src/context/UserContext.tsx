@@ -1,26 +1,11 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 import { PROXY_URL } from "../constants";
 
-// export interface Friend {
-//   id: number;
-//   displayName: string;
-//   avatarUrl: string;
-// }
-
-// export interface UserStats {
-//   matchesPlayed: number;
-//   wins: number;
-//   losses: number;
-// }
-
 export interface User {
   id: number;
   username: string;
   displayName: string;
   avatarUrl: string;
-  // friends: Friend[];
-  // stats: UserStats | null;
-  // role: "full" | "partial";
 }
 
 interface UserContextType {
@@ -32,8 +17,6 @@ interface UserContextType {
   updateUser: (username: string, data: Partial<User>) => void;
   setDisplayName: (username: string, displayName: string) => void;
   setAvatar: (username: string, avatarUrl: string) => void;
-  // setStats: (username: string, stats: UserStats) => void;
-  // setFriends: (username: string, friends: Friend[]) => void;
 
   clearUsers: () => void;
 }
@@ -107,7 +90,6 @@ const loadUser = useCallback(async (username: string): Promise<User | undefined>
         username: data.username,
         displayName: data.displayName ?? data.username,
         avatarUrl: PROXY_URL + data.avatarURL,
-        // role: "partial",
       };
 
       setUsers((prev) => ({ ...prev, [username]: user }));
@@ -140,14 +122,6 @@ const loadUser = useCallback(async (username: string): Promise<User | undefined>
     updateUser(username, { avatarUrl });
   }
 
-  // function setStats(username: string, stats: UserStats) {
-  //   updateUser(username, { stats });
-  // }
-
-  // function setFriends(username: string, friends: Friend[]) {
-  //   updateUser(username, { friends });
-  // }
-
   function clearUsers() {
     setUsers({});
   }
@@ -161,8 +135,6 @@ const loadUser = useCallback(async (username: string): Promise<User | undefined>
         updateUser,
         setDisplayName,
         setAvatar,
-        // setStats,
-        // setFriends,
         clearUsers,
       }}
     >

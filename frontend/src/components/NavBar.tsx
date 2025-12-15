@@ -20,9 +20,9 @@ export default function NavBar() {
 			<span className="text-lg font-extrabold font-tomorrow text-vintage-yellow">
 				<NavLink to="/">Ping of Pongs</NavLink>
 			</span>
-			<div className="flex gap-5 items-center no-scrollbar overflow-x-auto">
+			<div className="flex gap-5 items-center">
 				<NavLink to="/testing" className={({ isActive }) => navLinkStyles({ active: isActive })}>Testing</NavLink>
-				<NavLink to="/profile_settings" className={({ isActive }) => navLinkStyles({ active: isActive })}>Profile settings</NavLink>
+				<NavLink to="/settings" className={({ isActive }) => navLinkStyles({ active: isActive })}>Settings</NavLink>
 				<NavLink to="/login" className={({ isActive }) => navLinkStyles({ active: isActive })}>Log in</NavLink>
 				<NavLink to="/game" className={({ isActive }) => navLinkStyles({ active: isActive })}>Game</NavLink>
 				<NavLink to="/players" className={({ isActive }) => navLinkStyles({ active: isActive })}>Players</NavLink>
