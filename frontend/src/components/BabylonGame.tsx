@@ -57,7 +57,8 @@ export default function BabylonGame() {
         game.canvas = canvasRef.current;
         game.engine = new BABYLON.Engine(game.canvas, true);
         gameRef.current = game;
-
+        
+        game.hasThirdPlayer = false;
         if (window.numberOfPlayers === 3)
           game.hasThirdPlayer = true;
 
@@ -73,7 +74,6 @@ export default function BabylonGame() {
         game.score.p2 = 0;
         game.infoSaved = false;
         game.currentState = game.state.start;
-        game.hasThirdPlayer = false;
 
         game.engine.runRenderLoop(() => {
           if (!isMounted) return;
