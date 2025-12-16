@@ -3,18 +3,44 @@ import Input from "../components/Input";
 import { Button} from "../components/Button";
 import { PROXY_URL } from "../constants";
 import { useNavigate } from "react-router-dom";
-import { FiAlertCircle } from "react-icons/fi";
 import { passwordRequirements } from "../constants/passwordRequirements";
+import { useAppToast } from "../context/ToastContext";
+import { type Status } from "../types/types";
+
+const usernameRequirementsList = () => {
+	return (
+		<div>
+			<p className="font-semibold mb-1">Username requirements:</p>
+			<ul className="list-disc list-inside space-y-1">
+				<li>At least 3 characters</li>
+				<li>Unique (not taken by other user)</li>
+			</ul>
+		</div>
+	)
+}
+
+const passwordRequirementsList = () => {
+	return (
+		<div>
+			<p className="font-semibold mb-1">Password requirements:</p>
+			<ul className="list-disc list-inside space-y-1">
+				{passwordRequirements.map((req) => (
+				  <li key={req}>{req}</li>
+				))}
+			</ul>
+		</div>
+	)
+}
 
 export default function SignUp() {
 
-	const [information, setInformation] = useState("");
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
+	const [usernameStatus, setUsernameStatus] = useState<Status | null>(null);
+	const [passwordStatus, setPasswordStatus] = useState<Status | null>(null);
 
 	const navigate = useNavigate();
-
-// In this function we actually try to sign up
+	const { showToast } = useAppToast();
 
 	async function handleSignUp(e: React.FormEvent<HTMLFormElement>) {
 	
@@ -32,17 +58,18 @@ export default function SignUp() {
 
     if (!res.ok) {
       console.log(data);
-	  	setInformation("SignUp failed!");
+	  	showToast("Error: " + data.error, "error");
       return;
     }
     console.log("SignUp was succesfull:", data);
+		showToast("You have successfully created an account, you still need to log in to access the game", "success");
 		navigate("/login");
 	}
 
 // Here we check if username is already in use (saved to backend)
 // This function is called onBlur = after the "username" field is left (finished typing)
 
-	async function usernameInUse(name: string): Promise<boolean> {
+	async function usernameInUse(name: string) {
 	
 		const url = PROXY_URL + "/users/check-username?username=" + name;
 		console.log(url);
@@ -55,21 +82,20 @@ export default function SignUp() {
 				}
 			});
 			
-		console.log("fetch response status: ", res.status); // log HTTP status
-			
-		if (!res.ok){ 			// backend responded with an error status
-			console.error("Username check failed:", res.status);
-			return (false);
-		}
-		
-		const data = await res.json();			
-		console.log("data from check-username:", data);
-		return !data.available; // return true if username is free
+			console.log("fetch response status: ", res.status); // log HTTP status
+
+			const data = await res.json();
+				
+			if (!res.ok){ 			// backend responded with an error status
+				console.error("Username check failed:", res.status);
+				showToast("Something went wrong with username check, try again later.", "error");
+			}
+			return (data);
 		} 
-		
 		catch (err) {			// network error, backend doesnt work / is offline or something
 			console.error("Network error checking username:", err);
-			return (false);
+			showToast("Something went wrong with username check, try again later.", "error");
+			return (null);
 		}
 	}
 
@@ -78,22 +104,20 @@ export default function SignUp() {
 	  console.log(username);
 	  setUsername(username);
 	  if (username === "") {
-			setInformation("Username can not be empty");
+			setUsernameStatus({type: "warning", message: "Username can not be empty."});
 	  } else {
-			setInformation("");
+			setUsernameStatus(null);
 	  }
 	}
- // "Password must be at least 8 chars, with upper, lower, digit, special character";
- // This should be displayed somewhere!
 
 	function handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const password = e.target.value;
 		setPassword(password);
 		console.log(password);
 		if (password === "") {
-			setInformation("Password can not be empty");
+			setPasswordStatus({type: "warning", message: "Password can not be empty"});
 		} else {
-			setInformation(""); 
+			setPasswordStatus(null);
 		}
 	}
 
@@ -103,66 +127,47 @@ export default function SignUp() {
     
 		const value = e.target.value;
 		if (value === "") {
-			setInformation("Username can not be empty!");
+			setUsernameStatus({type: "warning", message: "Username can not be empty!"});
 			return;
 		}
-
-    const taken = await usernameInUse(value);
-    if (taken) {
-			setInformation("Username already taken");
-		 } else {
-			setInformation(""); // clear message
+    const data = await usernameInUse(value);
+		console.log("data from check-username:", data);
+		if (!data.available) {
+			setUsernameStatus({type: "error", message: "Username is already in use, choose a unique one."})
+		}
+		else {
+			setUsernameStatus({type: "ok", message: "Looks good!"});
 		}
   }
 
 	return (
-		<div className="flex flex-col w-screen items-center justify-center min-h-screen transition-colors duration-300">
-		  <p className="mt-10 text-lg text-center max-w-md">
- 				This is where you SignUp!
-	 	  </p>
-			<form onSubmit={handleSignUp} className="px-4 py-8 border border-white rounded-lg ">
-				<div>
-					{information && (
-						<div className="flex items-center gap-2 text-red-500 font-bold mb-2">
-							<FiAlertCircle className="text-xl" />
-							<span>{information}</span>
-						</div>
-					)}
-				</div>
-				<Input 
-			  	id="username"
-			  	label="Username:" 
-			  	type="text" 
-			  	value={username} 
-			  	onChange={handleUsernameChange}
-			  	onBlur={handleUsernameBlur}
-					focusTooltip={
-					<div>
-  					<p className="font-semibold mb-1">Username requirements:</p>
-  					<ul className="list-disc list-inside space-y-1">
-   						<li>At least 3 characters</li>
-    					<li>Unique (not taken by other user)</li>
-  					</ul>
-					</div>
-				}/>
-				<Input
-			  	id="password" 
-				  label="Password:" 
-			 		type="password" 
-			 		value={password} 
-			 		onChange={handlePasswordChange}
-					focusTooltip={
-					<div>
-  					<p className="font-semibold mb-1">Password requirements:</p>
-  					<ul className="list-disc list-inside space-y-1">
-   						{passwordRequirements.map((req) => (
-							  <li key={req}>{req}</li>
-							))}
-  					</ul>
-					</div>
-				}/>
-				<Button>Sign up</Button>
-			</form>
+		<div className="flex flex-col items-center justify-center gap-4 mt-36">
+			<h2 className="font-tomorrow font-bold text-3xl text-vintage-red dark:text-vintage-yellow ">Please sign up!</h2>
+			<div className="flex flex-col items-center bg-stone-700/50 dark:bg-stone-500 rounded-3xl p-8 gap-4">
+				<form onSubmit={handleSignUp} className="flex flex-col items-center gap-4">
+					<Input 
+				  	id="username"
+				  	label="Username:" 
+				  	type="text" 
+				  	value={username} 
+						status={usernameStatus || undefined}
+				  	onChange={handleUsernameChange}
+				  	onBlur={handleUsernameBlur}
+						focusTooltip={usernameRequirementsList()}/>
+					<Input
+				  	id="password" 
+					  label="Password:" 
+				 		type="password" 
+				 		value={password}
+						status={passwordStatus || undefined}
+				 		onChange={handlePasswordChange}
+						focusTooltip={passwordRequirementsList()}/>
+					<Button
+						disabled={usernameStatus === null || password === "" || usernameStatus.type !== "ok" }>
+							Sign up
+					</Button>
+				</form>
+			</div>
 		</div>
 	);
 }

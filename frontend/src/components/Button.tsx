@@ -51,7 +51,7 @@ export const Button = ({ to, onClick, children, variant = "primary", size = "md"
   };
 
   return (
-	<button onClick={handleClick} className={buttonStyles({ variant, size, disabled })}>
+	<button disabled={disabled} onClick={handleClick} className={buttonStyles({ variant, size, disabled })}>
     <div className="flex gap-2 items-center">
 			{children}
     </div>

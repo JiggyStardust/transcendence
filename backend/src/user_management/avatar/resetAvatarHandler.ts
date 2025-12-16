@@ -8,7 +8,7 @@ export interface IResetAvatarParams {
   username: string;
 }
 
-const DEFAULT_AVATAR_URL = "/uploads/avatars/default.jpeg";
+const DEFAULT_AVATAR_URL = "/uploads/avatars/default.png";
 
 export const resetAvatarHandler = async (req: FastifyRequest<{ Params: IResetAvatarParams }>, reply: FastifyReply) => {
   const authUser = (req as any).user;

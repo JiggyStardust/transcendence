@@ -25,9 +25,6 @@ const checkUsernameOpts: RouteShorthandOptions<
         username: {
           type: "string",
           minLength: 3,
-          // TODO: Discuss username normalization rules
-          // maxLength: 30,
-          // pattern: "^[a-zA-Z0-9_]+$",
         },
       },
       required: ["username"],
@@ -46,22 +43,20 @@ const checkUsernameOpts: RouteShorthandOptions<
   },
 };
 
-const checkUsernameHandler = async (
-  req: FastifyRequest<{ Querystring: CheckUsernameQuery }>,
-  reply: FastifyReply,
-) => {
+const checkUsernameHandler = async (req: FastifyRequest<{ Querystring: CheckUsernameQuery }>, reply: FastifyReply) => {
   const { username } = req.query;
-  const user: DbResult<IUserData> = await req.server.db.getUser(username);
-  const available = !user.ok;
+  const conflict = await req.server.db.user.findFirst({
+    where: {
+      OR: [{ username }, { displayName: username }],
+    },
+    select: { id: true },
+  });
+  const available = conflict === null;
   return { available };
 };
 
 const checkUsernameRoute: FastifyPluginAsync = async (fastify) => {
-  fastify.get<{ Querystring: CheckUsernameQuery }>(
-    "/check-username",
-    checkUsernameOpts,
-    checkUsernameHandler,
-  );
+  fastify.get<{ Querystring: CheckUsernameQuery }>("/check-username", checkUsernameOpts, checkUsernameHandler);
 };
 
 export default checkUsernameRoute;
