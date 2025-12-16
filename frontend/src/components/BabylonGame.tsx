@@ -1,6 +1,8 @@
 // @ts-nocheck
 import { useEffect, useRef, useState } from 'react';
 import { useGame } from '../../src/context/GameContext';
+import { useUser } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 export default function BabylonGame() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -8,10 +10,32 @@ export default function BabylonGame() {
   const gameRef = useRef<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const initializedRef = useRef(false);
+  const { users, user } = useUser();
+  const [me, setMe] = useState(null);
+  const navigate = useNavigate();
+
+  // Load user data once on mount
+  useEffect(() => {
+    const loadUserData = async () => {
+      if (user) {
+        setMe(user);
+      }
+    };
+    loadUserData();
+  }, [user]);
+
+
 
   useEffect(() => {
-    if (!canvasRef.current) return;
+    // Check for correct number of players
+    const numberOfUsers = Object.values(users).length;
+    if (numberOfUsers != 4) {
+      navigate("/");
+      return;
+    }
 
+    // Return if canvas is not made yet
+    if (!canvasRef.current) return;
     if (initializedRef.current) return;
     initializedRef.current = true;
     let isMounted = true;
