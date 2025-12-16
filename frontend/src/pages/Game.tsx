@@ -19,30 +19,38 @@ const GameRedirect = () => {
       console.log("Number of users:", numberOfUsers);
 
       clearPlayers();
-      var user1 = "";
-      var user2 = "";
-      var user3 = "";
+      var name1 = "";
+      var name2 = "";
+      var name3 = "";
+      var id1 = 0;
+      var id2 = 0;
+      var id3 = 0;
       switch (numberOfUsers) {
         case 2:
           console.log("case 2");
-          user1 = Object.values(users)[0]?.displayName || me?.displayName;
-          user2 = Object.values(users)[1]?.displayName || me?.displayName;
+          name1 = Object.values(users)[0]?.displayName || me?.displayName;
+          name2 = Object.values(users)[1]?.displayName || me?.displayName;
+          id1 = Object.values(users)[0]?.id || me?.id;
+          id2 = Object.values(users)[1]?.id || me?.id;
           setGameType("regular");
           setPlayers([
-            { id: "1", displayName: user1 },
-            { id: "2", displayName: user2 }
-          ]);
+            { id: id1, displayName: name1 },
+            { id: id2, displayName: name2 }
+          ])
           break;
         case 3:
           console.log("case 3");
-          user1 = Object.values(users)[0]?.displayName || me?.displayName;
-          user2 = Object.values(users)[1]?.displayName || me?.displayName;
-          user3 = Object.values(users)[2]?.displayName || me?.displayName;
+          name1 = Object.values(users)[0]?.displayName || me?.displayName;
+          name2 = Object.values(users)[1]?.displayName || me?.displayName;
+          name3 = Object.values(users)[2]?.displayName || me?.displayName;
+          id1 = Object.values(users)[0]?.id || me?.id;
+          id2 = Object.values(users)[1]?.id || me?.id;
+          id3 = Object.values(users)[2]?.id || me?.id;
           setGameType("multiplayer");
           setPlayers([
-            { id: "1", displayName: user1 },
-            { id: "2", displayName: user2 },
-            { id: "3", displayName: user3 }
+            { id: id1, displayName: name1 },
+            { id: id2, displayName: name2 },
+            { id: id3, displayName: name3 }
           ]);
           break;
         case 4:

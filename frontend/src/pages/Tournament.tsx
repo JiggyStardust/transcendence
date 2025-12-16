@@ -3,6 +3,7 @@ import { Button } from "../components/Button.tsx";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from '../context/GameContext';
+import { useUser } from "../context/UserContext";
 import { useEffect } from "react";
 
 const Match = ({game_number, player_1, player_2, active=true, onStartGame, winner}: {game_number: string, player_1: string, player_2:string, active?: boolean, onStartGame?: () => void, winner?: string | null}) => {
@@ -31,15 +32,20 @@ const Match = ({game_number, player_1, player_2, active=true, onStartGame, winne
 export default function Tournament() {
   const navigate = useNavigate();
   const { gameState, setPlayers, setGameType, clearPlayers, setGameNumber } = useGame();
+  const { users, loadMe } = useUser();
 
   console.log("Tournament page!");
-  const handleStartGame = (gameNumber: number, player1: string, player2: string) => {
+  const handleStartGame = (gameNumber: number,
+                            p1name: string,
+                            p2name: string,
+                            p1id: number,
+                            p2id: number) => {
     clearPlayers();
     setGameType("tournament");
     setGameNumber(gameNumber);
     setPlayers([
-      { id: "1", displayName: player1 },
-      { id: "2", displayName: player2 }
+      { id: p1id, displayName: p1name },
+      { id: p2id, displayName: p2name }
     ]);
 
     setTimeout(() => {
@@ -50,8 +56,26 @@ export default function Tournament() {
   // Check if game 3 should be active (both game 1 and 2 are complete)
   const isGame3Active = gameState.game1Winner && gameState.game2Winner;
 
+
+  const me = loadMe();
+
+  const name1 = Object.values(users)[0]?.displayName || me?.displayName;
+  const name2 = Object.values(users)[1]?.displayName || me?.displayName;
+  const name3 = Object.values(users)[2]?.displayName || me?.displayName;
+  const name4 = Object.values(users)[3]?.displayName || me?.displayName;
+  const id1 = Object.values(users)[0]?.id || me?.id;
+  const id2 = Object.values(users)[1]?.id || me?.id;
+  const id3 = Object.values(users)[2]?.id || me?.id;
+  const id4 = Object.values(users)[3]?.id || me?.id;
+  const game1WinnerName = gameState.game1Winner?.displayName ?? null;
+  const game2WinnerName = gameState.game2Winner?.displayName ?? null;
+  const game3WinnerName = gameState.game3Winner?.displayName ?? null;
+
+
   // Warn user on page refresh or tab close
   useEffect(() => {
+
+
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault();
       e.returnValue = "Refreshing will reset tournament data!";
@@ -70,25 +94,25 @@ export default function Tournament() {
       <div className="flex flex-col items-start gap-4">
         <Match
           game_number="Game 1"
-          player_1={"PlayerA"}
-          player_2={"PlayerB"}
-          winner={gameState.game1Winner}
-          onStartGame={() => handleStartGame(1, "PlayerA", "PlayerB")}
+          player_1={name1}
+          player_2={name2}
+          winner={game1WinnerName}
+          onStartGame={() => handleStartGame(1, name1, name2, id1, id2)}
         />
         <Match
           game_number="Game 2"
-          player_1={"PlayerC"}
-          player_2={"PlayerD"}
-          winner={gameState.game2Winner}
-          onStartGame={() => handleStartGame(2, "PlayerC", "PlayerD")}
+          player_1={name3}
+          player_2={name4}
+          winner={game2WinnerName}
+          onStartGame={() => handleStartGame(2, name3, name4, id3, id4)}
         />
         <Match
           game_number="Game 3"
-          player_1={gameState.game1Winner || "Winner of Game 1"}
-          player_2={gameState.game2Winner || "Winner of Game 2"}
-          winner={gameState.game3Winner}
+          player_1={game1WinnerName || "Winner of Game 1"}
+          player_2={game2WinnerName || "Winner of Game 2"}
+          winner={game3WinnerName}
           active={isGame3Active}
-          onStartGame={() => handleStartGame(3, gameState.game1Winner!, gameState.game2Winner!)}
+          onStartGame={() => handleStartGame(3, game1WinnerName!, game2WinnerName!)}
         />
       </div>
     </div>

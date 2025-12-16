@@ -12,9 +12,9 @@ export interface GameState {
   gameType: GameType | null;
   players: Player[];
   gameNumber: number;
-  game1Winner: string | null;
-  game2Winner: string | null;
-  game3Winner: string | null;
+  game1Winner: Player | null;
+  game2Winner: Player | null;
+  game3Winner: Player | null;
 }
 
 interface GameContextType {
