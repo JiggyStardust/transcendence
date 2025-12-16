@@ -29,7 +29,7 @@ export default function BabylonGame() {
   useEffect(() => {
     // Check for correct number of players
     const numberOfUsers = Object.values(users).length;
-    if (numberOfUsers != 4) {
+    if (numberOfUsers < 2) {
       navigate("/");
       return;
     }

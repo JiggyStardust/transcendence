@@ -35,67 +35,6 @@ const CardFrame = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-<<<<<<< HEAD
-const LoggedInCard = ({ card }: { card: LoggedIn }) => {
-  return (
-    <CardFrame className="flex flex-col items-center justify-center gap-4">
-      <img src={card.avatarUrl} className="w-28 h-28 object-cover rounded-full" alt={"Avatar Image of " + card.name}/>
-      <p className="font-semibold text-2xl">{card.name}</p>
-    </CardFrame>
-  )
-}
-
-type PendingCardProps = {
-  card: Pending;
-  setCards: React.Dispatch<React.SetStateAction<PlayerCard[]>>
-  onUpdate: (id: string, updates: Partial<Pending>) => void;
-  handleLogin: (player: Pending) => void;
-};
-
-const PendingCard = ({ card, setCards, onUpdate, handleLogin}: PendingCardProps) => {
-
-  const removeCard = (id: string) => {
-    // console.log("remove card clicked");
-    setCards(prevCards =>
-      prevCards.filter(c => c.id !== id)
-    );
-  };
-
-  return (
-    <CardFrame>
-      <button className="absolute top-4 right-4 cursor-pointer"
-        onClick={() => removeCard(card.id)}>
-        <FiXCircle size={20} />
-      </button>
-      <div className="absolute bottom-6 inset-x-0 flex flex-col items-center gap-3 px-4">
-        <Input id={"username-" + card.id} label="Username" value={card.username} onChange={(e) => onUpdate(card.id, { username: e.target.value })}/>
-        <Input type="password" id={"password-" + card.id} label="Password" value={card.password} onChange={(e) => onUpdate(card.id, { password: e.target.value })}/>
-        <Button onClick={() => handleLogin(card)}>Log in</Button>
-        {card.error && <p className="text-red-500 text-sm mt-2">{card.error}</p>}
-      </div>
-    </CardFrame>
-  )
-}
-
-type PlayerCardProps = {
-  card: PlayerCard;
-  onUpdate: (id: string, updates: Partial<Pending>) => void;
-  handleLogin: (card: Pending) => void;
-  setCards: React.Dispatch<React.SetStateAction<PlayerCard[]>>
-};
-
-const PlayerCardComponent = ({ card, onUpdate, handleLogin, setCards }: PlayerCardProps) => {
-  switch (card.type) {
-    case "loggedIn":
-      return <LoggedInCard card={card} />;
-    case "pending":
-      return (
-        <PendingCard
-          card={card}
-          onUpdate={onUpdate}
-          handleLogin={handleLogin}
-          setCards={setCards}
-=======
 const LoggedInCard = ({ card }: { card: LoggedIn }) => (
   <CardFrame>
     <div className="flex flex-col items-center justify-center h-full gap-4">
@@ -103,7 +42,6 @@ const LoggedInCard = ({ card }: { card: LoggedIn }) => (
         src={card.avatarUrl}
         className="w-28 h-28 rounded-full object-cover"
         alt={`Avatar of ${card.name}`}
->>>>>>> 49429fd09a6bc23e6ed67aa1eae5777e0d491576
         />
       <p className="text-2xl font-semibold">{card.name}</p>
     </div>

@@ -1,12 +1,9 @@
-<<<<<<< HEAD
 // @ts-nocheck
-=======
 import { FiCheck } from "react-icons/fi";
 import { FiAlertOctagon } from "react-icons/fi";
 import { FiXOctagon } from "react-icons/fi";
 import { type Status } from "../types/types";
 
->>>>>>> 49429fd09a6bc23e6ed67aa1eae5777e0d491576
 type InputProps = {
   id: string;
   label: string;
