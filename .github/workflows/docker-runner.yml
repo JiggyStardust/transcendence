@@ -72,13 +72,13 @@ jobs:
           exit 1
 
       - name: Call /health from inside the backend container
-        run: docker compose exec -T backend sh -c 'curl -fsS "http://localhost:$BACKEND_PORT/health"'
+        run: docker compose exec -T backend sh -c 'curl -kfsS "https://localhost:$BACKEND_PORT/health"'
 
       - name: Call /api/health from inside the frontend container
-        run: docker compose exec -T frontend sh -c 'curl -fsS "http://localhost:$VITE_PORT/api/health"'
+        run: docker compose exec -T frontend sh -c 'curl -kfsS "https://localhost:$VITE_PORT"'
 
       - name: Call api/health frontend over host
-        run: curl -fsS "http://localhost:$VITE_PORT/api/health"
+        run: curl -kfsS "https://localhost:$VITE_PORT/api/health"
 
       - name: Tear down
         if: always()

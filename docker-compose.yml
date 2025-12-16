@@ -7,12 +7,14 @@ services:
     ports: ["${VITE_PORT}:${VITE_PORT}"]
     volumes:
       - ./frontend:/app
+      - ./backend/certs/backend.pem:/certs/backend-ca.pem:ro
       - /app/node_modules
     environment:
       - VITE_PORT=${VITE_PORT}
       - VITE_HOST=${VITE_HOST}
       - VITE_ALLOWED_HOST_NAME=${VITE_ALLOWED_HOST_NAME}
       - VITE_LOCAL_BACKEND_URL=${DOCKER_BACKEND_URL}
+      - NODE_EXTRA_CA_CERTS=/certs/backend-ca.pem
     depends_on:
       backend:
         condition: service_healthy
@@ -29,6 +31,7 @@ services:
       - ./backend/src:/app/src
       - ./backend/prisma:/app/prisma
       - ./backend/uploads:/app/uploads
+      - ./backend/certs:/app/certs:ro
       - /app/node_modules
     environment:
       - BACKEND_PORT=${BACKEND_PORT}

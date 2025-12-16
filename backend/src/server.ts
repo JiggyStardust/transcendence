@@ -1,5 +1,6 @@
 import "dotenv/config";
 import path from "path";
+import fs from "fs";
 
 import Fastify from "fastify";
 
@@ -22,7 +23,13 @@ import publicProfileRoutes from "./routes/publicProfileRoutes";
 const PORT = parseInt(process.env.BACKEND_PORT ?? "4000");
 const HOST = process.env.BACKEND_HOST || "localhost";
 
-const fastify = Fastify({ logger: { level: "error" } });
+const fastify = Fastify({
+  logger: { level: "error" },
+  https: {
+    key: fs.readFileSync(path.join(process.cwd(), "certs/backend-key.pem")),
+    cert: fs.readFileSync(path.join(process.cwd(), "certs/backend.pem")),
+  },
+});
 
 // register cookies
 fastify.register(fastifyCookie, {
@@ -40,7 +47,7 @@ export default fastify;
 
 // register middleware
 fastify.register(cors, {
-  origin: ["http://" + HOST + ":" + PORT],
+  origin: ["https://" + HOST + ":" + PORT],
   credentials: true,
 });
 fastify.register(formbody);
@@ -77,7 +84,7 @@ fastify.get("/health", async (request, reply) => {
 const start = async () => {
   try {
     fastify.listen({ host: HOST, port: PORT });
-    console.log("Server running on http://" + HOST + ":" + PORT);
+    console.log("Server running on https://" + HOST + ":" + PORT);
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
