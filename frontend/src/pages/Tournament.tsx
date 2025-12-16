@@ -1,11 +1,9 @@
 // @ts-nocheck
 import { Button } from "../components/Button.tsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from '../context/GameContext';
 import { useUser } from "../context/UserContext";
-import { useEffect } from "react";
-
 
 const Match = ({game_number, player_1, player_2, active=true, onStartGame, winner}: {game_number: string, player_1: string, player_2:string, active?: boolean, onStartGame?: () => void, winner?: string | null}) => {
   return (
@@ -33,7 +31,18 @@ const Match = ({game_number, player_1, player_2, active=true, onStartGame, winne
 export default function Tournament() {
   const navigate = useNavigate();
   const { gameState, setPlayers, setGameType, clearPlayers, setGameNumber } = useGame();
-  const { users, loadMe } = useUser();
+  const { users, user } = useUser();
+  const [me, setMe] = useState(null);
+
+  // Load user data once on mount
+  useEffect(() => {
+    const loadUserData = async () => {
+      if (user) {
+        setMe(user);
+      }
+    };
+    loadUserData();
+  }, [user]);
 
   const handleStartGame = (gameNumber: number,
                             p1name: string,
@@ -56,10 +65,7 @@ export default function Tournament() {
   // Check if game 3 should be active (both game 1 and 2 are complete)
   const isGame3Active = gameState.game1Winner && gameState.game2Winner;
 
-  // Load the user context
-  const me = loadMe();
-
-  // Check for correct number of players in the case that user types /tournament directly
+  // Check for correct number of players
   const numberOfUsers = Object.values(users).length;
   if (numberOfUsers != 4) {
     navigate("/");
@@ -74,15 +80,12 @@ export default function Tournament() {
   const id2 = Object.values(users)[1]?.id || me?.id;
   const id3 = Object.values(users)[2]?.id || me?.id;
   const id4 = Object.values(users)[3]?.id || me?.id;
-  const game1WinnerName = gameState.game1Winner?.displayName ?? null;
-  const game2WinnerName = gameState.game2Winner?.displayName ?? null;
-  const game3WinnerName = gameState.game3Winner?.displayName ?? null;
-
+  const game1WinnerName = gameState.game1Winner ?? null;
+  const game2WinnerName = gameState.game2Winner ?? null;
+  const game3WinnerName = gameState.game3Winner ?? null;
 
   // Warn user on page refresh or tab close
   useEffect(() => {
-
-
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault();
       e.returnValue = "Refreshing will reset tournament data!";

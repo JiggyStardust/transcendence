@@ -19,12 +19,8 @@ const GameRedirect = () => {
       const numberOfUsers = Object.values(users).length;
 
       clearPlayers();
-      var name1 = "";
-      var name2 = "";
-      var name3 = "";
-      var id1 = 0;
-      var id2 = 0;
-      var id3 = 0;
+      var name1, name2, name3 = "";
+      var id1, id2, id3 = 0;
       switch (numberOfUsers) {
         case 2:
           name1 = Object.values(users)[0]?.displayName || me?.displayName;
