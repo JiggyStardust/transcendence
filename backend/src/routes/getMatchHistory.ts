@@ -4,10 +4,10 @@ import { getUserMatches } from "../database/utils/getUserMatches";
 export default async function matchHistory(fastify: FastifyInstance) {
     fastify.get("/match_history", async (req, reply) => {
         try {
-            const { userId } = req.query as { userId: number };
+            const userId = Number((req.query as { userId?: string }).userId);
 
             //validation
-            if (userId === undefined) {
+            if (!userId) {
                 return reply.code(400).send({ error: " Missing required param: userId" });
             }
 
