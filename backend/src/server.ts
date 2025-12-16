@@ -34,6 +34,10 @@ fastify.register(fastifyCookie, {
 // register jwt plugin
 fastify.register(fastifyJwt, {
   secret: process.env.JWT_SECRET!,
+  cookie: {
+    cookieName: "accessToken", //COOKIE_ACCESS_TOKEN or whatever it i called
+    signed: false 
+  }
 });
 
 fastify.register(authPlugin);

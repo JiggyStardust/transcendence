@@ -1,30 +1,16 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 import { PROXY_URL } from "../constants";
 
-// export interface Friend {
-//   id: number;
-//   displayName: string;
-//   avatarUrl: string;
-// }
-
-// export interface UserStats {
-//   matchesPlayed: number;
-//   wins: number;
-//   losses: number;
-// }
-
 export interface User {
   id: number;
   username: string;
   displayName: string;
   avatarUrl: string;
-  // friends: Friend[];
-  // stats: UserStats | null;
-  // role: "full" | "partial";
 }
 
 interface UserContextType {
   users: Record<string, User>;
+  mainUser: User | null;
 
   loadMe: () => Promise<User | undefined>;
   loadUser: (username: string) => Promise<User | undefined>;
@@ -32,8 +18,6 @@ interface UserContextType {
   updateUser: (username: string, data: Partial<User>) => void;
   setDisplayName: (username: string, displayName: string) => void;
   setAvatar: (username: string, avatarUrl: string) => void;
-  // setStats: (username: string, stats: UserStats) => void;
-  // setFriends: (username: string, friends: Friend[]) => void;
 
   clearUsers: () => void;
 }
@@ -41,13 +25,14 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | null>(null);
 
 export function UserProvider({ children }: { children: ReactNode }) {
+  const [mainUser, setMainUser] = useState<User | null>(null);
   const [users, setUsers] = useState<Record<string, User>>({});
 
   /************************** */
   // Fetch /me (main user) 
   /************************** */
   
-const loadMe = useCallback(async (): Promise<User | undefined> => {
+  const loadMe = useCallback(async (): Promise<User | undefined> => {
     try {
       const res = await fetch(PROXY_URL + "/me", {
         credentials: "include",
@@ -73,20 +58,20 @@ const loadMe = useCallback(async (): Promise<User | undefined> => {
       };
 
       setUsers((prev) => ({ ...prev, [username]: user }));
+      setMainUser(user);
       return user;
     } catch (e) {
       console.error("Error loading /me", e);
       return undefined;
     }
-  },
-  []
-);
+    },[]
+  );
   /****************************** */
   // Fetch /users/:username (side profiles)
   /****************************** */
 
 
-const loadUser = useCallback(async (username: string): Promise<User | undefined> => {
+  const loadUser = useCallback(async (username: string): Promise<User | undefined> => {
     try {
       const res = await fetch(`${PROXY_URL}/users/${username}`, {
         credentials: "include",
@@ -107,7 +92,6 @@ const loadUser = useCallback(async (username: string): Promise<User | undefined>
         username: data.username,
         displayName: data.displayName ?? data.username,
         avatarUrl: PROXY_URL + data.avatarURL,
-        // role: "partial",
       };
 
       setUsers((prev) => ({ ...prev, [username]: user }));
@@ -116,9 +100,8 @@ const loadUser = useCallback(async (username: string): Promise<User | undefined>
       console.error("Error fetching user", username, e);
       return undefined;
     }
-  },
-  []
-);
+  },[]
+  );
 
   // ------------------------
   // Helpers
@@ -140,14 +123,6 @@ const loadUser = useCallback(async (username: string): Promise<User | undefined>
     updateUser(username, { avatarUrl });
   }
 
-  // function setStats(username: string, stats: UserStats) {
-  //   updateUser(username, { stats });
-  // }
-
-  // function setFriends(username: string, friends: Friend[]) {
-  //   updateUser(username, { friends });
-  // }
-
   function clearUsers() {
     setUsers({});
   }
@@ -156,13 +131,12 @@ const loadUser = useCallback(async (username: string): Promise<User | undefined>
     <UserContext.Provider
       value={{
         users,
+        mainUser,
         loadMe,
         loadUser,
         updateUser,
         setDisplayName,
         setAvatar,
-        // setStats,
-        // setFriends,
         clearUsers,
       }}
     >

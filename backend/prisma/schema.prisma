@@ -34,7 +34,7 @@ enum AvatarType {
 model User {
   id                  Int             @id @default(autoincrement())
   username            String          @unique
-  displayName         String
+  displayName         String          @unique
   passwordHash        String
   isTwoFAenabled      Boolean         @default(false)
   twoFAsecret         String?
