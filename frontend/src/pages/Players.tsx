@@ -22,7 +22,8 @@ type Pending = {
   id: string;
   username?: string;
   password?: string;
-  status?: Status;
+  statusUsername?: Status;
+  statusPassword?: Status;
 };
 
 type PlayerCard = LoggedIn | Pending;
@@ -68,16 +69,16 @@ const PendingCard = ({
         id={`username-${card.id}`}
         label="Username"
         value={card.username}
-        status={card.status?.type === "error" ? card.status : undefined}
-        onChange={e => onUpdate(card.id, { username: e.target.value, status: undefined, })}
+        status={card.statusUsername?.type === "error" ? card.statusUsername : undefined}
+        onChange={e => onUpdate(card.id, { username: e.target.value, statusUsername: undefined, })}
         />
       <Input
         id={`username-${card.id}`}
         type="password"
         label="Password"
         value={card.password}
-        status={card.status?.type === "error" ? card.status : undefined}
-        onChange={e => onUpdate(card.id, { password: e.target.value, status: undefined, })}
+        status={card.statusPassword?.type === "error" ? card.statusPassword : undefined}
+        onChange={e => onUpdate(card.id, { password: e.target.value, statusPassword: undefined, })}
         />
       <Button onClick={() => onLogin(card)}>Log in</Button>
     </div>
@@ -157,11 +158,11 @@ export default function Players() {
 
   const handleLogin = async (card: Pending) => {
     if (!card.username) {
-      updatePending(card.id, { status: {type: "error", message: "Username required",}, });
+      updatePending(card.id, { statusUsername: {type: "error", message: "Username required",}, });
       return;
     }
     if (!card.password) {
-      updatePending(card.id, { status: {type: "error", message: "Password required",}, });
+      updatePending(card.id, { statusPassword: {type: "error", message: "Password required",}, });
       return;
     }
 
