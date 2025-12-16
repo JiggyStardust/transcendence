@@ -20,7 +20,7 @@ interface User {
 
 const ProfilePic = ({ avatarUrl, avatarUpdatedAt }: {avatarUrl: string | null, avatarUpdatedAt: number}) => {
 	const imageUrl = avatarUrl !== null
-	  ? `${avatarUrl}?t=${avatarUpdatedAt}` : PROXY_URL + "/uploads/avatars/default.jpeg";
+	  ? `${avatarUrl}?t=${avatarUpdatedAt}` : PROXY_URL + "/uploads/avatars/default.png";
 	return (
 		<img className="w-36 h-36 rounded-full object-cover"
 			key={avatarUpdatedAt}
