@@ -53,8 +53,7 @@ CREATE TABLE "Match" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     --"tournamentId" INTEGER,
     "winnerId" INTEGER,
-    "startedAt" DATETIME,
-    "endedAt" DATETIME,
+    "createdAt" DATETIME,
    -- CONSTRAINT "Match_tournamentId_fkey" FOREIGN KEY ("tournamentId") REFERENCES "Tournament" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
     CONSTRAINT "Match_winnerId_fkey" FOREIGN KEY ("winnerId") REFERENCES "User" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
@@ -65,8 +64,7 @@ CREATE TABLE "MatchParticipant" (
     "userId" INTEGER NOT NULL,
     "score" INTEGER NOT NULL DEFAULT 0,
     "isWinner" BOOLEAN NOT NULL DEFAULT false,
-    "startedAt" DATETIME,
-    "endedAt" DATETIME,
+    "createdAt" DATETIME,
 
     PRIMARY KEY ("matchId", "userId"),
     CONSTRAINT "MatchParticipant_matchId_fkey" FOREIGN KEY ("matchId") REFERENCES "Match" ("id") ON DELETE CASCADE ON UPDATE CASCADE,

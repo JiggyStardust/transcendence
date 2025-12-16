@@ -28,22 +28,28 @@ export const createMatch = async (
     }
 
     const now = new Date();
-    const winnerId = userIds[winnerIndexes[0]];
+    const winnerId = winner[1] ? userIds[1] : userIds[0];
+    
     const match = await prisma.match.create({
       data: {
+        createdAt: now,
+        winnerId,
         participants: {
-            create: userIds.map((id) => ({ userId: id }))
+            create: userIds.map((userId, i) => ({ 
+              userId,
+              score: scores[i],
+              isWinner: winner[i],
+            })),
+          }
+        },
+        include: {
+          participants: true
         }
-      },
-      include: {
-        participants: true
-      }
-    });
-
-    return ok(match as IMatchData);
-  } catch (e) {
-    console.error("db.createMatch: Error creating match:", e ?? "Unknown error",
-    );
-    return err("ERROR_CREATING_MATCH");
-  }
+      });
+      
+      return ok(match as IMatchData);
+    } catch (e) {
+      console.error("db.createMatch: Error creating match:", e ?? "Unknown error",);
+      return err("ERROR_CREATING_MATCH");
+    }
 };

@@ -29,10 +29,13 @@ export interface IUserProfile {
 
 export interface IMatchData {
   id: number;
-  startedAt: Date;
-  endedAt: Date;
+  createdAt: Date;
   winnerId: number;
-  participants: { userId: number; score: number; isWinner: boolean }[];
+  participants: { 
+    userId: number; 
+    score: number; 
+    isWinner: boolean 
+  }[];
 }
 
 // Uniform DB return type: { ok: boolean, data: T | string }

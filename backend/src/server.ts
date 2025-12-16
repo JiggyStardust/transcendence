@@ -69,6 +69,12 @@ fastify.register(friendsRoutes, { prefix: "/friends" });
 fastify.register(meRoutes); // endpoint => /me
 fastify.register(publicProfileRoutes); // endpoint => users/:username GET /api/users/maria
 
+
+// declare a basic route
+fastify.get("/", async (request, reply) => {
+  return { message: "Hello PingPong!" };
+});
+
 fastify.get("/health", async (request, reply) => {
   return { ok: true };
 });
