@@ -10,6 +10,7 @@ export default async function matchesRoutes(fastify: FastifyInstance) {
                 winner: boolean[];
             };
 
+
             // Validation
             if (!userIds || !scores || ! winner) {
                 return reply.code(400).send({ 
@@ -18,6 +19,7 @@ export default async function matchesRoutes(fastify: FastifyInstance) {
 
             // create match using db function
             const result = await createMatch(fastify.db, userIds, scores, winner);
+            console.log("Match saved successfully!");
 
             if (result.ok) {
                 return reply.code(201).send(result.data);
@@ -27,7 +29,7 @@ export default async function matchesRoutes(fastify: FastifyInstance) {
                     return reply.code(statusCode).send({ error: result.data }); 
             }
         } catch (error) {
-                console.log("Error in POST /matches:", error);
+                console.error("Error in POST /matches:", error);
                 return reply.code(500).send({ error: "Internal server error" });
             }
     });

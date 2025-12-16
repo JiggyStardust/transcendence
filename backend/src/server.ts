@@ -19,6 +19,7 @@ import friendsRoutes from "./routes/friendRoutes";
 import meRoutes from "./routes/me";
 import publicProfileRoutes from "./routes/publicProfileRoutes";
 import matchRoutes from "./routes/matchRoute";
+import getMatchHistory from "./routes/getMatchHistory";
 
 const PORT = parseInt(process.env.BACKEND_PORT ?? "4000");
 const HOST = process.env.BACKEND_HOST || "localhost";
@@ -70,6 +71,7 @@ fastify.register(friendsRoutes, { prefix: "/friends" });
 fastify.register(meRoutes); // endpoint => /me
 fastify.register(publicProfileRoutes); // endpoint => users/:username GET /api/users/maria
 fastify.register(matchRoutes);
+fastify.register(getMatchHistory);
 
 
 // declare a basic route

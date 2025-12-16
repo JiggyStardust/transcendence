@@ -38,6 +38,23 @@ export interface IMatchData {
   }[];
 }
 
+export interface IMatchParticipantData {
+  userId: number;
+  score: number;
+  isWinner: boolean;
+  createdAt: Date | null; // not sure about this
+  user: IUserData;
+}
+
+export interface IMatchHistoryData {
+  matchId: number;
+  userId: number;
+  score: number;
+  isWinner: boolean;
+  createdAt: Date | null; // not sure about this
+  participants: IMatchParticipantData[];
+}
+
 // Uniform DB return type: { ok: boolean, data: T | string }
 export type DbOk<T> = { ok: true; data: T };
 export type DbErr = { ok: false; data: string };
