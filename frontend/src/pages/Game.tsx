@@ -13,9 +13,8 @@ const GameRedirect = () => {
     const startGame = async () => {
       // Load the main user first
       const me = await loadMe();
-      // console.log("Users object:", users); // might still be empty here initially
-      const firstUsername = Object.values(users)[0]?.username || me?.username;
-      // console.log("First user's username:", firstUsername);
+      
+      // Get number of users logged in
       const numberOfUsers = Object.values(users).length;
       console.log("Number of users:", numberOfUsers);
 
@@ -26,8 +25,8 @@ const GameRedirect = () => {
       switch (numberOfUsers) {
         case 2:
           console.log("case 2");
-          user1 = Object.values(users)[0]?.username || me?.username;
-          user2 = Object.values(users)[1]?.username || me?.username;
+          user1 = Object.values(users)[0]?.displayName || me?.displayName;
+          user2 = Object.values(users)[1]?.displayName || me?.displayName;
           setGameType("regular");
           setPlayers([
             { id: "1", displayName: user1 },
@@ -36,9 +35,9 @@ const GameRedirect = () => {
           break;
         case 3:
           console.log("case 3");
-          user1 = Object.values(users)[0]?.username || me?.username;
-          user2 = Object.values(users)[1]?.username || me?.username;
-          user3 = Object.values(users)[2]?.username || me?.username;
+          user1 = Object.values(users)[0]?.displayName || me?.displayName;
+          user2 = Object.values(users)[1]?.displayName || me?.displayName;
+          user3 = Object.values(users)[2]?.displayName || me?.displayName;
           setGameType("multiplayer");
           setPlayers([
             { id: "1", displayName: user1 },
