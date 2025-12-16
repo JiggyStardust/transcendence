@@ -3,22 +3,14 @@ import { useEffect } from "react";
 import { useUser } from "../context/UserContext";
 import { useGame } from '../context/GameContext';
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 
 const GameRedirect = () => {
   const navigate = useNavigate();
   const { setPlayers, setGameType, clearPlayers } = useGame();
   const { users, loadMe } = useUser();
-  const { accessToken } = useAuth();
 
   useEffect(() => {
     const startGame = async () => {
-
-      // Check for access token to usercontext
-      if (!accessToken) {
-        navigate("/login");
-        return;
-      }
 
       // Load the main user first
       const me = await loadMe();
