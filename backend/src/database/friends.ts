@@ -6,13 +6,42 @@ export interface IFriend {
   username: string;
   displayName: string;
   avatarURL: string;
-  status: UserStatus;
+  status: UserStatus | "UNKNOWN";
 }
+
+const USER_SELECT = {
+  id: true,
+  username: true,
+  displayName: true,
+  avatarURL: true,
+  status: true,
+} as const;
 
 export interface IListFriends {
   accepted: IFriend[];
   pendingIncoming: IFriend[];
   pendingOutgoing: IFriend[];
+}
+
+export type TSearchFriendsQuery = {
+  search: string;
+};
+
+enum FriendshipStatus {
+  DEFAULT = "DEFAULT",
+  ACCEPTED = "ACCEPTED",
+  PENDING_INCOMING = "PENDING_INCOMING",
+  PENDING_OUTGOING = "PENDING_OUTGOING",
+}
+
+type TFriendshipStatus = FriendshipStatus;
+
+export interface ISearchResult {
+  userID: number;
+  displayName: string;
+  avatarURL: string;
+  status: UserStatus | "UNKNOWN";
+  friendshipStatus: TFriendshipStatus;
 }
 
 export class FriendService {
@@ -162,6 +191,7 @@ export class FriendService {
       where: {
         OR: [
           { userID: fromUserID, friendID: toUserID, status: FriendStatus.ACCEPTED },
+          { userID: fromUserID, friendID: toUserID, status: FriendStatus.PENDING },
           { userID: toUserID, friendID: fromUserID, status: FriendStatus.ACCEPTED },
         ],
       },
@@ -185,33 +215,113 @@ export class FriendService {
   }
 
   async listAllRequest(userID: number): Promise<IListFriends> {
-    const userSelect = {
-      id: true,
-      username: true,
-      displayName: true,
-      status: true,
-      avatarURL: true,
-    } as const;
-
     const [friends, incoming, outgoing] = await Promise.all([
       this.fastify.db.friend.findMany({
         where: { userID, status: FriendStatus.ACCEPTED },
-        select: { friend: { select: userSelect } },
+        select: { friend: { select: USER_SELECT } },
       }),
       this.fastify.db.friend.findMany({
         where: { friendID: userID, status: FriendStatus.PENDING },
-        select: { user: { select: userSelect } },
+        select: { user: { select: USER_SELECT } },
       }),
       this.fastify.db.friend.findMany({
         where: { userID, status: FriendStatus.PENDING },
-        select: { friend: { select: userSelect } },
+        select: { friend: { select: USER_SELECT } },
       }),
     ]);
 
-    const accepted = friends.map((r: any) => r.friend as IFriend);
-    const pendingIncoming = incoming.map((r: any) => r.user as IFriend);
-    const pendingOutgoing = outgoing.map((r: any) => r.friend as IFriend);
+    const accepted = friends.map((r: any) => ({
+      userID: r.friend.id,
+      username: r.friend.username,
+      displayName: r.friend.displayName,
+      avatarURL: r.friend.avatarURL,
+      status: r.friend.status,
+    }));
+    const pendingIncoming = incoming.map((r: any) => ({
+      userID: r.user.id,
+      username: r.user.username,
+      displayName: r.user.displayName,
+      avatarURL: r.user.avatarURL,
+      status: "UNKNOWN",
+    }));
+    const pendingOutgoing = outgoing.map((r: any) => ({
+      userID: r.friend.id,
+      username: r.friend.username,
+      displayName: r.friend.displayName,
+      avatarURL: r.friend.avatarURL,
+      status: "UNKNOWN",
+    }));
 
     return { accepted, pendingIncoming, pendingOutgoing };
+  }
+
+  friendshipStatus = async (userID: number, friendID: number): Promise<TFriendshipStatus> => {
+    const row = await this.fastify.db.friend.findFirst({
+      where: {
+        OR: [
+          { userID, friendID },
+          { userID: friendID, friendID: userID },
+        ],
+      },
+      select: { userID: true, friendID: true, status: true },
+    });
+
+    if (!row) return FriendshipStatus.DEFAULT;
+    if (row.status === FriendStatus.ACCEPTED) return FriendshipStatus.ACCEPTED;
+
+    return row.userID === userID ? FriendshipStatus.PENDING_OUTGOING : FriendshipStatus.PENDING_INCOMING;
+  };
+
+  async searchRequest(userID: number, key: string): Promise<ISearchResult[]> {
+    const users = await this.fastify.db.user.findMany({
+      where: {
+        displayName: { startsWith: key },
+        NOT: { id: userID },
+      },
+      select: USER_SELECT,
+      orderBy: { displayName: "asc" },
+      take: 20,
+    });
+
+    const userIds = users.map((user: any) => user.id);
+
+    const friendships = await this.fastify.db.friend.findMany({
+      where: {
+        OR: [
+          ...userIds.map((id: number) => ({ userID: userID, friendID: id })),
+          ...userIds.map((id: number) => ({ userID: id, friendID: userID })),
+        ],
+      },
+      select: { userID: true, friendID: true, status: true },
+    });
+
+    const friendshipMap = new Map<number, { userID: number; friendID: number; status: FriendStatus }>();
+    for (const f of friendships) {
+      const otherId = f.userID === userID ? f.friendID : f.userID;
+      friendshipMap.set(otherId, f);
+    }
+
+    const results: ISearchResult[] = users.map((user: any) => {
+      const f = friendshipMap.get(user.id);
+      let friendshipStatus: TFriendshipStatus;
+      if (!f) {
+        friendshipStatus = FriendshipStatus.DEFAULT;
+      } else if (f.status === FriendStatus.ACCEPTED) {
+        friendshipStatus = FriendshipStatus.ACCEPTED;
+      } else {
+        friendshipStatus = f.userID === userID ? FriendshipStatus.PENDING_OUTGOING : FriendshipStatus.PENDING_INCOMING;
+      }
+
+      const searchRes: ISearchResult = {
+        userID: user.userID,
+        displayName: user.displayName,
+        avatarURL: user.avatarURL,
+        status: friendshipStatus === FriendStatus.ACCEPTED ? user.status : "UKNOWN",
+        friendshipStatus,
+      };
+
+      return searchRes;
+    });
+    return results;
   }
 }

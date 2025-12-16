@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
-import { FriendService } from "../../database/friends";
+import { FriendService, TSearchFriendsQuery } from "../../database/friends";
 
 const REGEX_ONLY_DIGITS = /^\d+$/;
 const INVALID_URL_OR_PROPS = "Invalid values: friend or user ID isn't a number";
@@ -89,6 +89,17 @@ export class FriendHandler {
     try {
       const friends = await this.service.listAllRequest(req.user.id);
       return reply.send({ success: true, data: friends });
+    } catch (err: any) {
+      return reply.code(400).send({ error: err.message });
+    }
+  };
+
+  search = async (req: FastifyRequest<{ Querystring: TSearchFriendsQuery }>, reply: FastifyReply) => {
+    const { search } = req.query;
+    const userID = req.user.id;
+    try {
+      const searchResults = await this.service.searchRequest(userID, search);
+      return reply.send({ success: true, data: searchResults });
     } catch (err: any) {
       return reply.code(400).send({ error: err.message });
     }
