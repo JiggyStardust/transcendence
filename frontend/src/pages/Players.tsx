@@ -10,6 +10,7 @@ import { useAppToast } from "../context/ToastContext";
 import type { User } from "../context/UserContext";
 import type { Status } from "../types/types";
 
+
 type LoggedIn = {
   type: "loggedIn";
   id: string;
@@ -69,15 +70,15 @@ const PendingCard = ({
         id={`username-${card.id}`}
         label="Username"
         value={card.username}
-        status={card.statusUsername?.type === "error" ? card.statusUsername : undefined}
+        status={card.statusUsername || undefined}
         onChange={e => onUpdate(card.id, { username: e.target.value, statusUsername: undefined, })}
         />
       <Input
-        id={`username-${card.id}`}
+        id={`password-${card.id}`}
         type="password"
         label="Password"
         value={card.password}
-        status={card.statusPassword?.type === "error" ? card.statusPassword : undefined}
+        status={card.statusPassword || undefined}
         onChange={e => onUpdate(card.id, { password: e.target.value, statusPassword: undefined, })}
         />
       <Button onClick={() => onLogin(card)}>Log in</Button>
@@ -125,7 +126,7 @@ export default function Players() {
     })();
   }, [loadMe, loadUser]);
   
-  /* Build cards from UserContext                                   */
+  /* Build cards from UserContext */
   
   useEffect(() => {
     const loggedInCards: LoggedIn[] = Object.values(users).map((user: User) => ({
@@ -186,7 +187,6 @@ export default function Players() {
     if (!res.ok) {
       console.log("response:" + data.error);
       showToast(data.error, "error");
-      removePending(card.id);
       return;
     }
 
