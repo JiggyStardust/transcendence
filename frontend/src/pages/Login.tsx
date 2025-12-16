@@ -121,7 +121,7 @@ export default function Login() {
       return;
     }
     login();
-    navigate("/dashboard");
+    navigate("/players");
   }
 
   function onClose() {
