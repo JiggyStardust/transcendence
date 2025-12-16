@@ -6,6 +6,7 @@ import { useGame } from '../context/GameContext';
 import { useUser } from "../context/UserContext";
 import { useEffect } from "react";
 
+
 const Match = ({game_number, player_1, player_2, active=true, onStartGame, winner}: {game_number: string, player_1: string, player_2:string, active?: boolean, onStartGame?: () => void, winner?: string | null}) => {
   return (
     <div className="flex justify-center gap-7">
@@ -56,8 +57,15 @@ export default function Tournament() {
   // Check if game 3 should be active (both game 1 and 2 are complete)
   const isGame3Active = gameState.game1Winner && gameState.game2Winner;
 
-
+  // Load the user context
   const me = loadMe();
+
+  // Check for correct number of players in the case that user types /tournament directly
+  const numberOfUsers = Object.values(users).length;
+  if (numberOfUsers != 4) {
+    navigate("/");
+    return null;
+  }
 
   const name1 = Object.values(users)[0]?.displayName || me?.displayName;
   const name2 = Object.values(users)[1]?.displayName || me?.displayName;
