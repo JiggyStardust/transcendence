@@ -18,9 +18,9 @@ type InputProps = {
 
 export default function Input({id, label, type = "text", value, tooltip, focusTooltip, autofocus=false, status, onChange, onBlur,}: InputProps) {
 	const statusIcons = {
-	  ok:   <FiCheck size="20" color="green" />,
-	  warning:<FiAlertOctagon size="20" color="orange"  />,
-	  error:  <FiXOctagon size="20" color="red" />
+	  ok: <FiCheck size="20" color="green" />,
+	  warning: <FiAlertOctagon size="20" color="orange"  />,
+	  error: <FiXOctagon size="20" color="red" />
 	};
 	return (
 		<div className="flex flex-col gap-1 text-black dark:text-white">
@@ -35,7 +35,7 @@ export default function Input({id, label, type = "text", value, tooltip, focusTo
 			      </div>
 			    )}
 			  </div>
-			  {status && status.type !== "" && (
+			  {status && (
 			    <div className="relative group/icon cursor-help">
 			      {statusIcons[status.type]}
 						{status.message && (
@@ -48,7 +48,7 @@ export default function Input({id, label, type = "text", value, tooltip, focusTo
 			</div>
 
 			<div className="relative group">
-				<input className="flex justify-left p-1 border border-white rounded-sm"
+				<input className="flex justify-left p-1 border dark:border-white rounded-sm"
 					type={type}
 					id={id}
 					value={value}

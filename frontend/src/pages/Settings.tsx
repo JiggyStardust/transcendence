@@ -1,18 +1,29 @@
 import { Button } from "../components/Button";
 import Input from "../components/Input";
 import { PROXY_URL } from "../constants";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { passwordRequirements } from "../constants/passwordRequirements";
 import { FiX } from "react-icons/fi";
+import { useAppToast } from "../context/ToastContext";
+import { type Status } from "../types/types";
+import { useUser } from "../context/UserContext";
 
-const ProfilePic = ({ avatarUrl }: {avatarUrl: string | null}) => {
-	const timestamp = Date.now();
-	const imageUrl = avatarUrl 
-	  ? `${PROXY_URL + avatarUrl}?t=${timestamp}` 
-	  : PROXY_URL + "/uploads/avatars/default.jpeg";
-	console.log("imageUrl: " + imageUrl);
+interface User {
+	username: string;
+  displayName: string;
+  twoFactorEnabled: boolean;
+	avatarUrl: string | null;
+	avatarUpdatedAt: number;
+}
+
+//TODO newly uploaded avatar does not show before reload of page
+
+const ProfilePic = ({ avatarUrl, avatarUpdatedAt }: {avatarUrl: string | null, avatarUpdatedAt: number}) => {
+	const imageUrl = avatarUrl !== null
+	  ? `${avatarUrl}?t=${avatarUpdatedAt}` : PROXY_URL + "/uploads/avatars/default.png";
 	return (
 		<img className="w-36 h-36 rounded-full object-cover"
+			key={avatarUpdatedAt}
       src={imageUrl}
       alt="Avatar"
     />
@@ -22,20 +33,13 @@ const ProfilePic = ({ avatarUrl }: {avatarUrl: string | null}) => {
 const ProfileInfo = ({ user }: { user: User }) => {
 	return (
 		<div className="flex gap-8">
-			<ProfilePic avatarUrl={user.avatarUrl}/>
+			<ProfilePic avatarUrl={user.avatarUrl} avatarUpdatedAt={user.avatarUpdatedAt}/>
 			<div className="flex flex-col gap-4 pt-4">
 				<h1 className="font-bold text-3xl">{user.username}</h1>
-				<p>Some text</p>
+				<p>Some text???</p>
 			</div>
 		</div>
 	)
-}
-
-interface User {
-	username: string;
-  displayName: string;
-  twoFactorEnabled: boolean;
-	avatarUrl: string | null;
 }
 
 interface SettingsProps {
@@ -51,6 +55,9 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 	const [file, setFile] = useState<File | null>(null);
 	const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 	const [nameChanged, setNameChanged] = useState(false);
+	const [displayNameStatus, setDisplayNameStatus] = useState<Status | null>(null);
+
+	const { showToast } = useAppToast();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const selectedFile = e.target.files?.[0] || null;
@@ -59,13 +66,11 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 		}
 		const fileSizeMB = selectedFile.size / (1024 * 1024);
 		if (fileSizeMB > MAX_FILE_SIZE_MB) {
-			console.log("File size too big");
-	    //show error
+			showToast("File size too big, must be under 2MB", "error");
 	    return;
 	  }
 		if (!ACCEPTED_TYPES.includes(selectedFile.type)) {
-			console.log("Wrong file type");
-	    //show error
+			showToast("Wrong file type, accepted types: .png, .jpg, .jpeg", "error");
 	    return;
 	  }
 		setFile(selectedFile);
@@ -75,7 +80,6 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
   };
 
 	const removeFile = () => {
-		console.log("Remove file clicked");
 		setFile(null);
     setFileName("");
 		setPreviewUrl("");
@@ -84,6 +88,14 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 	function updateName(e: React.ChangeEvent<HTMLInputElement>) {
     setUser(u => ({ ...u, displayName: e.target.value }));
 		setNameChanged(true);
+		const len = e.target.value.length;
+		if (e.target.value === "") {
+			setDisplayNameStatus({type: "error", message: "Display name can not be empty"});
+		} else if (len < 3 || len > 20) {
+			setDisplayNameStatus({type: "error", message: "Display name must be between 3 and 20 characters"});
+		} else {
+			setDisplayNameStatus(null);
+		}
   }
 
 	async function saveDisplayName(displayName: string) {
@@ -115,12 +127,14 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 
 	async function saveSettings(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		if (mainUser.displayName != user.displayName) {
+		if (nameChanged) {
 			const displayNameResponse = await saveDisplayName(user.displayName);
 			if (displayNameResponse.error) {
 				//set state username not context username
-				//alert of error
+				showToast("Error: " + displayNameResponse.error, "error")
+				setDisplayNameStatus(null);
 			} else {
+				showToast("Success: display name updated successfully", "success");
 				setUser({ ...user, displayName: displayNameResponse.displayName});
 				setNameChanged(false);
 			}
@@ -128,10 +142,17 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 		if (file != null) {
 			const avatarResponse = await saveAvatar(file);
 			if (avatarResponse.error) {
-				//alert of error
+				setDisplayNameStatus(null);
+				showToast("Error: " + avatarResponse.error, "error")
 			}
 			else {
-				setUser({ ...user, avatarUrl: avatarResponse.avatarURL });
+				showToast("Success: avatar updated successfully", "success");
+			  setUser(prev => ({
+				  ...prev,
+				  avatarUrl: "/api" + avatarResponse.avatarURL,
+				  avatarUpdatedAt: Date.now(),
+				}));
+				console.log("Test: " + user.avatarUrl);
 				setPreviewUrl("");
 				setFileName("");
 			}
@@ -147,6 +168,7 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 					label="Display name:"
 					value={user.displayName}
 					tooltip="Name that is shown to other players"
+					status={displayNameStatus || undefined}
 					onChange={(e) => updateName(e)}/>
 				<p className="mt-4">Change avatar:</p>
 				<div className="flex gap-6 items-center">
@@ -155,14 +177,12 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 				    className="w-30 px-4 py-2 cursor-pointer font-tomorrow rounded-lg hover:bg-vintage-yellow/60 dark:bg-stone-600 bg-amber-50 dark:hover:bg-neutral-800">
 				    Choose File
 				  </label>
-				  <input
-				    type="file"
+					<input
+						type="file"
 				    id="avatar"
-				    name="avatar"
 				    accept="image/png, image/jpeg, image/jpg"
 						className="hidden"
-						onChange={handleFileChange}
-				  />
+						onChange={handleFileChange} />
 					{previewUrl && (
 						 <div className="flex items-center gap-1">
 							<img className="w-12 h-12 rounded-full object-cover"
@@ -178,7 +198,7 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 				</div>
 				<div className="absolute bottom-8 right-12">
 					<Button
-						disabled={previewUrl || nameChanged ? false : true}>
+						disabled={previewUrl || (nameChanged && displayNameStatus?.type !== "error") ? false : true}>
 						Save
 					</Button>
 				</div>
@@ -191,6 +211,7 @@ const TwoFactorAuthSetting = ({ user, setUser }: SettingsProps) => {
 	const [qr, setQr] = useState<string | null>(null);
 	const [token, setToken] = useState("");
 	const [qrModalOpen, setQrModalOpen] = useState(false);
+	const { showToast } = useAppToast();
 
 	const verify2FA = async () => {
 	  const res = await fetch(PROXY_URL + "/verify-setup-2fa", {
@@ -202,12 +223,13 @@ const TwoFactorAuthSetting = ({ user, setUser }: SettingsProps) => {
 		const data = await res.json();
 	  if (data.success) {
 			setQrModalOpen(false);
-			setUser(u => ({ ...u, twoFactorEnabled: true }))
+			setUser(u => ({ ...u, twoFactorEnabled: true }));
 			console.log("Success: " + data);
-			//TODO some success message?
+			showToast("Success: Two factor authentication is now enabled.", "success");
 		}
 		else {
-			console.log("Error: " + data.error);	//TODO show error
+			console.log("Error: " + data.error);
+			showToast("Error: " + data.error, "error");
 		}
 	};
 
@@ -219,6 +241,7 @@ const TwoFactorAuthSetting = ({ user, setUser }: SettingsProps) => {
     const data = await res.json();
 		if (data.error) {
 			console.log("Error: " + data.error);
+			showToast("Error: " + data.error, "error");
 		}
     setQr(data.qr);
     setQrModalOpen(true);
@@ -229,7 +252,9 @@ const TwoFactorAuthSetting = ({ user, setUser }: SettingsProps) => {
 	return (
 		<div className="flex items-center gap-4">
 			<p>Two factor authentication is <strong>{status}</strong></p>
-			<Button onClick={start2FA}>{user.twoFactorEnabled ? "Disable" : "Enable"}</Button>
+			{status === "disabled" && (
+				<Button onClick={start2FA}>Enable</Button>
+			)}
 			{qrModalOpen && (
 				<QrModal
 					qr={qr}
@@ -286,9 +311,11 @@ const ChangePassword = () => {
 	const [newPassword, setNewPassword] = useState("");
 	const [passwordModalOpen, setPasswordModalOpen] = useState(false);
 
+	const { showToast } = useAppToast();
+
 	async function updatePassword() {
 		if (oldPassword && newPassword) {
-			const res = await fetch(PROXY_URL + "/updatePassword", {
+			const res = await fetch(PROXY_URL + "/user/password", {
 				method: "PATCH",
 				credentials: "include",
 				headers: {
@@ -302,12 +329,12 @@ const ChangePassword = () => {
 			const data = await res.json();
 			if (data.success) {
 				setPasswordModalOpen(false);
-				//TODO some success message?
+				showToast("Success: Password updated successfully!", "success");
 			}
 			else {
 				setOldPassword("");
 				setNewPassword("");
-				//TODO show error
+				showToast("Error: " + data.error, "error");
 				console.log("Error: " + data.error);
 			}
 		}
@@ -393,27 +420,43 @@ const AuthSettings = ({ user, setUser }: SettingsProps) => {
 	)
 }
 
-const mainUser = {
-	username: "maria1",
-  displayName: "aallotar",
-  twoFactorEnabled: false,
-	avatarUrl: null,
-}
-
 const Settings = ({}) => {
-	const [user, setUser] = useState<User>({		//get actual data
+	const { mainUser } = useUser();
+	if (!mainUser) {
+		return (
+			<div>
+				<h1>
+					No user logged in
+				</h1>
+			</div>
+		)
+	}
+	const [user, setUser] = useState<User>({
 		username: mainUser.username,
-    displayName: mainUser.displayName,
-    twoFactorEnabled: mainUser.twoFactorEnabled,
-		avatarUrl: null,
-  });
+		displayName: mainUser.displayName,
+		twoFactorEnabled: false, // this needs to be in user context
+		avatarUrl: mainUser.avatarUrl,
+		avatarUpdatedAt: Date.now(),
+	});
+
+	useEffect(() => {
+	  console.log("Avatar URL:", user.avatarUrl);
+	  console.log("Updated at:", user.avatarUpdatedAt);
+	}, [user.avatarUrl, user.avatarUpdatedAt]);
 
 	return (
 		<div className="flex justify-center pt-6">
 			<div className="flex flex-col gap-12 w-3/5 min-w-xl max-w-6xl">
-				<ProfileInfo user={user} />
-				<ProfileSettings user={user} setUser={setUser} />
-				<AuthSettings user={user} setUser={setUser} />
+				{user.username !== "" && (
+					<>
+						<ProfileInfo user={user} />
+						<ProfileSettings user={user} setUser={setUser} />
+						<AuthSettings user={user} setUser={setUser} />
+					</>
+				)}
+				{user.username === "" && (
+					<p>Loading page...</p>
+				)}
 			</div>
 		</div>
 	)

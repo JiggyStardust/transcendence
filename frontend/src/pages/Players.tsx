@@ -10,7 +10,6 @@ import { useAppToast } from "../context/ToastContext";
 import type { User } from "../context/UserContext";
 import type { Status } from "../types/types";
 
-
 type LoggedIn = {
   type: "loggedIn";
   id: string;
@@ -167,6 +166,8 @@ export default function Players() {
       return;
     }
 
+    //TODO: if the username who tries to log in is already in usercontext, show error (this will be handled only in the frontend)
+
     const guestList = cards
       .filter((c): c is LoggedIn => c.type === "loggedIn")
       .map(c => Number(c.id));
@@ -228,12 +229,10 @@ export default function Players() {
       </div>
 
       <div className="flex justify-center mt-6">
-        <button
-          onClick={handleLogout}
-          className="px-6 py-2 border rounded-lg"
-        >
+        <Button
+          onClick={handleLogout}>
           Log out
-        </button>
+        </Button>
       </div>
     </main>
   );

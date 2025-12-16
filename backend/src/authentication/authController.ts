@@ -273,11 +273,3 @@ export async function verify_player(req: FastifyRequest<{ Body: IAuthGuestReques
     avatarURL: user.avatarURL,
   };
 }
-
-// export async function logout(req: FastifyRequest, reply: FastifyReply) {
-  
-//   reply
-//     .clearCookie("accessToken", { path: "/" })
-//     .clearCookie("refreshToken", { path: "/" })
-//     .send({ message: "Logged out!" })
-// }

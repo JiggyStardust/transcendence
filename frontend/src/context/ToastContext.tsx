@@ -50,7 +50,7 @@ export function ToastList({ toasts }) {
         <div
           key={toast.id}
           className={`
-            px-4 py-2 rounded-md shadow-lg transition ease-in-out duration-300 dark:text-stone-800
+            px-4 py-2 rounded-md shadow-lg dark:text-stone-800
             ${toast.type === "error" ? "bg-red-300" : "bg-green-300"}
           `}>
           {toast.message}
