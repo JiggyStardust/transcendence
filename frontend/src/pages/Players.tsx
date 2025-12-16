@@ -62,7 +62,7 @@ type PendingCardProps = {
 const PendingCard = ({ card, setCards, onUpdate, handleLogin}: PendingCardProps) => {
 
   const removeCard = (id: string) => {
-    console.log("remove card clicked");
+    // console.log("remove card clicked");
     setCards(prevCards =>
       prevCards.filter(c => c.id !== id)
     );
