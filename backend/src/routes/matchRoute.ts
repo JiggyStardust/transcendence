@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { createMatch } from "../database/utils/createMatch";
 
-export async function matchesRoutes(fastify: FastifyInstance) {
+export default async function matchesRoutes(fastify: FastifyInstance) {
     fastify.post("/matches", async (req, reply) => {
         try {
             const { userIds, scores, winner } = req.body as {
@@ -32,3 +32,4 @@ export async function matchesRoutes(fastify: FastifyInstance) {
             }
     });
 }
+

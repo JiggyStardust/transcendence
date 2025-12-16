@@ -18,6 +18,7 @@ import avatarRoutes from "./routes/avatar";
 import friendsRoutes from "./routes/friendRoutes";
 import meRoutes from "./routes/me";
 import publicProfileRoutes from "./routes/publicProfileRoutes";
+import matchRoutes from "./routes/matchRoute";
 
 const PORT = parseInt(process.env.BACKEND_PORT ?? "4000");
 const HOST = process.env.BACKEND_HOST || "localhost";
@@ -68,6 +69,7 @@ fastify.register(avatarRoutes, { prefix: "/users" });
 fastify.register(friendsRoutes, { prefix: "/friends" });
 fastify.register(meRoutes); // endpoint => /me
 fastify.register(publicProfileRoutes); // endpoint => users/:username GET /api/users/maria
+fastify.register(matchRoutes);
 
 
 // declare a basic route
