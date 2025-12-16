@@ -35,7 +35,6 @@ export default function Tournament() {
   const { gameState, setPlayers, setGameType, clearPlayers, setGameNumber } = useGame();
   const { users, loadMe } = useUser();
 
-  console.log("Tournament page!");
   const handleStartGame = (gameNumber: number,
                             p1name: string,
                             p2name: string,

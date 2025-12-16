@@ -20,7 +20,6 @@ function reduceSize(str) {
 
 export function parseUsername(game, players) {
   const maxLength = 9;
-  // console.log(players);
   
   if (players.length >= 2) {
     game.username.p1 = players[0].displayName;

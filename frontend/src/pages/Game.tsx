@@ -3,20 +3,28 @@ import { useEffect } from "react";
 import { useUser } from "../context/UserContext";
 import { useGame } from '../context/GameContext';
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const GameRedirect = () => {
   const navigate = useNavigate();
   const { setPlayers, setGameType, clearPlayers } = useGame();
   const { users, loadMe } = useUser();
+  const { accessToken } = useAuth();
 
   useEffect(() => {
     const startGame = async () => {
+
+      // Check for access token to usercontext
+      if (!accessToken) {
+        navigate("/login");
+        return;
+      }
+
       // Load the main user first
       const me = await loadMe();
       
       // Get number of users logged in
       const numberOfUsers = Object.values(users).length;
-      console.log("Number of users:", numberOfUsers);
 
       clearPlayers();
       var name1 = "";
@@ -27,7 +35,6 @@ const GameRedirect = () => {
       var id3 = 0;
       switch (numberOfUsers) {
         case 2:
-          console.log("case 2");
           name1 = Object.values(users)[0]?.displayName || me?.displayName;
           name2 = Object.values(users)[1]?.displayName || me?.displayName;
           id1 = Object.values(users)[0]?.id || me?.id;
@@ -39,7 +46,6 @@ const GameRedirect = () => {
           ])
           break;
         case 3:
-          console.log("case 3");
           name1 = Object.values(users)[0]?.displayName || me?.displayName;
           name2 = Object.values(users)[1]?.displayName || me?.displayName;
           name3 = Object.values(users)[2]?.displayName || me?.displayName;
@@ -54,11 +60,9 @@ const GameRedirect = () => {
           ]);
           break;
         case 4:
-          console.log("case 4");
           navigate("/tournament");
           return null;
         default:
-          console.log("case default");
           navigate("/login");
           return null;
       }
