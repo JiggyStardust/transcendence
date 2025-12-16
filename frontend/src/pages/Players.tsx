@@ -6,17 +6,22 @@ import { useEffect, useState } from "react";
 import { FiPlus, FiXCircle } from "react-icons/fi";
 import { useUser } from "../context/UserContext";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 // This is temporary to demonstrate logout functionality / see if it works. Will be put to NavBar later.
 const LogoutButton = () => {
   const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
   return (
-    <button
-      onClick={logout}
-      className="mt-4 px-6 py-2 rounded-lg border border-stone-700 text-stone-700 dark:text-stone-200 hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors"
-    >
+    <Button
+      onClick={handleLogout}>
       Log Out
-    </button>
+    </Button>
   );
 };
 
@@ -165,6 +170,7 @@ const Players = () => {
       updatePendingCard(card.id, { error: "Both username and password needed" });
       return;
     }
+    //TODO: if the username who tries to log in is already in usercontext, show error (this will be handled only in the frontend)
     try {
       const res = await fetch(PROXY_URL + "/verify_player", {
         method: "POST",

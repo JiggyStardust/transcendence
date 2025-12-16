@@ -25,6 +25,7 @@ export interface User {
 
 interface UserContextType {
   users: Record<string, User>;
+  mainUser: User | null;
 
   loadMe: () => Promise<User | undefined>;
   loadUser: (username: string) => Promise<User | undefined>;
@@ -41,13 +42,14 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | null>(null);
 
 export function UserProvider({ children }: { children: ReactNode }) {
+  const [mainUser, setMainUser] = useState<User | null>(null);
   const [users, setUsers] = useState<Record<string, User>>({});
 
   /************************** */
   // Fetch /me (main user) 
   /************************** */
   
-const loadMe = useCallback(async (): Promise<User | undefined> => {
+  const loadMe = useCallback(async (): Promise<User | undefined> => {
     try {
       const res = await fetch(PROXY_URL + "/me", {
         credentials: "include",
@@ -73,20 +75,20 @@ const loadMe = useCallback(async (): Promise<User | undefined> => {
       };
 
       setUsers((prev) => ({ ...prev, [username]: user }));
+      setMainUser(user);
       return user;
     } catch (e) {
       console.error("Error loading /me", e);
       return undefined;
     }
-  },
-  []
-);
+    },[]
+  );
   /****************************** */
   // Fetch /users/:username (side profiles)
   /****************************** */
 
 
-const loadUser = useCallback(async (username: string): Promise<User | undefined> => {
+  const loadUser = useCallback(async (username: string): Promise<User | undefined> => {
     try {
       const res = await fetch(`${PROXY_URL}/users/${username}`, {
         credentials: "include",
@@ -116,9 +118,8 @@ const loadUser = useCallback(async (username: string): Promise<User | undefined>
       console.error("Error fetching user", username, e);
       return undefined;
     }
-  },
-  []
-);
+  },[]
+  );
 
   // ------------------------
   // Helpers
@@ -156,6 +157,7 @@ const loadUser = useCallback(async (username: string): Promise<User | undefined>
     <UserContext.Provider
       value={{
         users,
+        mainUser,
         loadMe,
         loadUser,
         updateUser,
@@ -163,8 +165,7 @@ const loadUser = useCallback(async (username: string): Promise<User | undefined>
         setAvatar,
         // setStats,
         // setFriends,
-        clearUsers,
-      }}
+        clearUsers}}
     >
       {children}
     </UserContext.Provider>
