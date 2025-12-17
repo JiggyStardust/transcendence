@@ -1,8 +1,9 @@
 import { FastifyInstance } from "fastify";
 import { createMatch } from "../database/utils/createMatch";
+import { verifyToken } from "../authentication/authMiddleware";
 
 export default async function matchesRoutes(fastify: FastifyInstance) {
-    fastify.post("/matches", async (req, reply) => {
+    fastify.post("/matches", {preHandler: verifyToken }, async (req, reply) => {
         try {
             const { userIds, scores, winner } = req.body as {
                 userIds: number[];
