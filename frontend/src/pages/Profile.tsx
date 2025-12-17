@@ -24,12 +24,15 @@ export default function Profile() {
           credentials: "include",
         });
 
-        if (!res.ok) throw new Error("Failed to fetch match history");
+        if (!res.ok) {
+          showToast("Error: could not fetch match history", "error"); // shows twice because of strict mode
+        }
 
         const data: IMatchHistoryData[] = await res.json();
         setMatches(data);
+        showToast("Success: loading match history", "success"); // just for me now that database still empty
       } catch (error) {
-        showToast("Could not load match history", "error"); // shows twice because of strict mode
+        showToast("Error: could not load match history", "error"); // shows twice because of strict mode
       }
     };
 
@@ -37,11 +40,11 @@ export default function Profile() {
   }, [showToast]);
 
   // Count wins/losses
-  // const wins = matches.filter(m => m.isWinner).length;
-  // const losses = matches.length - wins;
+  const wins = matches.filter(m => m.isWinner).length;
+  const losses = matches.length - wins;
 
-  const wins = 6;
-  const losses = 3;
+  // const wins = 6;
+  // const losses = 3;
 
   return (
     <main className="p-12 flex flex-col items-center gap-8">
