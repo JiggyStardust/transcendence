@@ -1,15 +1,23 @@
 // @ts-nocheck
-import { useEffect } from "react";
+
+import { useEffect, useRef } from "react";
 import { useUser } from "../context/UserContext";
 import { useGame } from '../context/GameContext';
 import { useNavigate } from "react-router-dom";
+import { useAppToast } from "../context/ToastContext";
+
 
 const GameRedirect = () => {
   const navigate = useNavigate();
   const { setPlayers, setGameType, clearPlayers } = useGame();
   const { users, loadMe } = useUser();
+  const { showToast } = useAppToast();
+  const hasRun = useRef(false);
 
   useEffect(() => {
+    if (hasRun.current) return;
+    hasRun.current = true;
+
     const startGame = async () => {
 
       // Load the main user first
@@ -52,6 +60,7 @@ const GameRedirect = () => {
           return null;
         default:
           navigate("/login");
+          showToast("At least 2 players must be logged in to play the game!");
           return null;
       }
       navigate("/game");
