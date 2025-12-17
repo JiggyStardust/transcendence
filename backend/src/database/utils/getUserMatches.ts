@@ -25,21 +25,19 @@ export const getUserMatches = async (
             },
         });
 
-        const result: IMatchHistoryData[] = matches.map(mp => ({
-            matchId: mp.matchId,
-            userId: mp.userId,
-            score: mp.score,
-            isWinner: mp.isWinner,
-            createdAt: mp.createdAt,
-
-            participants: mp.match.participants.map(p => ({
-                userId: p.userId,
-                score: p.score,
-                isWinner: p.isWinner,
-                createdAt: p.createdAt,
-                user: p.user,
-            })),
-        }));
+        const result: IMatchHistoryData[] = matches.map(mp => {
+            // find opponent
+            const opponent = mp.match.participants.find(p => p.userId !== userId);
+            return {
+                matchId: mp.matchId,
+                createdAt: mp.createdAt,
+                isWinner: mp.isWinner,
+                userScore: mp.score,
+                opponentScore: opponent?.score ?? 0,
+                opponentDisplayName: opponent?.user.displayName ?? 'Unknown',
+                opponentAvatarUrl: opponent?.user.avatarURL ?? '',
+            };
+        });
         return ok(result);
     } catch (e) {
         console.error("db.getUserMatches: Error fetching matches:", e);

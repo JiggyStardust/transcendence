@@ -8,6 +8,8 @@ curl -X POST http://localhost:5173/matches \
   -d '{"userIds": [1, 2], "scores": [10, 15], "winner": [false, true]}'
 ```
 
+### getting match info back from backend
+
 
 ### returns from IMatchHistoryData
 
