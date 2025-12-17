@@ -3,12 +3,14 @@ import { useEffect, useRef, useState } from 'react';
 import { useGame } from '../../src/context/GameContext';
 import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../components/Button.tsx";
 
 export default function BabylonGame() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { gameState, updateGameState, setGameWinner } = useGame();
   const gameRef = useRef<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isGameOver, setIsGameOver] = useState(false);
   const initializedRef = useRef(false);
   const { users, user } = useUser();
   const [me, setMe] = useState(null);
@@ -123,6 +125,7 @@ export default function BabylonGame() {
             case game.state.gameOver:
               saveGame(game, gameState, setGameWinner);
               gameOver(game);
+              setIsGameOver(true);
               break;
           }
 
@@ -158,6 +161,10 @@ export default function BabylonGame() {
     };
   }, []);
 
+  const handleReturnToTournament = () => {
+    navigate("/tournament");
+  };
+
   return (
     <div className="page-bg flex flex-col items-center justify-center min-h-screen w-screen">
       {isLoading && (
@@ -176,6 +183,17 @@ export default function BabylonGame() {
           outline: 'none'
         }}
       />
+      {isGameOver && (
+        <div className="absolute bottom-10">
+          <Button 
+            variant="primary" 
+            size="lg"
+            onClick={handleReturnToTournament}
+          >
+            Return to Tournament
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
