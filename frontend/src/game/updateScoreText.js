@@ -1,6 +1,9 @@
 export function updateScoreText(game) {
   const array = ["0", "1", "2", "3", "4", "5", "6", "7"];
 
+  if (!game.scene || !game.scene.isReady())
+    return;
+
   array.forEach((x) => {
     game.scoreTextLeft = game.scene.getMeshByName("scoreTextLeft" + x);
     game.scoreTextRight = game.scene.getMeshByName("scoreTextRight" + x);
