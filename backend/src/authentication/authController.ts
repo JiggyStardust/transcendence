@@ -6,6 +6,7 @@ import { validatePassword, PASSWORD_ERROR_MESSAGE } from "utils/validatePassword
 import { validateUsername, USERNAME_ERROR_MESSAGE } from "utils/validateUsername";
 import { UserStatus } from "@prisma/client";
 import { IUserData } from "database/types";
+import { ACCESS_EXPIRATION, REFRESH_EXPIRATION, ACCESS_COOKIE, REFRES_COOKIE } from "../constants";
 
 export interface IUserPayload {
   id: string;
@@ -122,7 +123,8 @@ export async function verify2FALogin(req: AuthenticatedRequest<IVerify2FALoginBo
   });
 
   if (!verified) return reply.code(401).send({ error: "Invalid 2FA code" });
-  const jwtToken = generateAccessToken({ id: user.id, username: user.username });
+  const accessToken = generateAccessToken({ id: user.id, username: user.username });
+  const refreshToken = generateRefreshToken({ id: user.id, username: user.username });
 
   try {
     await req.server.db.user.update({
@@ -133,7 +135,21 @@ export async function verify2FALogin(req: AuthenticatedRequest<IVerify2FALoginBo
     return reply.code(500).send({ error: "Failed to set online status" });
   }
 
-  reply.send({ token: jwtToken });
+  reply
+    .setCookie(ACCESS_COOKIE, accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/",
+    })
+    .setCookie(REFRES_COOKIE, refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      maxAge: REFRESH_EXPIRATION,
+      path: "/",
+    })
+    .send({ message: "Logged in!" });
 }
 
 export async function signup(req: FastifyRequest<{ Body: IAuthRequestBody }>, reply: FastifyReply) {
@@ -192,7 +208,7 @@ export async function login(req: FastifyRequest<{ Body: IAuthRequestBody }>, rep
     id: user.id,
     username: user.username,
   });
-  const refreshToken = generateRefreshToken({ id: user.id });
+  const refreshToken = generateRefreshToken({ id: user.id, username: user.username });
 
   try {
     await req.server.db.user.update({
@@ -204,18 +220,17 @@ export async function login(req: FastifyRequest<{ Body: IAuthRequestBody }>, rep
   }
 
   reply
-    .setCookie("accessToken", accessToken, {
+    .setCookie(ACCESS_COOKIE, accessToken, {
       httpOnly: true,
       secure: true,
       sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60, // 7 days
       path: "/",
     })
-    .setCookie("refreshToken", refreshToken, {
+    .setCookie(REFRES_COOKIE, refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60, // 7 days
+      maxAge: REFRESH_EXPIRATION,
       path: "/",
     })
     .send({ message: "Logged in!" });
@@ -229,14 +244,14 @@ export async function logout(req: FastifyRequest, reply: FastifyReply) {
     });
   } catch (err) {
     return reply
-      .clearCookie("accessToken", { path: "/", sameSite: "lax", secure: true })
-      .clearCookie("refreshToken", { path: "/", sameSite: "lax", secure: true })
+      .clearCookie(ACCESS_COOKIE, { path: "/", sameSite: "lax", secure: true })
+      .clearCookie(REFRES_COOKIE, { path: "/", sameSite: "lax", secure: true })
       .code(500)
       .send({ error: "Failed to set offline status" });
   }
   reply
-    .clearCookie("accessToken", { path: "/", sameSite: "lax", secure: true })
-    .clearCookie("refreshToken", { path: "/", sameSite: "lax", secure: true })
+    .clearCookie(ACCESS_COOKIE, { path: "/", sameSite: "lax", secure: true })
+    .clearCookie(REFRES_COOKIE, { path: "/", sameSite: "lax", secure: true })
     .send({ message: "Logged out" });
 }
 

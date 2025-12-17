@@ -38,9 +38,6 @@ model User {
   passwordHash        String
   isTwoFAenabled      Boolean         @default(false)
   twoFAsecret         String?
-  tokenHash           String?
-  tokenExpiresAt      DateTime?
-  tokenRevoked        Boolean         @default(false)
 
   avatarURL           String          @default("/uploads/avatars/default.png")
   avatarType          AvatarType      @default(DEFAULT)
