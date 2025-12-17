@@ -26,6 +26,7 @@ export const game = {
 	arrowLeftText: null,
 	gameOverFinalText: null,
 	gameOverScoreText: null,
+	infoSaved: false,
 	winnerText: null,
 	p1NameText: null,
 	p2NameText: null,
@@ -44,9 +45,9 @@ export const game = {
 	},
 
 	username: {
-		p1: "Player1",
-		p2: "Player2",
-		p3: "Player3",
+		p1: "Default1",
+		p2: "Default2",
+		p3: "Default3",
 		p1Display: null,
 		p2Display: null,
 		p3Display: null

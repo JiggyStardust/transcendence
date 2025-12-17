@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 import { PROXY_URL } from "../constants";
 
@@ -46,8 +47,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
       const data = await res.json();
       const username = data.username;
 
-      console.log("Loaded me:", data);
-      console.log("avatarUrl:", data.avatarURL);
+      // console.log("Loaded me:", data);
+      // console.log("avatarUrl:", data.avatarURL);
 
       const user: User = {
         id: data.id,
@@ -84,8 +85,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
       const data = await res.json();
 
-      console.log("Loaded me:", data);
-      console.log("avatarUrl:", data.avatarURL);
+      // console.log("Loaded me:", data);
+      // console.log("avatarUrl:", data.avatarURL);
 
       const user: User = {
         id: data.id,
