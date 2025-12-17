@@ -46,26 +46,26 @@ export function UserProvider({ children }: { children: ReactNode }) {
       const data = await res.json();
       const username = data.username;
 
-      console.log("Loaded me:", data);
-      console.log("avatarUrl:", data.avatarURL);
+      // console.log("Loaded me:", data);
+      // console.log("avatarUrl:", data.avatarURL);
 
       const user: User = {
         id: data.id,
         username: data.username,
         displayName: data.displayName ?? data.username,
         avatarUrl: PROXY_URL + data.avatarURL,
-        // role: "full",
       };
 
       setUsers((prev) => ({ ...prev, [username]: user }));
       setMainUser(user);
       return user;
     } catch (e) {
-      console.error("Error loading /me", e);
+      // console.error("Error loading /me", e);
       return undefined;
     }
     },[]
   );
+
   /****************************** */
   // Fetch /users/:username (side profiles)
   /****************************** */
@@ -78,14 +78,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
       });
 
       if (!res.ok) {
-        console.error("Failed to load user", username);
+        // console.error("Failed to load user", username);
         return undefined;
       }
 
       const data = await res.json();
 
-      console.log("Loaded me:", data);
-      console.log("avatarUrl:", data.avatarURL);
+      // console.log("Loaded me:", data);
+      // console.log("avatarUrl:", data.avatarURL);
 
       const user: User = {
         id: data.id,
@@ -97,7 +97,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       setUsers((prev) => ({ ...prev, [username]: user }));
       return user;
     } catch (e) {
-      console.error("Error fetching user", username, e);
+      // console.error("Error fetching user", username, e);
       return undefined;
     }
   },[]

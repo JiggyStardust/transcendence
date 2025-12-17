@@ -8,6 +8,7 @@ import Game from "./pages/Game";
 import Players from "./pages/Players.tsx";
 import NavBar from "./components/NavBar.tsx";
 import PrivateRoute from "./pages/PrivateRoute.tsx";
+import Profile from "./pages/Profile";
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
 		      <Route path="/testing" element={<Testing />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/game" element={<Game />} />
+          <Route path="/profile" element={<Profile />} />
           <Route element={<PrivateRoute />}>
             <Route path="/players" element={<Players />} /> 
           </Route>
