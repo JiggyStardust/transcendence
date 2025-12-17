@@ -1,8 +1,9 @@
 import { FastifyInstance } from "fastify";
 import { getUserMatches } from "../database/utils/getUserMatches";
+import { verifyToken } from "../authentication/authMiddleware";
 
 export default async function matchHistory(fastify: FastifyInstance) {
-    fastify.get("/match_history", async (req, reply) => {
+    fastify.get("/match_history", { preHandler: verifyToken }, async (req, reply) => {
         try {
             const userId = Number((req.query as { userId?: string }).userId);
 

@@ -20,3 +20,14 @@ export const verifyToken: preHandlerHookHandler = (req, reply, done) => {
     reply.code(401).send({ error: "Invalid or expired token" });
   }
 };
+
+/*export const verifyToken: preHandlerHookHandler = async (req, reply) => {
+  try {
+    await req.jwtVerify();
+
+  } catch (err) {
+    reply.code(401).send({ error: "invalid or expired token" });
+  }
+}*/
+
+
