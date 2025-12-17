@@ -14,7 +14,7 @@ export default function MatchHistoryTable({ matches }: Props) {
   return (
     <div className="overflow-x-auto w-full">
       <table className="table-auto border-collapse border border-gray-300 w-full">
-        <thead className="bg-gray-100">
+        <thead>
           <tr>
             <th className="px-4 py-2 border border-gray-300">Date</th>
             <th className="px-4 py-2 border border-gray-300">Opponent</th>
@@ -26,7 +26,7 @@ export default function MatchHistoryTable({ matches }: Props) {
         <tbody>
           {sortedMatches.map(match => (
             <tr key={match.matchId} className="text-center">
-              <td className="px-4 py-2 border border-gray-300">
+              <td className="px-4 py-2 border border-gray-100">
                 {new Date(match.createdAt).toLocaleDateString()}
               </td>
               <td className="px-4 py-2 border border-gray-300 flex items-center justify-center gap-2">
