@@ -313,7 +313,7 @@ export class FriendService {
       }
 
       const searchRes: ISearchResult = {
-        userID: user.userID,
+        userID: user.id,
         displayName: user.displayName,
         avatarURL: user.avatarURL,
         status: friendshipStatus === FriendStatus.ACCEPTED ? user.status : "UKNOWN",
