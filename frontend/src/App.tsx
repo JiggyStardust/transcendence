@@ -1,5 +1,6 @@
 // @ts-nocheck
 
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { GameProvider } from './context/GameContext';
 import Landing from "./pages/Landing.tsx";
@@ -14,31 +15,35 @@ import PrivateRoute from "./pages/PrivateRoute.tsx";
 import Tournament from "./pages/Tournament.tsx";
 import BabylonGame from "./components/BabylonGame.tsx";
 
+
 function App() {
 
-  return (
-    <div>
-      <Router>
-        <GameProvider>
-				<NavBar />
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
-		      <Route path="/testing" element={<Testing />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route element={<PrivateRoute />}>
-            <Route path="/players" element={<Players />} /> 
-          </Route>
-          <Route path="*" element={<Landing />} />
-          <Route path="/tournament" element={<Tournament />} />
-          <Route path="/game" element={<BabylonGame />} />
-          <Route path="/gameRedirect" element={<GameRedirect />} />
-        </Routes>
-        </GameProvider>
-      </Router>
-    </div>
-  );
+
+ return (
+   <div>
+     <Router>
+       <NavBar />
+       <Routes>
+         <Route path="/" element={<Landing />} />
+         <Route path="/signup" element={<SignUp />} />
+         <Route path="/login" element={<Login />} />
+         <Route path="/testing" element={<Testing />} />
+         <Route path="/settings" element={<Settings />} />
+         <Route element={<PrivateRoute />}>
+           <Route path="/players" element={<Players />} />
+         </Route>
+         <Route path="*" element={<Landing />} />
+         <Route path="/tournament" element={<GameProvider> <Tournament /> </GameProvider>} />
+         <Route path="/game" element={<GameProvider> <BabylonGame /> </GameProvider>} />
+         <Route path="/gameRedirect" element={<GameProvider> <GameRedirect /> </GameProvider>} />
+       </Routes>
+     </Router>
+   </div>
+ );
 }
 
+
 export default App;
+
+
+
