@@ -12,6 +12,7 @@
   "dependencies": {
     "@babylonjs/core": "^8.32.1",
     "@tailwindcss/vite": "^4.1.14",
+    "@vitejs/plugin-basic-ssl": "^2.1.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "react": "^19.1.1",

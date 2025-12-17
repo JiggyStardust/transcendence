@@ -11,11 +11,21 @@ env-check:
 		exit 1; \
 	fi
 
-run-detach: env-check
+certs-check:
+	@if [ ! -d "backend/certs" ]; then \
+	    mkdir -p backend/certs; \
+		openssl req -x509 -newkey rsa:2048 -sha256 -days 3650 -nodes \
+            -keyout backend/certs/backend-key.pem \
+            -out backend/certs/backend.pem \
+            -subj "/CN=backend" \
+            -addext "subjectAltName=DNS:backend,DNS:localhost,IP:127.0.0.1"; \
+    fi
+
+run-detach: env-check certs-check
 	docker-compose -f docker-compose.yml up --build --detach
 	docker ps
 
-run: env-check
+run: env-check certs-check
 	docker-compose -f docker-compose.yml up --build
 	docker ps
 
