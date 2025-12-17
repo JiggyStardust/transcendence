@@ -18,3 +18,6 @@ function checkAccessLimit(value: string | undefined, fallback: number): number {
   if (!value) throw new Error("Missing required env vars for JWT");
   return /^\d+$/.test(value) ? Number(value) : fallback;
 }
+
+export const ACCESS_COOKIE = "accessToken";
+export const REFRESH_COOKIE = "refreshToken";
