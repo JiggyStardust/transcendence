@@ -26,6 +26,7 @@ export function parseUsername(game, players) {
     game.username.p2 = players[1].displayName;
   }
   
+  game.hasThirdPlayer = false;
   if (players.length >= 3) {
     game.username.p3 = players[2].displayName;
     game.hasThirdPlayer = true;
