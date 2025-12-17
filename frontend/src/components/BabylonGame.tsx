@@ -183,7 +183,7 @@ export default function BabylonGame() {
           outline: 'none'
         }}
       />
-      {isGameOver && (
+      {isGameOver && gameState.gameType === "tournament" && (
         <div className="absolute bottom-10">
           <Button 
             variant="primary" 
