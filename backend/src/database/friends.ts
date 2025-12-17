@@ -27,7 +27,7 @@ export type TSearchFriendsQuery = {
   search: string;
 };
 
-enum FriendshipStatus {
+export enum FriendshipStatus {
   DEFAULT = "DEFAULT",
   ACCEPTED = "ACCEPTED",
   PENDING_INCOMING = "PENDING_INCOMING",

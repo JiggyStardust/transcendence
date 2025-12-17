@@ -1,31 +1,133 @@
 import { useUser } from "../context/UserContext";
 import { useEffect, useState } from "react";
 import { Button } from "../components/Button";
+import { PROXY_URL } from "../constants";
+import type { IListFriends, IFriend } from "../../../backend/src/database/friends.ts"
+import SearchUsers from "../components/SearchUsers.tsx";
 
 const Stats = () => {
 	return (
-		<div className="bg-blue-200 w-2/3">
+		<div className="relative flex flex-col bg-stone-700/50 dark:bg-stone-500 rounded-3xl p-8 w-2/3">
 			<h2>
-				Friends
+				Stats
 			</h2>
 		</div>
 	)
 }
 
+interface FriendRowProps {
+  friend: IFriend;
+}
+
+const FriendRow = ({ friend }: FriendRowProps) => {
+  return (
+    <li className="flex items-center gap-4 bg-stone-800/50 dark:bg-stone-600 rounded-xl p-4">
+      <img
+        src={friend.avatarURL}
+        alt={friend.username}
+        className="w-10 h-10 rounded-full object-cover"
+      />
+
+      <div className="flex flex-col">
+        <span className="font-medium">
+          {friend.displayName || friend.username}
+        </span>
+        <span className="text-sm opacity-70">{friend.status}</span>
+      </div>
+    </li>
+  );
+};
+
+interface FriendSectionProps {
+  title: string;
+  list: IFriend[];
+}
+
+const FriendSection = ({ title, list }: FriendSectionProps) => {
+  if (list.length === 0) return null;
+
+  return (
+    <div className="flex flex-col gap-3">
+      <h3 className="text-lg font-medium opacity-80">{title}</h3>
+
+      <ul className="flex flex-col gap-2">
+        {list.map((friend) => (
+          <FriendRow key={friend.userID} friend={friend} />
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+const getAllFriends = async () => {
+	const res = await fetch(PROXY_URL + "/friends/all", {
+		method: "GET",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		credentials: "include",
+	});
+
+	if (!res.ok) {
+		const err = await res.json();
+		throw new Error(err.error || "Failed to load friends");
+	}
+	return res.json();
+};
+
 const Friends = () => {
+	const [friends, setFriends] = useState<IListFriends | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const loadFriends = async () => {
+      try {
+        const res = await getAllFriends();
+        setFriends(res.data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadFriends();
+  }, []);
+
 	return (
-		<div className="bg-red-200 w-2/3">
-			<h2>
-				Friends
-			</h2>
+		<div className="relative flex flex-col items-center bg-stone-700/50 dark:bg-stone-500 rounded-3xl p-8 w-2/3">
+			{error && (
+				<div className="bg-stone-700/50 rounded-3xl p-8 w-full max-w-3xl text-red-400">
+	        {error ?? "Failed to load friends"}
+	      </div>
+			)}
+			{loading && (
+				<div className="bg-stone-700/50 rounded-3xl p-8 w-full max-w-3xl">
+	        Loading friends...
+	      </div>
+			)}
+
+			{!loading && !error && friends?.accepted.length === 0 && friends.pendingIncoming.length === 0 && friends.pendingOutgoing.length === 0 ? (
+				<div className="bg-stone-700/50 rounded-3xl p-8 w-full max-w-3xl">
+	        No friends
+	      </div>
+			) : friends && (
+				<>
+					<div className="relative flex flex-col bg-stone-700/50 dark:bg-stone-500 rounded-3xl p-8 w-2/3">
+			      <FriendSection title="Friends" list={friends.accepted} />
+			      <FriendSection title="Incoming Requests" list={friends.pendingIncoming} />
+			      <FriendSection title="Outgoing Requests" list={friends.pendingOutgoing} />
+					</div>
+				</>
+			)}
+			<SearchUsers />
 		</div>
 	)
 }
 
 
 const Profile = () => {
-	const [statsOpen, setStatesOpen] = useState(true);
-	const [friendsOpen, setFriendsOpen] = useState(false);
+const [activeTab, setActiveTab] = useState("stats");
 	const { users, loadMe } = useUser();
 	useEffect(() => {
 		loadMe();
@@ -37,20 +139,17 @@ const Profile = () => {
 			<h1 className="text-4xl text-vintage-red dark:text-vintage-yellow">
 				Profile of <span className="font-tomorrow font-semibold underline dark:decoration-vintage-red">{mainUser.username}</span>
 			</h1>
-			<div className="flex gap-4">
-				<Button size="lg" onClick={() => setStatesOpen(!statsOpen)}>
-					Stats
-				</Button>
-				<Button size="lg" onClick={() => setFriendsOpen(!friendsOpen)}>
-					Friends
-				</Button>
+			<div className="flex flex-col gap-8 items-center w-full">
+				<div className="flex gap-4">
+					<Button size="lg" onClick={() => setActiveTab("stats")}>
+						Stats
+					</Button>
+					<Button size="lg"  onClick={() => setActiveTab("friends")}>
+						Friends
+					</Button>
+				</div>
+				{activeTab === "stats" ? <Stats /> : <Friends />}
 			</div>
-			{statsOpen && (
-				<Stats />
-			)}
-			{friendsOpen && (
-				<Friends />
-			)}
 		</div>
 	)
 }

@@ -422,7 +422,13 @@ const AuthSettings = ({ user, setUser }: SettingsProps) => {
 
 const Settings = ({}) => {
 	const { users, loadMe } = useUser();
-	const [user, setUser] = useState<User | null>(null);
+	const [user, setUser] = useState<User>({
+	  username: "",
+	  displayName: "",
+	  twoFactorEnabled: false,
+	  avatarUrl: "",
+	  avatarUpdatedAt: 0,
+	});
   const mainUser = Object.values(users)[0];
 
   useEffect(() => {
