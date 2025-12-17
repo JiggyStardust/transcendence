@@ -421,8 +421,28 @@ const AuthSettings = ({ user, setUser }: SettingsProps) => {
 }
 
 const Settings = ({}) => {
-	const { mainUser } = useUser();
-	if (!mainUser) {
+	const { users, loadMe } = useUser();
+  useEffect(() => {
+    loadMe();
+  }, [loadMe]);
+	 const [user, setUser] = useState<User | null>(null);
+
+  const mainUser = Object.values(users)[0];
+
+	
+	useEffect(() => {
+		if (mainUser) {
+			setUser({
+				username: mainUser.username,
+        displayName: mainUser.displayName,
+        twoFactorEnabled: false,
+        avatarUrl: mainUser.avatarUrl,
+        avatarUpdatedAt: Date.now(),
+      });
+    }
+  }, [mainUser]);
+	
+	if (!mainUser || !user) {
 		return (
 			<div>
 				<h1>
@@ -431,18 +451,6 @@ const Settings = ({}) => {
 			</div>
 		)
 	}
-	const [user, setUser] = useState<User>({
-		username: mainUser.username,
-		displayName: mainUser.displayName,
-		twoFactorEnabled: false, // this needs to be in user context
-		avatarUrl: mainUser.avatarUrl,
-		avatarUpdatedAt: Date.now(),
-	});
-
-	useEffect(() => {
-	  console.log("Avatar URL:", user.avatarUrl);
-	  console.log("Updated at:", user.avatarUpdatedAt);
-	}, [user.avatarUrl, user.avatarUpdatedAt]);
 
 	return (
 		<div className="flex justify-center pt-6">

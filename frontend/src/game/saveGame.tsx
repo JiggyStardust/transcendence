@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 export function saveGame(game, gameState, setGameWinner) {
   if (!game.infoSaved) {
     game.infoSaved = true;
