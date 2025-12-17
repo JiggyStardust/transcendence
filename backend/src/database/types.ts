@@ -27,6 +27,46 @@ export interface IUserProfile {
   avatarType: AvatarType;
 }
 
+export interface IMatchData {
+  id: number;
+  createdAt: Date;
+  winnerId: number;
+  participants: { 
+    userId: number; 
+    score: number; 
+    isWinner: boolean 
+  }[];
+}
+
+/*export interface IMatchParticipantData {
+  userId: number;
+  score: number;
+  isWinner: boolean;
+  createdAt: Date | null; // not sure about this
+  user: IUserData;
+}*/
+
+/*export interface IMatchHistoryData {
+  matchId: number;
+  userId: number;
+  score: number;
+  isWinner: boolean;
+  createdAt: Date;  
+  participants: IMatchParticipantData[];
+}*/
+
+export interface IMatchHistoryData {
+  matchId: number;
+  createdAt: Date;
+  isWinner: boolean;
+  userScore: number;
+  opponentScore: number;
+  opponentDisplayName: string;
+  opponentAvatarUrl: string;
+}
+
+
+
 // Uniform DB return type: { ok: boolean, data: T | string }
 export type DbOk<T> = { ok: true; data: T };
 export type DbErr = { ok: false; data: string };

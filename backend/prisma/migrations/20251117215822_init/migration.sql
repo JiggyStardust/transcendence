@@ -39,23 +39,22 @@ CREATE TABLE "Friend" (
 );
 
 -- CreateTable
-CREATE TABLE "Tournament" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "name" TEXT NOT NULL,
-    "createdBy" INTEGER NOT NULL,
-    "startDate" DATETIME NOT NULL,
-    "endDate" DATETIME NOT NULL,
-    CONSTRAINT "Tournament_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-);
+--CREATE TABLE "Tournament" (
+   -- "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+   -- "name" TEXT NOT NULL,
+   -- "createdBy" INTEGER NOT NULL,
+   -- "startDate" DATETIME NOT NULL,
+   -- "endDate" DATETIME NOT NULL,
+   -- CONSTRAINT "Tournament_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+--);
 
 -- CreateTable
 CREATE TABLE "Match" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "tournamentId" INTEGER,
+    --"tournamentId" INTEGER,
     "winnerId" INTEGER,
-    "startedAt" DATETIME,
-    "endedAt" DATETIME,
-    CONSTRAINT "Match_tournamentId_fkey" FOREIGN KEY ("tournamentId") REFERENCES "Tournament" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
+    "createdAt" DATETIME,
+   -- CONSTRAINT "Match_tournamentId_fkey" FOREIGN KEY ("tournamentId") REFERENCES "Tournament" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
     CONSTRAINT "Match_winnerId_fkey" FOREIGN KEY ("winnerId") REFERENCES "User" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
@@ -65,8 +64,7 @@ CREATE TABLE "MatchParticipant" (
     "userId" INTEGER NOT NULL,
     "score" INTEGER NOT NULL DEFAULT 0,
     "isWinner" BOOLEAN NOT NULL DEFAULT false,
-    "startedAt" DATETIME,
-    "endedAt" DATETIME,
+    "createdAt" DATETIME,
 
     PRIMARY KEY ("matchId", "userId"),
     CONSTRAINT "MatchParticipant_matchId_fkey" FOREIGN KEY ("matchId") REFERENCES "Match" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
@@ -86,10 +84,10 @@ CREATE INDEX "Friend_friendID_idx" ON "Friend"("friendID");
 CREATE UNIQUE INDEX "Friend_userID_friendID_key" ON "Friend"("userID", "friendID");
 
 -- CreateIndex
-CREATE INDEX "Tournament_createdBy_idx" ON "Tournament"("createdBy");
+--CREATE INDEX "Tournament_createdBy_idx" ON "Tournament"("createdBy");
 
 -- CreateIndex
-CREATE INDEX "Match_tournamentId_idx" ON "Match"("tournamentId");
+--CREATE INDEX "Match_tournamentId_idx" ON "Match"("tournamentId");
 
 -- CreateIndex
 CREATE INDEX "Match_winnerId_idx" ON "Match"("winnerId");
