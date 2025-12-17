@@ -10,6 +10,9 @@ curl -X POST http://localhost:5173/matches \
 
 ### getting match info back from backend
 
+```
+curl -s "http://localhost:4000/match_history?userId=2" | jq
+```
 
 ### returns from IMatchHistoryData
 

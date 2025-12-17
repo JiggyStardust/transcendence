@@ -29,6 +29,9 @@ export const createMatch = async (
 
     const now = new Date();
     const winnerId = winner[1] ? userIds[1] : userIds[0];
+    if (!winnerId) {
+      return err("INVALID_WINNER");
+    }
     
     const match = await prisma.match.create({
       data: {
@@ -46,8 +49,19 @@ export const createMatch = async (
           participants: true
         }
       });
+
+      const result: IMatchData = {
+        id: match.id,
+        createdAt: match.createdAt,
+        winnerId: match.winnerId!,
+        participants: match.participants.map(p => ({
+          userId: p.userId,
+          score: p.score,
+          isWinner: p.isWinner,
+        })),
+      };
       
-      return ok(match as IMatchData);
+      return ok(result);
     } catch (e) {
       console.error("db.createMatch: Error creating match:", e ?? "Unknown error",);
       return err("ERROR_CREATING_MATCH");
