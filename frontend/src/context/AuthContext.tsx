@@ -15,7 +15,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   // This check is here, so after refresh we see if we are still online in backend (have cookies/tokens)
-  // This is because we don't have online-status setup in backend yet. So we see if mainuser can fetch with /me,
+  // So we see if mainuser can fetch with /me = we still online
   // which is only possible when main user is online/has tokens set.
   useEffect(() => {
     (async () => {
@@ -38,13 +38,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 
   function login() {
-    // cookies are set in the backend, no storing tokens anymore
     setIsAuthenticated(true);
   }
 
   async function logout() {
-    // THIS WILL BE ADDED AFTER BACKEND HAS /logout ENDPOINT
-
     try {
       await fetch(PROXY_URL + "/logout", {
         method: "POST",
