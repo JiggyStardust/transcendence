@@ -14,7 +14,8 @@ export async function meRoutes(fastify: FastifyInstance) {
                     displayName: true,
                     avatarURL: true,
                     createdAt: true,
-                    updatedAt: true
+                    updatedAt: true,
+                    isTwoFAenabled: true,
                 },
             });
 

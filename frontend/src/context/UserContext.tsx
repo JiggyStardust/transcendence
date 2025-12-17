@@ -7,6 +7,7 @@ export interface User {
   username: string;
   displayName: string;
   avatarUrl: string;
+  twoFactorEnabled: boolean;
 }
 
 interface UserContextType {
@@ -93,6 +94,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         username: data.username,
         displayName: data.displayName ?? data.username,
         avatarUrl: PROXY_URL + data.avatarURL,
+        twoFactorEnabled: data.isTwoFAenabled,
       };
 
       setUsers((prev) => ({ ...prev, [username]: user }));

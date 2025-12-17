@@ -435,7 +435,7 @@ const Settings = ({}) => {
 			setUser({
 				username: mainUser.username,
         displayName: mainUser.displayName,
-        twoFactorEnabled: false,
+        twoFactorEnabled: mainUser.twoFactorEnabled,
         avatarUrl: mainUser.avatarUrl,
         avatarUpdatedAt: Date.now(),
       });
