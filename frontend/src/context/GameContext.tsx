@@ -1,16 +1,11 @@
-
-
-
-
 import { createContext, useContext, useState, ReactNode } from "react";
 
-
 export type GameType = "regular" | "multiplayer" | "tournament";
+
 export interface Player {
  id: string;
  displayName: string;
 }
-
 
 export interface GameState {
  gameType: GameType | null;
@@ -20,7 +15,6 @@ export interface GameState {
  game2Winner: string | null;
  game3Winner: string | null;
 }
-
 
 interface GameContextType {
  gameState: GameState;
@@ -35,9 +29,7 @@ interface GameContextType {
  clearGame: () => void;
 }
 
-
 const GameContext = createContext<GameContextType | null>(null);
-
 
 const initialGameState: GameState = {
  gameType: null,
@@ -48,25 +40,20 @@ const initialGameState: GameState = {
  game3Winner: null,
 };
 
-
 export function GameProvider({ children }: { children: ReactNode }) {
  const [gameState, setGameState] = useState<GameState>(initialGameState);
-
 
  function updateGameState(data: Partial<GameState>) {
    setGameState((prev: GameState) => ({ ...prev, ...data }));
  }
 
-
  function setGameType(gameType: GameType) {
    updateGameState({ gameType });
  }
 
-
  function setPlayers(players: Player[]) {
    updateGameState({ players });
  }
-
 
  function addPlayer(player: Player) {
    setGameState((prev: GameState) => ({
@@ -75,7 +62,6 @@ export function GameProvider({ children }: { children: ReactNode }) {
    }));
  }
 
-
  function removePlayer(playerId: string) {
    setGameState((prev: GameState) => ({
      ...prev,
@@ -83,16 +69,13 @@ export function GameProvider({ children }: { children: ReactNode }) {
    }));
  }
 
-
  function clearPlayers() {
    updateGameState({ players: [] });
  }
 
-
  function setGameNumber(gameNumber: number) {
    updateGameState({ gameNumber });
  }
-
 
  function setGameWinner(gameNumber: 1 | 2 | 3, winner: string) {
    if (gameNumber === 1) {
@@ -104,11 +87,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
    }
  }
 
-
  function clearGame() {
    setGameState(initialGameState);
  }
-
 
  return (
    <GameContext.Provider
@@ -129,7 +110,6 @@ export function GameProvider({ children }: { children: ReactNode }) {
    </GameContext.Provider>
  );
 }
-
 
 export function useGame() {
  const context = useContext(GameContext);
