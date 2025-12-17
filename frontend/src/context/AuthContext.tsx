@@ -19,19 +19,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // which is only possible when main user is online/has tokens set.
   useEffect(() => {
     (async () => {
-      try {
-        const res = await fetch(PROXY_URL + "/me", { credentials: "include" });
-        if (res.ok) {
-          setIsAuthenticated(true);
-        } else {
+      if (isAuthenticated)
+      {
+        try {
+          const res = await fetch(PROXY_URL + "/me", { credentials: "include" });
+          if (res.ok) {
+            setIsAuthenticated(true);
+          } else {
+            setIsAuthenticated(false);
+          }
+        } catch (err) {
+          console.error("Error checking auth status:", err);
           setIsAuthenticated(false);
         }
-      } catch (err) {
-        console.error("Error checking auth status:", err);
-        setIsAuthenticated(false);
       }
     })();
-  }, []);
+  }, [isAuthenticated, setIsAuthenticated]);
 
 
   function login() {

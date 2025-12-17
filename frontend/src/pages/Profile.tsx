@@ -2,20 +2,12 @@ import MatchResultPie from "../components/PieChart";
 import { useAppToast } from "../context/ToastContext";
 import { useEffect, useState } from "react";
 import { PROXY_URL } from "../constants/";
-
-interface IMatchHistoryData {
-  matchId: number;    // I probably will not use this
-  createdAt: string;  // "2025-12-16T15;31:12.680Z"
-  isWinner: boolean;  // (is the main user a winner)
-  userScore: number;  // (main users score)
-  opponentScore: number;
-  opponentDisplayName: string;
-  opponentAvatarURL: string;
-}
+import { type IMatchHistoryData } from "../types/types";
+import MatchHistoryTable from "../components/MatchHistoryTable";
 
 export default function Profile() {
   const { showToast } = useAppToast();
-  const [matches, setMatches] = useState<IMatchHistoryData[]>([]);
+  const [ matches, setMatches] = useState<IMatchHistoryData[]>([]);
 
   useEffect(() => {
     const fetchMatchHistory = async () => {
@@ -29,7 +21,12 @@ export default function Profile() {
         }
 
         const data: IMatchHistoryData[] = await res.json();
+        if (!data){
+          showToast("Error: could not load match history", "error");  
+        }
         setMatches(data);
+        console.log("data: ", data);
+
         showToast("Success: loading match history", "success"); // just for me now that database still empty
       } catch (error) {
         showToast("Error: could not load match history", "error"); // shows twice because of strict mode
@@ -43,8 +40,6 @@ export default function Profile() {
   const wins = matches.filter(m => m.isWinner).length;
   const losses = matches.length - wins;
 
-  // const wins = 6;
-  // const losses = 3;
 
   return (
     <main className="p-12 flex flex-col items-center gap-8">
@@ -56,9 +51,12 @@ export default function Profile() {
         <MatchResultPie wins={wins} losses={losses} />
 
         <div className="flex gap-6 text-xl">
-          <p className="text-green-500">Wins: {wins}</p>
-          <p className="text-red-500">Losses: {losses}</p>
+          <p className="text-blue-500">Wins: {wins}</p>
+          <p className="text-orange-500">Losses: {losses}</p>
         </div>
+        <h2 className="text-xl mt-8">Match History</h2>
+        <MatchHistoryTable matches={matches} />
+
       </div>
     </main>
   );

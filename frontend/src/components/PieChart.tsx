@@ -33,7 +33,7 @@ export default function MatchResultPie({
         cy={size / 2}
         r={radius}
         fill="none"
-        stroke="#22c55e"  // color
+        stroke="#3a86ff"  // color
         strokeWidth={strokeWidth}
       />
 
@@ -43,7 +43,7 @@ export default function MatchResultPie({
         cy={size / 2}
         r={radius}
         fill="none"
-        stroke="#ef4444" // color
+        stroke="#fb5607" // color
         strokeWidth={strokeWidth}
         strokeDasharray={`${lossStroke} ${circumference - lossStroke}`}
         strokeDashoffset={0} // where areas start
