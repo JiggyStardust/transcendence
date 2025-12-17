@@ -2,7 +2,7 @@
 import { FiCheck } from "react-icons/fi";
 import { FiAlertOctagon } from "react-icons/fi";
 import { FiXOctagon } from "react-icons/fi";
-import { type Status } from "../types/types";
+import { type Status } from "../types/toastTypes";
 
 type InputProps = {
   id: string;

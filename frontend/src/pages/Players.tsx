@@ -8,7 +8,7 @@ import { useUser } from "../context/UserContext";
 import { useAuth } from "../context/AuthContext";
 import { useAppToast } from "../context/ToastContext";
 import type { User } from "../context/UserContext";
-import type { Status } from "../types/types";
+import type { Status } from "../types/toastTypes";
 
 type LoggedIn = {
   type: "loggedIn";

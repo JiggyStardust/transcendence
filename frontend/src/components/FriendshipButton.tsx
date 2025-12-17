@@ -1,4 +1,3 @@
-import type { FriendshipStatus } from "../../../backend/src/database/friends.ts"
 import { Button } from "./Button.tsx";
 import { PROXY_URL } from "../constants/index.ts";
 

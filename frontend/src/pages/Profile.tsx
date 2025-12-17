@@ -2,8 +2,9 @@ import { useUser } from "../context/UserContext";
 import { useEffect, useState } from "react";
 import { Button } from "../components/Button";
 import { PROXY_URL } from "../constants";
-import type { IListFriends, IFriend } from "../../../backend/src/database/friends.ts"
 import SearchUsers from "../components/SearchUsers.tsx";
+import { mapFriendsList } from "../../src/adapters/friendsAdapter";
+import type { UserPreview } from "../types/userTypes.ts";
 
 const Stats = () => {
 	return (
@@ -15,25 +16,27 @@ const Stats = () => {
 	)
 }
 
+
 interface FriendRowProps {
   friend: IFriend;
 }
 
 const FriendRow = ({ friend }: FriendRowProps) => {
+	const imageUrl = friend.avatarURL !== null ? "/api" + friend.avatarURL : PROXY_URL + "/uploads/avatars/default.png";
   return (
     <li className="flex items-center gap-4 bg-stone-800/50 dark:bg-stone-600 rounded-xl p-4">
       <img
-        src={friend.avatarURL}
+        src={imageUrl}
         alt={friend.username}
         className="w-10 h-10 rounded-full object-cover"
       />
-
       <div className="flex flex-col">
         <span className="font-medium">
           {friend.displayName || friend.username}
         </span>
         <span className="text-sm opacity-70">{friend.status}</span>
       </div>
+			<FriendshipButton status={status} userID={friend.userID}/>
     </li>
   );
 };
@@ -76,7 +79,7 @@ const getAllFriends = async () => {
 };
 
 const Friends = () => {
-	const [friends, setFriends] = useState<IListFriends | null>(null);
+	const [friends, setFriends] = useState<UserPreview[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -84,7 +87,8 @@ const Friends = () => {
     const loadFriends = async () => {
       try {
         const res = await getAllFriends();
-        setFriends(res.data);
+				const mapped = mapFriendsList(res.data);
+        setFriends(mapped);
       } catch (err: any) {
         setError(err.message);
       } finally {

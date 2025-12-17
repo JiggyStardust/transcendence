@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { passwordRequirements } from "../constants/passwordRequirements";
 import { FiX } from "react-icons/fi";
 import { useAppToast } from "../context/ToastContext";
-import { type Status } from "../types/types";
+import { type Status } from "../types/toastTypes";
 import { useUser } from "../context/UserContext";
 
 interface User {

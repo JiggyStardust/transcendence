@@ -1,5 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { FriendStatus, UserStatus } from "@prisma/client";
+import { type ISearchResult } from "../../../shared/types/users";
 
 export interface IFriend {
   userID: number;
@@ -34,15 +35,7 @@ export enum FriendshipStatus {
   PENDING_OUTGOING = "PENDING_OUTGOING",
 }
 
-type TFriendshipStatus = FriendshipStatus;
-
-export interface ISearchResult {
-  userID: number;
-  displayName: string;
-  avatarURL: string;
-  status: UserStatus | "UNKNOWN";
-  friendshipStatus: TFriendshipStatus;
-}
+export type TFriendshipStatus = FriendshipStatus;
 
 export class FriendService {
   constructor(private fastify: FastifyInstance) {}

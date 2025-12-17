@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-import type { ISearchResult } from "../../../backend/src/database/friends.ts"
 import { PROXY_URL } from "../constants/index.ts";
 import FriendshipButton from "./FriendshipButton.tsx";
 import { useAppToast } from "../context/ToastContext";
+import { type UserPreview } from "../types/userTypes.ts";
+import { mapSearchResultToUser } from "../adapters/userAdapter";
+import { type ISearchResult } from "../../../shared/types/users.ts";
 
 interface SearchResponse {
   success: boolean;
@@ -24,22 +26,21 @@ export const searchFriends = async (query: string): Promise<SearchResponse> => {
 	return res.json();
 };
 
-const UserRow = ({ avatarURL, userID, displayName, friendshipStatus, status} : ISearchResult ) => {
-	const imageUrl = avatarURL !== null
-	? "/api" + avatarURL : PROXY_URL + "/uploads/avatars/default.png";
-	console.log("Friend ID in user row: " + userID);
+const UserRow = ({ avatarUrl, id, name, relationship, presence} : UserPreview ) => {
+	const imageUrl = avatarUrl !== null
+	? "/api" + avatarUrl : PROXY_URL + "/uploads/avatars/default.png";
   return (
     <li className="flex items-center justify-between gap-4 border shadow rounded-xl p-4">
       <div className="flex items-center gap-2">
 				<img
 	        src={imageUrl}
-	        alt={displayName}
+	        alt={name}
 	        className="w-10 h-10 rounded-full object-cover"
 	      />
-        <span className="font-tomorrow font-medium">{displayName}</span>
+        <span className="font-tomorrow font-medium">{name}</span>
 			</div>
 			<div className="flex flex-col text-end">
-				<FriendshipButton status={friendshipStatus} userID={userID} />
+				<FriendshipButton status={relationship} userID={id} />
       	<span className="text-sm opacity-70">Online status: <span className="font-bold">{status}</span></span>
 			</div>
     </li>
@@ -48,7 +49,7 @@ const UserRow = ({ avatarURL, userID, displayName, friendshipStatus, status} : I
 
 const SearchUsers = () => {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<ISearchResult[]>([]);
+  const [results, setResults] = useState<UserPreview[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 	const { showToast } = useAppToast();
@@ -65,7 +66,8 @@ const SearchUsers = () => {
 
       try {
         const res = await searchFriends(query);
-        setResults(res.data);
+				const mapped = res.data.map(mapSearchResultToUser);
+        setResults(mapped);
       } catch (err: any) {
         showToast("Error: " + err.message, "error");
 				setError(err.message);
@@ -92,7 +94,7 @@ const SearchUsers = () => {
 
       <ul className="flex flex-col gap-2">
         {results.map((user) => (
-          <UserRow avatarURL={user.avatarURL} userID={user.userID} displayName={user.displayName} friendshipStatus={user.friendshipStatus} status={user.status} />
+          <UserRow avatarUrl={user.avatarUrl} id={user.id} name={user.name} relationship={user.relationship} presence={user.presence} />
         ))}
       </ul>
     </div>
