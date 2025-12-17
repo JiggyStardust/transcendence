@@ -422,14 +422,13 @@ const AuthSettings = ({ user, setUser }: SettingsProps) => {
 
 const Settings = ({}) => {
 	const { users, loadMe } = useUser();
+	const [user, setUser] = useState<User | null>(null);
+  const mainUser = Object.values(users)[0];
+
   useEffect(() => {
     loadMe();
   }, [loadMe]);
-	 const [user, setUser] = useState<User | null>(null);
 
-  const mainUser = Object.values(users)[0];
-
-	
 	useEffect(() => {
 		if (mainUser) {
 			setUser({
@@ -441,18 +440,14 @@ const Settings = ({}) => {
       });
     }
   }, [mainUser]);
-	
-	if (!mainUser || !user) {
-		return (
-			<div>
-				<h1>
-					No user logged in
-				</h1>
-			</div>
-		)
-	}
 
 	return (
+		<>
+		{!user ? (
+			<h1>
+				No user logged in
+			</h1>
+		) : (
 		<div className="flex justify-center pt-6">
 			<div className="flex flex-col gap-12 w-3/5 min-w-xl max-w-6xl">
 				{user.username !== "" && (
@@ -467,6 +462,8 @@ const Settings = ({}) => {
 				)}
 			</div>
 		</div>
+		)}
+		</>
 	)
 }
 

@@ -56,7 +56,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         username: data.username,
         displayName: data.displayName ?? data.username,
         avatarUrl: PROXY_URL + data.avatarURL,
-        // role: "full",
+        twoFactorEnabled: data.isTwoFAenabled,
       };
 
       setUsers((prev) => ({ ...prev, [username]: user }));
