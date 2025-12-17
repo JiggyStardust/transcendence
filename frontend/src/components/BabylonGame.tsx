@@ -161,7 +161,7 @@ export default function BabylonGame() {
   return (
     <div className="page-bg flex flex-col items-center justify-center min-h-screen w-screen">
       {isLoading && (
-        <div className="absolute text-black text-2xl">
+        <div className="absolute">
           Loading game...
         </div>
       )}
