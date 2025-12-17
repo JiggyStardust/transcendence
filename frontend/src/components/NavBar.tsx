@@ -29,6 +29,7 @@ export default function NavBar() {
 					<>
 						<NavLink to="/players" className={({ isActive }) => navLinkStyles({ active: isActive })}>Players</NavLink>
 						<NavLink to="/gameRedirect" className={({ isActive }) => navLinkStyles({ active: isActive })}>Game</NavLink>
+						<NavLink to="/profile" className={({ isActive }) => navLinkStyles({ active: isActive })}>Profile</NavLink>
 						<NavLink to="/settings" className={({ isActive }) => navLinkStyles({ active: isActive })}>Settings</NavLink>
 					</>
 				) : (
