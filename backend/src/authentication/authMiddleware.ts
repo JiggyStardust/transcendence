@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { REFRESH_EXPIRATION, JWT_SECRET, JWT_REFRESH_SECRET, ACCESS_COOKIE, REFRES_COOKIE } from "../constants";
+import { REFRESH_EXPIRATION, JWT_SECRET, JWT_REFRESH_SECRET, ACCESS_COOKIE, REFRESH_COOKIE } from "../constants";
 import type { preHandlerHookHandler } from "fastify";
 import { generateAccessToken, generateRefreshToken } from "./authService";
 
@@ -43,7 +43,7 @@ export const verifyToken: preHandlerHookHandler = (req, reply, done) => {
         if (isExpiringSoon(refreshDecoded.exp)) {
           const newRefreshToken = generateRefreshToken(refreshPayload);
           console.log("New resresh token generated:", refreshDecoded);
-          reply.setCookie(REFRES_COOKIE, newRefreshToken, {
+          reply.setCookie(REFRESH_COOKIE, newRefreshToken, {
             httpOnly: true,
             secure: true,
             sameSite: "lax",

@@ -6,7 +6,7 @@ import { validatePassword, PASSWORD_ERROR_MESSAGE } from "utils/validatePassword
 import { validateUsername, USERNAME_ERROR_MESSAGE } from "utils/validateUsername";
 import { UserStatus } from "@prisma/client";
 import { IUserData } from "database/types";
-import { REFRESH_EXPIRATION, ACCESS_COOKIE, REFRES_COOKIE } from "../constants";
+import { REFRESH_EXPIRATION, ACCESS_COOKIE, REFRESH_COOKIE } from "../constants";
 
 export interface IUserPayload {
   id: string;
@@ -142,7 +142,7 @@ export async function verify2FALogin(req: AuthenticatedRequest<IVerify2FALoginBo
       sameSite: "lax",
       path: "/",
     })
-    .setCookie(REFRES_COOKIE, refreshToken, {
+    .setCookie(REFRESH_COOKIE, refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "lax",
@@ -226,7 +226,7 @@ export async function login(req: FastifyRequest<{ Body: IAuthRequestBody }>, rep
       sameSite: "lax",
       path: "/",
     })
-    .setCookie(REFRES_COOKIE, refreshToken, {
+    .setCookie(REFRESH_COOKIE, refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "lax",
@@ -245,13 +245,13 @@ export async function logout(req: FastifyRequest, reply: FastifyReply) {
   } catch (err) {
     return reply
       .clearCookie(ACCESS_COOKIE, { path: "/", sameSite: "lax", secure: true })
-      .clearCookie(REFRES_COOKIE, { path: "/", sameSite: "lax", secure: true })
+      .clearCookie(REFRESH_COOKIE, { path: "/", sameSite: "lax", secure: true })
       .code(500)
       .send({ error: "Failed to set offline status" });
   }
   reply
     .clearCookie(ACCESS_COOKIE, { path: "/", sameSite: "lax", secure: true })
-    .clearCookie(REFRES_COOKIE, { path: "/", sameSite: "lax", secure: true })
+    .clearCookie(REFRESH_COOKIE, { path: "/", sameSite: "lax", secure: true })
     .send({ message: "Logged out" });
 }
 

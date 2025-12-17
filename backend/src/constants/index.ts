@@ -20,4 +20,4 @@ function checkAccessLimit(value: string | undefined, fallback: number): number {
 }
 
 export const ACCESS_COOKIE = "accessToken";
-export const REFRES_COOKIE = "refreshToken";
+export const REFRESH_COOKIE = "refreshToken";
