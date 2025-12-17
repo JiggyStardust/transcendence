@@ -2,6 +2,7 @@ import "dotenv/config";
 
 export const JWT_SECRET = requireEnvVar(process.env.JWT_SECRET, "JWT_SECRET");
 export const JWT_REFRESH_SECRET = requireEnvVar(process.env.JWT_REFRESH_SECRET, "JWT_REFRESH_SECRET");
+export const COOKIE_SECRET = process.env.COOKIE_SECRET;
 
 // Allow values in seconds only
 export const ACCESS_EXPIRATION = checkAccessLimit(process.env.JWT_ACCESS_EXPIRATION, 30 * 24 * 60 * 60);
