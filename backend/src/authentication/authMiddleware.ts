@@ -1,12 +1,5 @@
 import jwt from "jsonwebtoken";
-import {
-  ACCESS_EXPIRATION,
-  REFRESH_EXPIRATION,
-  JWT_SECRET,
-  JWT_REFRESH_SECRET,
-  ACCESS_COOKIE,
-  REFRES_COOKIE,
-} from "../constants";
+import { REFRESH_EXPIRATION, JWT_SECRET, JWT_REFRESH_SECRET, ACCESS_COOKIE, REFRES_COOKIE } from "../constants";
 import type { preHandlerHookHandler } from "fastify";
 import { generateAccessToken, generateRefreshToken } from "./authService";
 
@@ -27,7 +20,6 @@ export const verifyToken: preHandlerHookHandler = (req, reply, done) => {
 
   try {
     const decoded = jwt.verify(accessToken, JWT_SECRET) as any;
-    console.log("Access token valid:", decoded);
     req.user = { id: decoded.id, username: decoded.username };
     return done();
   } catch (err) {
@@ -38,7 +30,6 @@ export const verifyToken: preHandlerHookHandler = (req, reply, done) => {
 
       try {
         const refreshDecoded = jwt.verify(refreshToken, JWT_REFRESH_SECRET) as any;
-        console.log("Refresh token valid:", refreshDecoded);
         const refreshPayload = { id: refreshDecoded.id, username: refreshDecoded.username };
         const newAccessToken = generateAccessToken(refreshPayload);
         reply
@@ -50,7 +41,6 @@ export const verifyToken: preHandlerHookHandler = (req, reply, done) => {
             path: "/",
           });
         if (isExpiringSoon(refreshDecoded.exp)) {
-          console.log("Refresh token expiring soon.");
           const newRefreshToken = generateRefreshToken(refreshPayload);
           console.log("New resresh token generated:", refreshDecoded);
           reply.setCookie(REFRES_COOKIE, newRefreshToken, {

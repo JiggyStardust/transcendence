@@ -6,7 +6,7 @@ import { validatePassword, PASSWORD_ERROR_MESSAGE } from "utils/validatePassword
 import { validateUsername, USERNAME_ERROR_MESSAGE } from "utils/validateUsername";
 import { UserStatus } from "@prisma/client";
 import { IUserData } from "database/types";
-import { ACCESS_EXPIRATION, REFRESH_EXPIRATION, ACCESS_COOKIE, REFRES_COOKIE } from "../constants";
+import { REFRESH_EXPIRATION, ACCESS_COOKIE, REFRES_COOKIE } from "../constants";
 
 export interface IUserPayload {
   id: string;
