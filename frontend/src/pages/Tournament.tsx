@@ -22,7 +22,7 @@ const Match = ({game_number, player_1, player_2, active=true, onStartGame, winne
       </Button>
       <p className="text-3xl">
         {player_1} vs. {player_2}
-        {winner && <span className="ml-4 text-vintage-yellow">| Winner: {winner}</span>}
+        {winner && <span className="ml-4">| Winner: {winner}</span>}
       </p>
     </div>
   )

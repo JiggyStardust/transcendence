@@ -56,7 +56,7 @@ export const game = {
 	score: {
 		p1: 0,
 		p2: 0,
-		max: 7
+		max: 1
 	},
 
 	pointScored: {
