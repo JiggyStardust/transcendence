@@ -27,7 +27,6 @@ export const createMatch = async (
         return err("INVALID_MATCH_PAYLOAD");
     }
 
-    const now = new Date();
     const winnerId = winner[1] ? userIds[1] : userIds[0];
     if (!winnerId) {
       return err("INVALID_WINNER");
@@ -35,7 +34,6 @@ export const createMatch = async (
     
     const match = await prisma.match.create({
       data: {
-        createdAt: now,
         winnerId,
         participants: {
             create: userIds.map((userId, i) => ({ 
@@ -54,7 +52,8 @@ export const createMatch = async (
         id: match.id,
         createdAt: match.createdAt,
         winnerId: match.winnerId!,
-        participants: match.participants.map(p => ({
+        participants: match.participants.map(
+          (p: (typeof match.participants)[number]) => ({
           userId: p.userId,
           score: p.score,
           isWinner: p.isWinner,

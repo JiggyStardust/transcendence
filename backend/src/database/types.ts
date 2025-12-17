@@ -1,5 +1,5 @@
 // shared types
-import { AvatarType } from ".prisma/client";
+//import { AvatarType } from "@prisma/client";
 
 export interface IPrismaReturn<T = unknown> {
   data: T | undefined;
@@ -24,7 +24,7 @@ export interface IUserProfile {
   username: string;
   displayName: string;
   avatarURL: string;
-  avatarType: AvatarType;
+  //avatarType: AvatarType;
 }
 
 export interface IMatchData {
