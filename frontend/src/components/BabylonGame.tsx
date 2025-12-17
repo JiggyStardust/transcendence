@@ -96,6 +96,7 @@ export default function BabylonGame() {
 
         game.score.p1 = 0;
         game.score.p2 = 0;
+        game.reset.timer = game.reset.interval;
         game.infoSaved = false;
         game.currentState = game.state.start;
 
