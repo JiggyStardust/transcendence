@@ -1,20 +1,51 @@
-
-import { useEffect, useRef, useState } from 'react';
-import { useGame } from '../../src/context/GameContext';
-import { useUser } from "../context/UserContext";
+import { Button } from "../components/Button";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../components/Button.tsx";
+import { useGame } from '../context/GameContext';
+import { useUser } from "../context/UserContext";
 
-export default function BabylonGame() {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const { gameState, updateGameState, setGameWinner } = useGame();
-  const gameRef = useRef<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isGameOver, setIsGameOver] = useState(false);
-  const initializedRef = useRef(false);
-  const { users, user } = useUser();
-  const [me, setMe] = useState(null);
+interface User {
+  id: number;
+  displayName: string;
+}
+
+interface MatchProps {
+  game_number: string;
+  player_1: string;
+  player_2: string;
+  active?: boolean;
+  onStartGame?: () => void;
+  winner?: string | null;
+}
+
+const Match = ({game_number, player_1, player_2, active=true, onStartGame, winner}: MatchProps) => {
+  return (
+    <div className="flex justify-center gap-7">
+      <Button 
+        variant="primary" 
+        size="lg" 
+        disabled={!active || !!winner}
+        onClick={() => {
+          if (active && !winner) {
+            onStartGame?.()
+          }
+        }}
+      >
+        {game_number}
+      </Button>
+      <p className="text-3xl">
+        {player_1} vs. {player_2}
+        {winner && <span className="ml-4">| Winner: {winner}</span>}
+      </p>
+    </div>
+  )
+}
+
+export default function Tournament() {
   const navigate = useNavigate();
+  const { gameState, setPlayers, setGameType, clearPlayers, setGameNumber } = useGame();
+  const { users, user } = useUser();
+  const [me, setMe] = useState<User | null>(null);
 
   // Load user data once on mount
   useEffect(() => {
@@ -26,174 +57,91 @@ export default function BabylonGame() {
     loadUserData();
   }, [user]);
 
+  const handleStartGame = (gameNumber: number,
+                            p1name: string,
+                            p2name: string,
+                            p1id?: number,
+                            p2id?: number) => {
+    clearPlayers();
+    setGameType("tournament");
+    setGameNumber(gameNumber);
+    setPlayers([
+      { id: p1id, displayName: p1name },
+      { id: p2id, displayName: p2name }
+    ]);
 
+    setTimeout(() => {
+      navigate("/game");
+    }, 0);
+  };
 
+  // Check if game 3 should be active (both game 1 and 2 are complete)
+  const isGame3Active = gameState.game1Winner && gameState.game2Winner;
+
+  // Check for correct number of players
+  const numberOfUsers = Object.values(users).length;
+  if (numberOfUsers != 4) {
+    navigate("/");
+    return null;
+  }
+
+  const name1 = (Object.values(users)[0] as User)?.displayName || me?.displayName;
+  const name2 = (Object.values(users)[1] as User)?.displayName || me?.displayName;
+  const name3 = (Object.values(users)[2] as User)?.displayName || me?.displayName;
+  const name4 = (Object.values(users)[3] as User)?.displayName || me?.displayName;
+  const id1 = (Object.values(users)[0] as User)?.id || me?.id;
+  const id2 = (Object.values(users)[1] as User)?.id || me?.id;
+  const id3 = (Object.values(users)[2] as User)?.id || me?.id;
+  const id4 = (Object.values(users)[3] as User)?.id || me?.id;
+  const game1WinnerName = gameState.game1Winner ?? null;
+  const game2WinnerName = gameState.game2Winner ?? null;
+  const game3WinnerName = gameState.game3Winner ?? null;
+
+  // Get winner IDs for Game 3
+  const game1WinnerId = game1WinnerName === name1 ? id1 : game1WinnerName === name2 ? id2 : undefined;
+  const game2WinnerId = game2WinnerName === name3 ? id3 : game2WinnerName === name4 ? id4 : undefined;
+
+  // Warn user on page refresh or tab close
   useEffect(() => {
-    // Check for correct number of players
-    const numberOfUsers = Object.values(users).length;
-    if (numberOfUsers < 2) {
-      navigate("/");
-      return;
-    }
-
-    // Return if canvas is not made yet
-    if (!canvasRef.current) return;
-    if (initializedRef.current) return;
-    initializedRef.current = true;
-    let isMounted = true;
-
-    // Prevent page from scrolling
-    const preventScrollKeys = (e: KeyboardEvent) => {
-      const keys = ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'];
-      if (keys.includes(e.code) && document.activeElement === canvasRef.current) {
-        e.preventDefault();
-      }
-    };
-
-    const preventScrollWheel = (e: WheelEvent) => {
-      if (document.activeElement === canvasRef.current) e.preventDefault();
-    };
-
-    window.addEventListener('keydown', preventScrollKeys, { passive: false });
-    window.addEventListener('wheel', preventScrollWheel, { passive: false });
-
-    // Warn user before refresh/close
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault();
-      e.returnValue = "Refreshing will reset your game progress!";
+      e.returnValue = "Refreshing will reset tournament data!";
     };
+
     window.addEventListener("beforeunload", handleBeforeUnload);
 
-    // Initialize Game
-    const initGame = async () => {
-      try {
-        const { game } = await import('../game/game.js');
-        const { parseUsername } = await import('../game/parseUsername.js');
-        const { createScene } = await import('../game/createScene.js');
-        const { applyCollision } = await import('../game/applyCollision.js');
-        const { moveSphere } = await import('../game/moveSphere.js');
-        const { updateScoreText } = await import('../game/updateScoreText.js');
-        const { pointScored } = await import('../game/pointScored.js');
-        const { reset } = await import('../game/reset.js');
-        const { gameOver } = await import('../game/gameOver.js');
-        const { saveGame } = await import('../game/saveGame.tsx');
-
-        if (!isMounted || !canvasRef.current) return;
-
-        game.canvas = canvasRef.current;
-        game.engine = new BABYLON.Engine(game.canvas, true);
-        gameRef.current = game;
-        
-        game.hasThirdPlayer = false;
-        if (window.numberOfPlayers === 3)
-          game.hasThirdPlayer = true;
-
-        parseUsername(game, gameState.players);
-        await createScene(game);
-
-        if (!isMounted) {
-          game.engine.dispose();
-          return;
-        }
-
-        game.score.p1 = 0;
-        game.score.p2 = 0;
-        game.reset.timer = game.reset.interval;
-        game.infoSaved = false;
-        game.currentState = game.state.start;
-
-        game.engine.runRenderLoop(() => {
-          if (!isMounted) return;
-
-          game.canvas.focus();
-          if (!game.scene || !game.scene.isReady()) return;
-
-          switch (game.currentState) {
-            case game.state.start: 
-              reset(game);
-              break;
-            case game.state.playing:
-              applyCollision(game);
-              moveSphere(game);
-              break;
-            case game.state.pointScored:
-              pointScored(game);
-              break;
-            case game.state.reset:
-              reset(game);
-              break;
-            case game.state.gameOver:
-              saveGame(game, gameState, setGameWinner);
-              gameOver(game);
-              setIsGameOver(true);
-              break;
-          }
-
-          updateScoreText(game);
-          game.scene.render();
-        });
-
-        const handleResize = () => { if (game.engine) game.engine.resize(); };
-        window.addEventListener('resize', handleResize);
-        setIsLoading(false);
-
-        return () => {
-          window.removeEventListener('resize', handleResize);
-          if (game.engine) { game.engine.stopRenderLoop(); game.engine.dispose(); }
-        };
-      } catch (error) {
-        console.error('Failed to initialize game:', error);
-        setIsLoading(false);
-      }
-    };
-
-    const cleanupPromise = initGame();
-
     return () => {
-      isMounted = false;
-      initializedRef.current = false;
-
-      window.removeEventListener('keydown', preventScrollKeys);
-      window.removeEventListener('wheel', preventScrollWheel);
       window.removeEventListener("beforeunload", handleBeforeUnload);
-
-      cleanupPromise?.then((cleanup) => cleanup && cleanup());
     };
   }, []);
 
-  const handleReturnToTournament = () => {
-    navigate("/tournament");
-  };
-
   return (
-    <div className="page-bg flex flex-col items-center justify-center min-h-screen w-screen">
-      {isLoading && (
-        <div className="absolute">
-          Loading game...
-        </div>
-      )}
-      <canvas
-        ref={canvasRef}
-        tabIndex={0}
-        width="1280"
-        height="720"
-        id="renderCanvas"
-        style={{
-          display: isLoading ? 'none' : 'block',
-          outline: 'none'
-        }}
-      />
-      {isGameOver && (
-        <div className="absolute bottom-10">
-          <Button 
-            variant="primary" 
-            size="lg"
-            onClick={handleReturnToTournament}
-          >
-            Return to Tournament
-          </Button>
-        </div>
-      )}
+    <div className="flex justify-center flex-col items-center gap-10">
+      <h1 className="mt-4 font-press text-7xl text-vintage-red dark:text-vintage-yellow [word-spacing:-30px] tracking-[-0.1em]">Tournament</h1>
+      <div className="flex flex-col items-start gap-4">
+        <Match
+          game_number="Game 1"
+          player_1={name1}
+          player_2={name2}
+          winner={game1WinnerName}
+          onStartGame={() => handleStartGame(1, name1, name2, id1, id2)}
+        />
+        <Match
+          game_number="Game 2"
+          player_1={name3}
+          player_2={name4}
+          winner={game2WinnerName}
+          onStartGame={() => handleStartGame(2, name3, name4, id3, id4)}
+        />
+        <Match
+          game_number="Game 3"
+          player_1={game1WinnerName || "Winner of Game 1"}
+          player_2={game2WinnerName || "Winner of Game 2"}
+          winner={game3WinnerName}
+          active={isGame3Active}
+          onStartGame={() => handleStartGame(3, game1WinnerName!, game2WinnerName!, game1WinnerId, game2WinnerId)}
+        />
+      </div>
     </div>
   );
 }

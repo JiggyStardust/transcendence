@@ -7,13 +7,13 @@ import { Button } from "../components/Button.tsx";
 
 export default function BabylonGame() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const { gameState, updateGameState, setGameWinner } = useGame();
+  const { gameState, setGameWinner } = useGame();
   const gameRef = useRef<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isGameOver, setIsGameOver] = useState(false);
   const initializedRef = useRef(false);
   const { users, user } = useUser();
-  const [me, setMe] = useState(null);
+  const [setMe] = useState(null);
   const navigate = useNavigate();
 
   // Load user data once on mount
@@ -84,10 +84,7 @@ export default function BabylonGame() {
         game.engine = new BABYLON.Engine(game.canvas, true);
         gameRef.current = game;
         
-        game.hasThirdPlayer = false;
-        if (window.numberOfPlayers === 3)
-          game.hasThirdPlayer = true;
-
+        
         parseUsername(game, gameState.players);
         await createScene(game);
 
@@ -183,7 +180,7 @@ export default function BabylonGame() {
           outline: 'none'
         }}
       />
-      {isGameOver && (
+      {isGameOver && gameState.gameType === "tournament" && (
         <div className="absolute bottom-10">
           <Button 
             variant="primary" 

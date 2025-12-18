@@ -35,7 +35,7 @@ const fastify = Fastify({
 
 // register cookies
 fastify.register(fastifyCookie, {
-  secret: "a_random_secret_key", // used for signed cookies
+  secret: process.env.COOKIE_SECRET, // used for signed cookies
 });
 
 // register jwt plugin
