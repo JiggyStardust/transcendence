@@ -34,7 +34,6 @@ const ProfileInfo = ({ user }: { user: User }) => {
 			<ProfilePic avatarUrl={user.avatarUrl} avatarUpdatedAt={user.avatarUpdatedAt}/>
 			<div className="flex flex-col gap-4 pt-4">
 				<h1 className="font-bold text-3xl">{user.username}</h1>
-				<p>Some text???</p>
 			</div>
 		</div>
 	)
