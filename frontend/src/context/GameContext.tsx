@@ -3,7 +3,7 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 export type GameType = "regular" | "multiplayer" | "tournament";
 
 export interface Player {
- id: string;
+ id: number;
  displayName: string;
 }
 
@@ -21,7 +21,7 @@ interface GameContextType {
   setGameType: (type: GameType) => void;
  setPlayers: (players: Player[]) => void;
  addPlayer: (player: Player) => void;
- removePlayer: (playerId: string) => void;
+ removePlayer: (playerId: number) => void;
  clearPlayers: () => void;
  setGameNumber: (gameNumber: number) => void;
  setGameWinner: (gameNumber: 1 | 2 | 3, winner: string) => void;
@@ -62,7 +62,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
    }));
  }
 
- function removePlayer(playerId: string) {
+ function removePlayer(playerId: number) {
    setGameState((prev: GameState) => ({
      ...prev,
      players: prev.players.filter((p) => p.id !== playerId),

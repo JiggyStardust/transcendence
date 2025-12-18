@@ -1,5 +1,5 @@
 import { Button } from "../components/Button";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from '../context/GameContext';
 import { useUser } from "../context/UserContext";
@@ -44,24 +44,13 @@ const Match = ({game_number, player_1, player_2, active=true, onStartGame, winne
 export default function Tournament() {
   const navigate = useNavigate();
   const { gameState, setPlayers, setGameType, clearPlayers, setGameNumber } = useGame();
-  const { users, user } = useUser();
-  const [me, setMe] = useState<User | null>(null);
-
-  // Load user data once on mount
-  useEffect(() => {
-    const loadUserData = async () => {
-      if (user) {
-        setMe(user);
-      }
-    };
-    loadUserData();
-  }, [user]);
+  const { users, mainUser } = useUser();
 
   const handleStartGame = (gameNumber: number,
                             p1name: string,
                             p2name: string,
-                            p1id?: number,
-                            p2id?: number) => {
+                            p1id: number,
+                            p2id: number) => {
     clearPlayers();
     setGameType("tournament");
     setGameNumber(gameNumber);
@@ -76,8 +65,9 @@ export default function Tournament() {
   };
 
   // Check if game 3 should be active (both game 1 and 2 are complete)
-  const isGame3Active = gameState.game1Winner && gameState.game2Winner;
-
+  let isGame3Active = false;
+  if (gameState.game1Winner && gameState.game2Winner)
+    isGame3Active = true;
   // Check for correct number of players
   const numberOfUsers = Object.values(users).length;
   if (numberOfUsers != 4) {
@@ -85,14 +75,14 @@ export default function Tournament() {
     return null;
   }
 
-  const name1 = (Object.values(users)[0] as User)?.displayName || me?.displayName;
-  const name2 = (Object.values(users)[1] as User)?.displayName || me?.displayName;
-  const name3 = (Object.values(users)[2] as User)?.displayName || me?.displayName;
-  const name4 = (Object.values(users)[3] as User)?.displayName || me?.displayName;
-  const id1 = (Object.values(users)[0] as User)?.id || me?.id;
-  const id2 = (Object.values(users)[1] as User)?.id || me?.id;
-  const id3 = (Object.values(users)[2] as User)?.id || me?.id;
-  const id4 = (Object.values(users)[3] as User)?.id || me?.id;
+  const name1 = (Object.values(users)[0] as User)?.displayName || "Player1";
+  const name2 = (Object.values(users)[1] as User)?.displayName || "Player2";
+  const name3 = (Object.values(users)[2] as User)?.displayName || "Player3";
+  const name4 = (Object.values(users)[3] as User)?.displayName || "Player4";
+  const id1 = (Object.values(users)[0] as User)?.id || mainUser?.id;
+  const id2 = (Object.values(users)[1] as User)?.id || mainUser?.id;
+  const id3 = (Object.values(users)[2] as User)?.id || mainUser?.id;
+  const id4 = (Object.values(users)[3] as User)?.id || mainUser?.id;
   const game1WinnerName = gameState.game1Winner ?? null;
   const game2WinnerName = gameState.game2Winner ?? null;
   const game3WinnerName = gameState.game3Winner ?? null;
@@ -124,14 +114,14 @@ export default function Tournament() {
           player_1={name1}
           player_2={name2}
           winner={game1WinnerName}
-          onStartGame={() => handleStartGame(1, name1, name2, id1, id2)}
+          onStartGame={() => handleStartGame(1, name1, name2, id1!, id2!)}
         />
         <Match
           game_number="Game 2"
           player_1={name3}
           player_2={name4}
           winner={game2WinnerName}
-          onStartGame={() => handleStartGame(2, name3, name4, id3, id4)}
+          onStartGame={() => handleStartGame(2, name3, name4, id3!, id4!)}
         />
         <Match
           game_number="Game 3"
@@ -139,7 +129,7 @@ export default function Tournament() {
           player_2={game2WinnerName || "Winner of Game 2"}
           winner={game3WinnerName}
           active={isGame3Active}
-          onStartGame={() => handleStartGame(3, game1WinnerName!, game2WinnerName!, game1WinnerId, game2WinnerId)}
+          onStartGame={() => handleStartGame(3, game1WinnerName!, game2WinnerName!, game1WinnerId!, game2WinnerId!)}
         />
       </div>
     </div>

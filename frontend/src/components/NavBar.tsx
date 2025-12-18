@@ -1,4 +1,3 @@
-
 import { ThemeToggle } from './ThemeToggle.tsx'
 import { NavLink } from "react-router-dom";
 import { cva } from "class-variance-authority";
