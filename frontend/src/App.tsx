@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { GameProvider } from './context/GameContext';
 import Landing from "./pages/Landing.tsx";
@@ -12,38 +11,36 @@ import NavBar from "./components/NavBar.tsx";
 import PrivateRoute from "./pages/PrivateRoute.tsx";
 import Tournament from "./pages/Tournament.tsx";
 import BabylonGame from "./components/BabylonGame.tsx";
+import Profile2 from "./pages/Profile2.tsx";
 import Profile from "./pages/Profile.tsx";
 
 
 function App() {
 
 
- return (
-   <div>
-     <Router>
-       <NavBar />
-       <Routes>
-         <Route path="/" element={<Landing />} />
-         <Route path="/signup" element={<SignUp />} />
-         <Route path="/login" element={<Login />} />
-         <Route path="/testing" element={<Testing />} />
-         <Route element={<PrivateRoute />}>
-          <Route path="/settings" element={<Settings />} />
-         </Route>
+  return (
+    <div>
+      <Router>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/testing" element={<Testing />} />
+          <Route path="/profile2" element={<Profile2 />} />
           <Route element={<PrivateRoute />}>
-           <Route path="/profile" element={<Profile />} />
-         </Route>
-         <Route element={<PrivateRoute />}>
-          <Route path="/players" element={<Players />} />
-         </Route>
-         <Route path="*" element={<Landing />} />
-         <Route path="/tournament" element={<GameProvider> <Tournament /> </GameProvider>} />
-         <Route path="/game" element={<GameProvider> <BabylonGame /> </GameProvider>} />
-         <Route path="/gameRedirect" element={<GameProvider> <GameRedirect /> </GameProvider>} />
-       </Routes>
-     </Router>
-   </div>
- );
+            <Route path="/players" element={<Players />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
+          <Route path="*" element={<Landing />} />
+          <Route path="/tournament" element={<GameProvider> <Tournament /> </GameProvider>} />
+          <Route path="/game" element={<GameProvider> <BabylonGame /> </GameProvider>} />
+          <Route path="/gameRedirect" element={<GameProvider> <GameRedirect /> </GameProvider>} />
+        </Routes>
+      </Router>
+    </div>
+  );
 }
 
 

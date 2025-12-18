@@ -6,16 +6,7 @@ import SearchUsers from "../components/SearchUsers.tsx";
 import { mapFriendsList } from "../../src/adapters/friendsAdapter";
 import type { UserPreview } from "../types/userTypes.ts";
 import FriendshipButton from "../components/FriendshipButton.tsx";
-
-const Stats = () => {
-	return (
-		<div className="relative flex flex-col bg-stone-700/50 dark:bg-stone-500 rounded-3xl p-8 w-2/3">
-			<h2>
-				Stats
-			</h2>
-		</div>
-	)
-}
+import Stats from "../components/Stats.tsx";
 
 const FriendRow = ({ friend }: { friend: UserPreview}) => {
 	const imageUrl = friend.avatarUrl !== null ? "/api" + friend.avatarUrl : PROXY_URL + "/uploads/avatars/default.png";
