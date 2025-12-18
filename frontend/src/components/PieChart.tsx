@@ -15,7 +15,7 @@ export default function MatchResultPie({
 
   // Avoid division by zero
   if (total === 0) {
-    return <p className="text-sm text-gray-500">No data</p>;
+    return <p className="text-sm text-gray-600 dark:text-stone-800">No data</p>;
   }
 
   const radius = (size - strokeWidth) / 2;

@@ -37,7 +37,7 @@ const Stats = () => {
   const losses = matches.length - wins;
 
   return (
-    <div className="relative flex flex-col bg-stone-700/50 dark:bg-stone-500 rounded-3xl p-8 w-2/3 gap-8">
+    <div className="relative flex flex-col bg-stone-700/50 dark:bg-stone-500 rounded-3xl p-8 w-2/3 gap-8 mb-20">
       <h2 className="text-2xl font-semibold">Stats</h2>
 
       {loading ? (
