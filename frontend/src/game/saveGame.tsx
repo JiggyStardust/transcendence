@@ -1,8 +1,8 @@
-// @ts-nocheck
+
 
 import { PROXY_URL } from "../constants";
 
-export async function saveGame(game, gameState, setGameWinner) {
+export async function saveGame(game: any, gameState: any, setGameWinner: any) {
   if (!game.infoSaved) {
     game.infoSaved = true;
     // Save tournament results to gameContext

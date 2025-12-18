@@ -14,7 +14,7 @@ const AuthContext = createContext<AuthContextType | null>(null); // is first ini
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-    const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   // This check is here, so after refresh we see if we are still online in backend (have cookies/tokens)
   // So we see if mainuser can fetch with /me = we still online

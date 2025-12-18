@@ -1,11 +1,24 @@
-
-import { Button } from "../components/Button.tsx";
+import { Button } from "../components/Button";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from '../context/GameContext';
 import { useUser } from "../context/UserContext";
 
-const Match = ({game_number, player_1, player_2, active=true, onStartGame, winner}: {game_number: string, player_1: string, player_2:string, active?: boolean, onStartGame?: () => void, winner?: string | null}) => {
+interface User {
+  id: number;
+  displayName: string;
+}
+
+interface MatchProps {
+  game_number: string;
+  player_1: string;
+  player_2: string;
+  active?: boolean;
+  onStartGame?: () => void;
+  winner?: string | null;
+}
+
+const Match = ({game_number, player_1, player_2, active=true, onStartGame, winner}: MatchProps) => {
   return (
     <div className="flex justify-center gap-7">
       <Button 
@@ -31,8 +44,8 @@ const Match = ({game_number, player_1, player_2, active=true, onStartGame, winne
 export default function Tournament() {
   const navigate = useNavigate();
   const { gameState, setPlayers, setGameType, clearPlayers, setGameNumber } = useGame();
-  const { users, user } = useUser(); // Get user from context instead of calling loadMe
-  const [me, setMe] = useState(null);
+  const { users, user } = useUser();
+  const [me, setMe] = useState<User | null>(null);
 
   // Load user data once on mount
   useEffect(() => {
@@ -47,8 +60,8 @@ export default function Tournament() {
   const handleStartGame = (gameNumber: number,
                             p1name: string,
                             p2name: string,
-                            p1id: number,
-                            p2id: number) => {
+                            p1id?: number,
+                            p2id?: number) => {
     clearPlayers();
     setGameType("tournament");
     setGameNumber(gameNumber);
@@ -72,17 +85,21 @@ export default function Tournament() {
     return null;
   }
 
-  const name1 = Object.values(users)[0]?.displayName || me?.displayName;
-  const name2 = Object.values(users)[1]?.displayName || me?.displayName;
-  const name3 = Object.values(users)[2]?.displayName || me?.displayName;
-  const name4 = Object.values(users)[3]?.displayName || me?.displayName;
-  const id1 = Object.values(users)[0]?.id || me?.id;
-  const id2 = Object.values(users)[1]?.id || me?.id;
-  const id3 = Object.values(users)[2]?.id || me?.id;
-  const id4 = Object.values(users)[3]?.id || me?.id;
+  const name1 = (Object.values(users)[0] as User)?.displayName || me?.displayName;
+  const name2 = (Object.values(users)[1] as User)?.displayName || me?.displayName;
+  const name3 = (Object.values(users)[2] as User)?.displayName || me?.displayName;
+  const name4 = (Object.values(users)[3] as User)?.displayName || me?.displayName;
+  const id1 = (Object.values(users)[0] as User)?.id || me?.id;
+  const id2 = (Object.values(users)[1] as User)?.id || me?.id;
+  const id3 = (Object.values(users)[2] as User)?.id || me?.id;
+  const id4 = (Object.values(users)[3] as User)?.id || me?.id;
   const game1WinnerName = gameState.game1Winner ?? null;
   const game2WinnerName = gameState.game2Winner ?? null;
   const game3WinnerName = gameState.game3Winner ?? null;
+
+  // Get winner IDs for Game 3
+  const game1WinnerId = game1WinnerName === name1 ? id1 : game1WinnerName === name2 ? id2 : undefined;
+  const game2WinnerId = game2WinnerName === name3 ? id3 : game2WinnerName === name4 ? id4 : undefined;
 
   // Warn user on page refresh or tab close
   useEffect(() => {
@@ -122,7 +139,7 @@ export default function Tournament() {
           player_2={game2WinnerName || "Winner of Game 2"}
           winner={game3WinnerName}
           active={isGame3Active}
-          onStartGame={() => handleStartGame(3, game1WinnerName!, game2WinnerName!)}
+          onStartGame={() => handleStartGame(3, game1WinnerName!, game2WinnerName!, game1WinnerId, game2WinnerId)}
         />
       </div>
     </div>

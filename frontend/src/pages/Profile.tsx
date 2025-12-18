@@ -140,6 +140,11 @@ const [activeTab, setActiveTab] = useState("stats");
 	}, [loadMe]);
 
 	const mainUser = Object.values(users)[0];
+
+	if (!mainUser) {
+    return <div>Loading...</div>;
+	}
+
 	return (
 		<div className="flex flex-col items-center gap-20">
 			<h1 className="text-4xl text-vintage-red dark:text-vintage-yellow">

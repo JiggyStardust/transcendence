@@ -1,7 +1,8 @@
 import { FastifyPluginAsync } from "fastify";
+import { verifyToken } from "../authentication/authMiddleware";
 
 const publicProfileRoutes: FastifyPluginAsync = async (fastify): Promise<void> => {
-  fastify.get("/users/:username", async (req, reply) => {
+  fastify.get("/users/:username", { preHandler: verifyToken }, async (req, reply) => {
     const { username } = req.params as { username: string };
 
     const user = await fastify.db.user.findUnique({
