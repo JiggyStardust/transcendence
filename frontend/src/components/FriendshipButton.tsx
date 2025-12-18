@@ -2,6 +2,7 @@ import { Button } from "./Button.tsx";
 import { PROXY_URL } from "../constants/index.ts";
 import type { FriendRelationship } from "../types/userTypes.ts";
 import { useAppToast } from "../context/ToastContext";
+import { useState, useEffect } from "react";
 
 
 interface ApiResponse<T = any> {
@@ -49,39 +50,26 @@ interface FriendshipButtonProps {
 }
 
 const FriendshipButton = ({ status, userID }: FriendshipButtonProps) => {
-  let label: string;
-  let action: (() => Promise<void>) | null = null;
+  const [buttonState, setButtonState] = useState(status);
   const { showToast } = useAppToast();
 
-  switch (status) {
-    case "FRIEND":
-			label = "Friends";
-      break;
-
-    case "INCOMING_REQUEST":
-      label = "Accept friend request";
-      action = async () => {
-        await acceptFriend(userID);
-      };
-      break;
-
-    case "OUTGOING_REQUEST":
-      label = "Requested";
-      break;
-
-    default:
-      label = "Add Friend";
-      action = async () => {
-        await connectFriend(userID);
-      };
-      break;
-  }
+  useEffect(() => {
+    setButtonState(status);
+  }, [status]);
 
   const handleClick = async () => {
-    if (!action) return;
     try {
-      await action();
-      const message = status === "INCOMING_REQUEST" ? "Friend request successfully accepted" : "Friend request sent";
+      const message = buttonState === "INCOMING_REQUEST" 
+        ? "Friend request successfully accepted" 
+        : "Friend request sent";
+
+      if (buttonState === "INCOMING_REQUEST") {
+        await acceptFriend(userID);
+        setButtonState("FRIEND");
+      } else if (buttonState === "NONE") {
+        await connectFriend(userID);
+        setButtonState("OUTGOING_REQUEST");
+      }
       showToast(message, "success");
     } catch (err: any) {
       console.error(err.message);
@@ -89,9 +77,25 @@ const FriendshipButton = ({ status, userID }: FriendshipButtonProps) => {
     }
   };
 
-  const disabled =
-    status === "FRIEND" ||
-    status === "OUTGOING_REQUEST";
+  const buttonConfig: Record<string, { label: string; disabled: boolean }> = {
+    FRIEND: {
+      label: "Friends",
+      disabled: true,
+    },
+    INCOMING_REQUEST: {
+      label: "Accept friend request",
+      disabled: false,
+    },
+    OUTGOING_REQUEST: {
+      label: "Requested",
+      disabled: true,
+    },
+  };
+
+  const { label, disabled } = buttonConfig[buttonState] || {
+    label: "Add Friend",
+    disabled: false,
+  };
 
   return (
     <Button size="sm" disabled={disabled} onClick={handleClick}>
