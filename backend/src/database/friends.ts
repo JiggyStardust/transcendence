@@ -1,6 +1,13 @@
 import { FastifyInstance } from "fastify";
 import { FriendStatus, UserStatus } from "@prisma/client";
-import { type ISearchResult } from "../../../shared/types/users";
+
+export interface ISearchResult {
+  userID: number;
+  displayName: string;
+  avatarURL: string;
+  status: UserStatus;
+  friendshipStatus: TFriendshipStatus;
+}
 
 export interface IFriend {
   userID: number;

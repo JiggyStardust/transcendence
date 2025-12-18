@@ -4,7 +4,7 @@ import FriendshipButton from "./FriendshipButton.tsx";
 import { useAppToast } from "../context/ToastContext";
 import { type UserPreview } from "../types/userTypes.ts";
 import { mapSearchResultToUser } from "../adapters/userAdapter";
-import { type ISearchResult } from "../../../shared/types/users.ts";
+import { type ISearchResult } from "../types/backendTypes.ts";
 
 interface SearchResponse {
   success: boolean;

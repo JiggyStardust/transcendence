@@ -1,4 +1,5 @@
-import { FriendshipStatus, type ISearchResult } from "../../../backend/src/database/friends.ts";
+import type { TFriendshipStatus } from "../types/backendTypes.ts";
+import { FriendshipStatus } from "../types/backendTypes.ts";
 import type { UserPreview } from "../types/userTypes.ts";
 
 export function mapSearchResultToUser(
@@ -14,7 +15,7 @@ export function mapSearchResultToUser(
 }
 
 function mapFriendshipStatus(
-  status: FriendshipStatus
+  status: TFriendshipStatus
 ): UserPreview["relationship"] {
   switch (status) {
     case FriendshipStatus.ACCEPTED:

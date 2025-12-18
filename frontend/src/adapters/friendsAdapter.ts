@@ -1,4 +1,4 @@
-import { type IListFriends } from "../../../backend/src/database/friends.ts";
+import { type IListFriends } from "../types/backendTypes.ts";
 import { type UserPreview } from "../types/userTypes.ts";
 
 export function mapFriendsList(data: IListFriends) {
