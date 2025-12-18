@@ -12,7 +12,7 @@ const FriendRow = ({ friend }: { friend: UserPreview}) => {
 	const imageUrl = friend.avatarUrl !== null ? "/api" + friend.avatarUrl : PROXY_URL + "/uploads/avatars/default.png";
 	const onlineStatus = friend.presence === "ONLINE" ? "Online" : "Offline";
   return (
-		<div className="flex justify-between items-center bg-stone-800/50 dark:bg-stone-600 rounded-xl p-4">
+		<div className="flex justify-between items-center bg-stone-700/50 dark:bg-stone-600 rounded-xl p-4">
 	    <li className="flex items-center gap-4 ">
 	      <img
 	        src={imageUrl}
@@ -43,8 +43,7 @@ const FriendSection = ({ title, list }: FriendSectionProps) => {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-lg font-medium opacity-80">{title}</h3>
-
+      <h3 className="text-lg font-medium">{title}</h3>
       <ul className="flex flex-col gap-2">
         {list.map((friend) => (
           <FriendRow key={friend.id} friend={friend} />
@@ -101,25 +100,25 @@ const Friends = () => {
   }, []);
 
 	return (
-		<div className="relative flex flex-col items-center bg-stone-700/50 dark:bg-stone-500 rounded-3xl p-8 w-2/3">
+		<div className="relative flex flex-col items-center bg-stone-700/50 dark:bg-stone-500 rounded-3xl p-8 w-2/3 mb-20">
 			{error && (
-				<div className="bg-stone-700/50 rounded-3xl p-8 w-full max-w-3xl text-red-400">
+				<div className="rounded-3xl p-8 w-full max-w-3xl text-red-400">
 	        {error ?? "Failed to load friends"}
 	      </div>
 			)}
 			{loading && (
-				<div className="bg-stone-700/50 rounded-3xl p-8 w-full max-w-3xl">
+				<div className="rounded-3xl p-8 w-full max-w-3xl">
 	        Loading friends...
 	      </div>
 			)}
 
 			{!loading && !error && friends?.accepted.length === 0 && friends.incoming.length === 0 && friends.outgoing.length === 0 ? (
-				<div className="bg-stone-700/50 rounded-3xl p-8 w-full max-w-3xl">
+				<div className="rounded-3xl p-8 w-full max-w-3xl">
 	        No friends
 	      </div>
 			) : friends && (
 				<>
-					<div className="relative flex flex-col bg-stone-700/50 dark:bg-stone-500 rounded-3xl p-8 w-2/3">
+					<div className="relative flex flex-col rounded-3xl p-8 w-2/3">
 			      <FriendSection title="Friends" list={friends.accepted} />
 			      <FriendSection title="Incoming Requests" list={friends.incoming} />
 			      <FriendSection title="Outgoing Requests" list={friends.outgoing} />
@@ -147,9 +146,17 @@ const [activeTab, setActiveTab] = useState("stats");
 
 	return (
 		<div className="flex flex-col items-center gap-20">
-			<h1 className="text-4xl text-vintage-red dark:text-vintage-yellow">
-				Profile of <span className="font-tomorrow font-semibold underline dark:decoration-vintage-red">{mainUser.username}</span>
-			</h1>
+			<div className="flex flex-col gap-8 items-center">
+				<img className="w-40 h-40 rounded-full object-cover"
+					src={imageUrl}
+					alt={mainUser.username} />
+				<div className="flex flex-col items-center">
+					<p>Profile of</p>
+					<h1 className="text-4xl font-tomorrow font-semibold underline decoration-vintage-yellow">
+						{mainUser.username}
+					</h1>
+				</div>
+			</div>
 			<div className="flex flex-col gap-8 items-center w-full">
 				<div className="flex gap-4">
 					<Button size="lg" onClick={() => setActiveTab("stats")}>

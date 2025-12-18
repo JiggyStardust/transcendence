@@ -31,7 +31,7 @@ const UserRow = ({ avatarUrl, id, name, relationship, presence} : UserPreview ) 
 	? "/api" + avatarUrl : PROXY_URL + "/uploads/avatars/default.png";
   const onlineStatus = presence === "ONLINE" ? "Online" : "Offline";
   return (
-    <li className="flex items-center justify-between gap-4 border shadow rounded-xl p-4">
+    <li key={id} className="flex items-center bg-stone-700/50 dark:bg-stone-600 justify-between gap-4 shadow rounded-xl p-4">
       <div className="flex items-center gap-2">
 				<img
 	        src={imageUrl}
@@ -55,7 +55,6 @@ const SearchUsers = () => {
   const [error, setError] = useState<string | null>(null);
 	const { showToast } = useAppToast();
 
-  // Debounce search to avoid too many API calls
   useEffect(() => {
     if (!query) {
       return;
@@ -75,19 +74,19 @@ const SearchUsers = () => {
       } finally {
         setLoading(false);
       }
-    }, 300); // 300ms debounce
+    }, 300);
 
     return () => clearTimeout(timer);
   }, [query]);
 
   return (
-    <div className="flex flex-col bg-stone-700/50 dark:bg-stone-500 rounded-3xl p-8 w-full max-w-3xl gap-4">
+    <div className="flex flex-col rounded-3xl p-8 w-full max-w-5xl gap-4">
       <input
         type="text"
         placeholder="Search users..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="w-full p-3 rounded-lg bg-stone-800/50 dark:bg-stone-600 text-white placeholder:text-gray-400"
+        className="w-full p-3 rounded-lg bg-stone-800/60 dark:bg-stone-700 placeholder:text-gray-200"
       />
 
       {loading && <p className="text-sm opacity-70">Searching...</p>}

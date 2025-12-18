@@ -20,7 +20,7 @@ export default function NavBar() {
 	const { isAuthenticated } = useAuth();
 
 	return (
-		<nav className="sticky top-0 px-6 py-3 mb-12 items-center flex justify-between bg-stone-600 dark:bg-zinc-900 max-w-screen">
+		<nav className="sticky top-0 px-6 py-3 mb-12 items-center flex justify-between bg-stone-600 dark:bg-zinc-900 max-w-screen z-100">
 			<span className="text-lg font-extrabold font-tomorrow text-vintage-yellow">
 				<NavLink to="/">Ping of Pongs</NavLink>
 			</span>
