@@ -57,11 +57,11 @@ export default function SignUp() {
     const data = await res.json();
 
     if (!res.ok) {
-      console.log(data);
+      // console.log(data);
 	  	showToast("Error: " + data.error, "error");
       return;
     }
-    console.log("SignUp was succesfull:", data);
+    // console.log("SignUp was succesfull:", data);
 		showToast("You have successfully created an account, you still need to log in to access the game", "success");
 		navigate("/login");
 	}
@@ -72,7 +72,7 @@ export default function SignUp() {
 	async function usernameInUse(name: string) {
 	
 		const url = PROXY_URL + "/users/check-username?username=" + name;
-		console.log(url);
+		// console.log(url);
 
 		try {
 			const res = await fetch(url.toString(), {
@@ -82,12 +82,12 @@ export default function SignUp() {
 				}
 			});
 			
-			console.log("fetch response status: ", res.status); // log HTTP status
+			// console.log("fetch response status: ", res.status); // log HTTP status
 
 			const data = await res.json();
 				
 			if (!res.ok){ 			// backend responded with an error status
-				console.error("Username check failed:", res.status);
+				// console.error("Username check failed:", res.status);
 				showToast("Something went wrong with username check, try again later.", "error");
 			}
 			return (data);
@@ -101,7 +101,6 @@ export default function SignUp() {
 
 	function handleUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
 	  const username = e.target.value;
-	  console.log(username);
 	  setUsername(username);
 	  if (username === "") {
 			setUsernameStatus({type: "warning", message: "Username can not be empty."});
@@ -113,7 +112,6 @@ export default function SignUp() {
 	function handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const password = e.target.value;
 		setPassword(password);
-		console.log(password);
 		if (password === "") {
 			setPasswordStatus({type: "warning", message: "Password can not be empty"});
 		} else {
