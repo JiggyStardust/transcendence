@@ -139,11 +139,12 @@ const [activeTab, setActiveTab] = useState("stats");
 	}, [loadMe]);
 
 	const mainUser = Object.values(users)[0];
+	if (!mainUser) {
+    	return <div>Loading...</div>;
+	}
+
 	const imageUrl = mainUser.avatarUrl !== null ? mainUser.avatarUrl : PROXY_URL + "/uploads/avatars/default.png";
 
-	if (!mainUser) {
-    return <div>Loading...</div>;
-	}
 
 	return (
 		<div className="flex flex-col items-center gap-20">
