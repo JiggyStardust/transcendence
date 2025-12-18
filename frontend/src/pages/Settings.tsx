@@ -16,8 +16,6 @@ interface User {
 	avatarUpdatedAt: number;
 }
 
-//TODO newly uploaded avatar does not show before reload of page
-
 const ProfilePic = ({ avatarUrl, avatarUpdatedAt }: {avatarUrl: string | null, avatarUpdatedAt: number}) => {
 	const imageUrl = avatarUrl !== null
 	  ? `${avatarUrl}?t=${avatarUpdatedAt}` : PROXY_URL + "/uploads/avatars/default.png";
