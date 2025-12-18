@@ -280,15 +280,6 @@ export async function verify_player(req: FastifyRequest<{ Body: IAuthGuestReques
   const valid = await bcrypt.compare(password, user.passwordHash);
   if (!valid) return reply.code(401).send({ error: "Invalid username or password" });
 
-  try {
-    await req.server.db.user.update({
-      where: { id: user.id },
-      data: { status: UserStatus.ONLINE },
-    });
-  } catch (err) {
-    return reply.code(500).send({ error: "Failed to set online status" });
-  }
-
   return {
     status: "verified",
     userID: user.id,
