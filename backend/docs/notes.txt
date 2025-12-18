@@ -5,9 +5,11 @@ node server.js
 # how to log in on command line without a frontend
 # This code must be copied as is because of the location of newline chars
 
-curl -X POST http://localhost:4000/signup \
+curl -X POST https://localhost:5173/api/signup \
   -H "Content-Type: application/json" \
-  -d '{"username":"demoUser","password":"demoPass"}'
+  -d '{"username":"demoUser2","password":"demoPass2-"}' \
+  -c cookiwes.txt
+
 
 
 # to log in
