@@ -11,7 +11,7 @@ interface SearchResponse {
   data: ISearchResult[];
 }
 
-export const searchFriends = async (query: string): Promise<SearchResponse> => {
+export const searchUsers = async (query: string): Promise<SearchResponse> => {
 
 	const res = await fetch(PROXY_URL + `/friends?search=${encodeURIComponent(query)}`, {
 		method: "GET",
@@ -29,6 +29,7 @@ export const searchFriends = async (query: string): Promise<SearchResponse> => {
 const UserRow = ({ avatarUrl, id, name, relationship, presence} : UserPreview ) => {
 	const imageUrl = avatarUrl !== null
 	? "/api" + avatarUrl : PROXY_URL + "/uploads/avatars/default.png";
+  const onlineStatus = presence === "ONLINE" ? "Online" : "Offline";
   return (
     <li className="flex items-center justify-between gap-4 border shadow rounded-xl p-4">
       <div className="flex items-center gap-2">
@@ -39,9 +40,9 @@ const UserRow = ({ avatarUrl, id, name, relationship, presence} : UserPreview ) 
 	      />
         <span className="font-tomorrow font-medium">{name}</span>
 			</div>
-			<div className="flex flex-col text-end">
+			<div className="flex flex-col text-end gap-1">
 				<FriendshipButton status={relationship} userID={id} />
-      	<span className="text-sm opacity-70">Online status: <span className="font-bold">{status}</span></span>
+      	<span className="text-sm opacity-70 font-bold mr-1">{onlineStatus}</span>
 			</div>
     </li>
   );
@@ -65,7 +66,7 @@ const SearchUsers = () => {
       setError(null);
 
       try {
-        const res = await searchFriends(query);
+        const res = await searchUsers(query);
 				const mapped = res.data.map(mapSearchResultToUser);
         setResults(mapped);
       } catch (err: any) {

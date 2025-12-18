@@ -1,4 +1,4 @@
-import type { TFriendshipStatus } from "../types/backendTypes.ts";
+import type { TFriendshipStatus, ISearchResult } from "../types/backendTypes.ts";
 import { FriendshipStatus } from "../types/backendTypes.ts";
 import type { UserPreview } from "../types/userTypes.ts";
 

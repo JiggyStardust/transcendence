@@ -1,6 +1,7 @@
 import { Button } from "./Button.tsx";
 import { PROXY_URL } from "../constants/index.ts";
 import type { FriendRelationship } from "../types/userTypes.ts";
+import { useAppToast } from "../context/ToastContext";
 
 
 interface ApiResponse<T = any> {
@@ -50,6 +51,7 @@ interface FriendshipButtonProps {
 const FriendshipButton = ({ status, userID }: FriendshipButtonProps) => {
   let label: string;
   let action: (() => Promise<void>) | null = null;
+  const { showToast } = useAppToast();
 
   switch (status) {
     case "FRIEND":
@@ -79,8 +81,11 @@ const FriendshipButton = ({ status, userID }: FriendshipButtonProps) => {
     if (!action) return;
     try {
       await action();
+      const message = status === "INCOMING_REQUEST" ? "Friend request successfully accepted" : "Friend request sent";
+      showToast(message, "success");
     } catch (err: any) {
       console.error(err.message);
+      showToast(err.message, "error");
     }
   };
 

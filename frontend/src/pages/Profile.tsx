@@ -19,21 +19,26 @@ const Stats = () => {
 
 const FriendRow = ({ friend }: { friend: UserPreview}) => {
 	const imageUrl = friend.avatarUrl !== null ? "/api" + friend.avatarUrl : PROXY_URL + "/uploads/avatars/default.png";
+	const onlineStatus = friend.presence === "ONLINE" ? "Online" : "Offline";
   return (
-    <li className="flex items-center gap-4 bg-stone-800/50 dark:bg-stone-600 rounded-xl p-4">
-      <img
-        src={imageUrl}
-        alt={friend.name}
-        className="w-10 h-10 rounded-full object-cover"
-      />
-      <div className="flex flex-col">
-        <span className="font-medium">
-          {friend.name }
-        </span>
-        <span className="text-sm opacity-70">{friend.presence}</span>
-      </div>
-			<FriendshipButton status={friend.relationship} userID={friend.id}/>
-    </li>
+		<div className="flex justify-between items-center bg-stone-800/50 dark:bg-stone-600 rounded-xl p-4">
+	    <li className="flex items-center gap-4 ">
+	      <img
+	        src={imageUrl}
+	        alt={friend.name}
+	        className="w-10 h-10 rounded-full object-cover"
+	      />
+	      <div className="flex flex-col">
+	        <span className="font-medium">
+	          {friend.name }
+	        </span>
+	        <span className="text-sm opacity-70">{onlineStatus}</span>
+	      </div>
+	    </li>
+			<div className="">
+				<FriendshipButton status={friend.relationship} userID={friend.id}/>
+			</div>
+		</div>
   );
 };
 
@@ -73,8 +78,7 @@ const getAllFriends = async () => {
 	}
 
 	const list = await res.json();
-	return (mapFriendsList(list));
-	
+	return (mapFriendsList(list.data));
 };
 
 const Friends = () => {
@@ -96,6 +100,7 @@ const Friends = () => {
         const res = await getAllFriends();
         setFriends(res);
       } catch (err: any) {
+				console.log("Error in load friends.")
         setError(err.message);
       } finally {
         setLoading(false);
