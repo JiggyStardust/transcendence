@@ -44,7 +44,7 @@ const Match = ({game_number, player_1, player_2, active=true, onStartGame, winne
 export default function Tournament() {
   const navigate = useNavigate();
   const { gameState, setPlayers, setGameType, clearPlayers, setGameNumber } = useGame();
-  const { users, user } = useUser();
+  const { users, User: user } = useUser();
   const [me, setMe] = useState<User | null>(null);
 
   // Load user data once on mount
@@ -76,8 +76,9 @@ export default function Tournament() {
   };
 
   // Check if game 3 should be active (both game 1 and 2 are complete)
-  const isGame3Active = gameState.game1Winner && gameState.game2Winner;
-
+  let isGame3Active = false;
+  if (gameState.game1Winner && gameState.game2Winner)
+    isGame3Active = true;
   // Check for correct number of players
   const numberOfUsers = Object.values(users).length;
   if (numberOfUsers != 4) {
@@ -85,10 +86,10 @@ export default function Tournament() {
     return null;
   }
 
-  const name1 = (Object.values(users)[0] as User)?.displayName || me?.displayName;
-  const name2 = (Object.values(users)[1] as User)?.displayName || me?.displayName;
-  const name3 = (Object.values(users)[2] as User)?.displayName || me?.displayName;
-  const name4 = (Object.values(users)[3] as User)?.displayName || me?.displayName;
+  const name1 = (Object.values(users)[0] as User)?.displayName || "Player1";
+  const name2 = (Object.values(users)[1] as User)?.displayName || "Player2";
+  const name3 = (Object.values(users)[2] as User)?.displayName || "Player3";
+  const name4 = (Object.values(users)[3] as User)?.displayName || "Player4";
   const id1 = (Object.values(users)[0] as User)?.id || me?.id;
   const id2 = (Object.values(users)[1] as User)?.id || me?.id;
   const id3 = (Object.values(users)[2] as User)?.id || me?.id;

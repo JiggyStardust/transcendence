@@ -3,7 +3,7 @@ import { createContext, useContext, useState, ReactNode } from "react";
 export type GameType = "regular" | "multiplayer" | "tournament";
 
 export interface Player {
- id: string;
+ id: number;
  displayName: string;
 }
 
