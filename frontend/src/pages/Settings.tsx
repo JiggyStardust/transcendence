@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { passwordRequirements } from "../constants/passwordRequirements";
 import { FiX } from "react-icons/fi";
 import { useAppToast } from "../context/ToastContext";
-import { type Status } from "../types/types";
+import { type Status } from "../types/toastTypes";
 import { useUser } from "../context/UserContext";
 
 interface User {
@@ -421,30 +421,39 @@ const AuthSettings = ({ user, setUser }: SettingsProps) => {
 }
 
 const Settings = ({}) => {
-	const { mainUser } = useUser();
-	if (!mainUser) {
-		return (
-			<div>
-				<h1>
-					No user logged in
-				</h1>
-			</div>
-		)
-	}
+	const { users, loadMe } = useUser();
 	const [user, setUser] = useState<User>({
-		username: mainUser.username,
-		displayName: mainUser.displayName,
-		twoFactorEnabled: false, // this needs to be in user context
-		avatarUrl: mainUser.avatarUrl,
-		avatarUpdatedAt: Date.now(),
+	  username: "",
+	  displayName: "",
+	  twoFactorEnabled: false,
+	  avatarUrl: "",
+	  avatarUpdatedAt: 0,
 	});
+  const mainUser = Object.values(users)[0];
+
+  useEffect(() => {
+    loadMe();
+  }, [loadMe]);
 
 	useEffect(() => {
-	  console.log("Avatar URL:", user.avatarUrl);
-	  console.log("Updated at:", user.avatarUpdatedAt);
-	}, [user.avatarUrl, user.avatarUpdatedAt]);
+		if (mainUser) {
+			setUser({
+				username: mainUser.username,
+        displayName: mainUser.displayName,
+        twoFactorEnabled: mainUser.twoFactorEnabled,
+        avatarUrl: mainUser.avatarUrl,
+        avatarUpdatedAt: Date.now(),
+      });
+    }
+  }, [mainUser]);
 
 	return (
+		<>
+		{!user ? (
+			<h1>
+				No user logged in
+			</h1>
+		) : (
 		<div className="flex justify-center pt-6">
 			<div className="flex flex-col gap-12 w-3/5 min-w-xl max-w-6xl">
 				{user.username !== "" && (
@@ -459,6 +468,8 @@ const Settings = ({}) => {
 				)}
 			</div>
 		</div>
+		)}
+		</>
 	)
 }
 

@@ -5,7 +5,7 @@ import { PROXY_URL } from "../constants";
 import { useNavigate } from "react-router-dom";
 import { passwordRequirements } from "../constants/passwordRequirements";
 import { useAppToast } from "../context/ToastContext";
-import { type Status } from "../types/types";
+import { type Status } from "../types/toastTypes";
 
 const usernameRequirementsList = () => {
 	return (
