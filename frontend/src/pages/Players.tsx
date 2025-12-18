@@ -201,7 +201,7 @@ export default function Players() {
 
   return (
     <main>
-      <div className="flex gap-12 p-12 overflow-x-auto">
+      <div className="flex gap-12 p-12 overflow-x-auto flex-nowrap no-scrollbar snap-x snap-mandatory scroll-pl-12">
         {cards.map(card =>
           card.type === "loggedIn" ? (
             <LoggedInCard key={card.id} card={card} />
