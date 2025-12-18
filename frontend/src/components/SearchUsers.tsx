@@ -31,7 +31,7 @@ const UserRow = ({ avatarUrl, id, name, relationship, presence} : UserPreview ) 
 	? "/api" + avatarUrl : PROXY_URL + "/uploads/avatars/default.png";
   const onlineStatus = presence === "ONLINE" ? "Online" : "Offline";
   return (
-    <li className="flex items-center bg-stone-700/50 dark:bg-stone-600 justify-between gap-4 shadow rounded-xl p-4">
+    <li key={id} className="flex items-center bg-stone-700/50 dark:bg-stone-600 justify-between gap-4 shadow rounded-xl p-4">
       <div className="flex items-center gap-2">
 				<img
 	        src={imageUrl}
