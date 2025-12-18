@@ -1,5 +1,5 @@
 import { Button } from "../components/Button";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from '../context/GameContext';
 import { useUser } from "../context/UserContext";
