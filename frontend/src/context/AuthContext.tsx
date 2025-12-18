@@ -14,7 +14,7 @@ const AuthContext = createContext<AuthContextType | null>(null); // is first ini
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-    const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   // This check is here, so after refresh we see if we are still online in backend (have cookies/tokens)
   // So we see if mainuser can fetch with /me = we still online
@@ -28,7 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         setIsAuthenticated(res.ok);
       } catch (err) {
-        console.error("Error checking auth status:", err);
+        // console.error("Error checking auth status:", err);
         setIsAuthenticated(false);
       } finally {
         setLoading(false);
@@ -50,18 +50,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         credentials: "include",
       });
     } catch (err) {
-      console.error("Logout failed", err);
+      // console.error("Logout failed", err);
     }
     setIsAuthenticated(false);
   }
 
 
-  return (
-    <AuthContext.Provider value={{ login, logout, isAuthenticated }}>
-      {children}
-    </AuthContext.Provider>
-  );
-}
+return (
+  <AuthContext.Provider value={{ login, logout, isAuthenticated, loading }}>
+    {!loading && children}
+  </AuthContext.Provider>
+); }
 
 export function useAuth() {
   const context = useContext(AuthContext);

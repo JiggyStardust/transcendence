@@ -16,8 +16,6 @@ interface User {
 	avatarUpdatedAt: number;
 }
 
-//TODO newly uploaded avatar does not show before reload of page
-
 const ProfilePic = ({ avatarUrl, avatarUpdatedAt }: {avatarUrl: string | null, avatarUpdatedAt: number}) => {
 	const imageUrl = avatarUrl !== null
 	  ? `${avatarUrl}?t=${avatarUpdatedAt}` : PROXY_URL + "/uploads/avatars/default.png";
@@ -108,7 +106,7 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 	    body: JSON.stringify({ displayName }),
 	  });
     const data = await res.json();
-		console.log("Display name response: ", data);
+		// console.log("Display name response: ", data);
 		return (data);
   }
 
@@ -152,7 +150,7 @@ const ProfileSettings = ({ user, setUser }: SettingsProps) => {
 				  avatarUrl: "/api" + avatarResponse.avatarURL,
 				  avatarUpdatedAt: Date.now(),
 				}));
-				console.log("Test: " + user.avatarUrl);
+				// console.log("Test: " + user.avatarUrl);
 				setPreviewUrl("");
 				setFileName("");
 			}
@@ -224,11 +222,11 @@ const TwoFactorAuthSetting = ({ user, setUser }: SettingsProps) => {
 	  if (data.success) {
 			setQrModalOpen(false);
 			setUser(u => ({ ...u, twoFactorEnabled: true }));
-			console.log("Success: " + data);
+			// console.log("Success: " + data);
 			showToast("Success: Two factor authentication is now enabled.", "success");
 		}
 		else {
-			console.log("Error: " + data.error);
+			// console.log("Error: " + data.error);
 			showToast("Error: " + data.error, "error");
 		}
 	};
@@ -240,7 +238,7 @@ const TwoFactorAuthSetting = ({ user, setUser }: SettingsProps) => {
     });
     const data = await res.json();
 		if (data.error) {
-			console.log("Error: " + data.error);
+			// console.log("Error: " + data.error);
 			showToast("Error: " + data.error, "error");
 		}
     setQr(data.qr);
@@ -335,7 +333,7 @@ const ChangePassword = () => {
 				setOldPassword("");
 				setNewPassword("");
 				showToast("Error: " + data.error, "error");
-				console.log("Error: " + data.error);
+				// console.log("Error: " + data.error);
 			}
 		}
 	}

@@ -75,7 +75,7 @@ export default function Login() {
 
     const data = await res.json();
 
-    console.log("handle login: " + data.twoFARequired);
+    // console.log("handle login: " + data.twoFARequired);
 
     if (!res.ok) {
       showToast("Login failed: " + data.error, "error");
@@ -84,7 +84,7 @@ export default function Login() {
       return;
     }
     if (data.twoFARequired) {
-      console.log("Two factor required");
+      // console.log("Two factor required");
       setTwoFAModalOpen(true);
     } else {
       login();
@@ -104,7 +104,7 @@ export default function Login() {
 
   async function validateTwoFA () {
 
-    console.log("Validate clicked");
+    // console.log("Validate clicked");
     const token = twoFACode;
 
     const res = await fetch(PROXY_URL + "/login-2fa", {
@@ -130,7 +130,7 @@ export default function Login() {
 
   function handleUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
 	  const username = e.target.value;
-	  console.log(username);
+	  // console.log(username);
 	  setUsername(username);
 	  if (username === "") {
 			setUsernameStatus({type: "warning", message: "Username can not be empty."});
@@ -142,7 +142,7 @@ export default function Login() {
  	function handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const password = e.target.value;
 		setPassword(password);
-		console.log(password);
+		// console.log(password);
 		if (password === "") {
 			setPasswordStatus({type: "warning", message: "Password can not be empty"});
 		} else {

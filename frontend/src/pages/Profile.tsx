@@ -90,7 +90,7 @@ const Friends = () => {
         const res = await getAllFriends();
         setFriends(res);
       } catch (err: any) {
-				console.log("Error in load friends.")
+				// console.log("Error in load friends.")
         setError(err.message);
       } finally {
         setLoading(false);
@@ -139,7 +139,11 @@ const [activeTab, setActiveTab] = useState("stats");
 	}, [loadMe]);
 
 	const mainUser = Object.values(users)[0];
-	const imageUrl = mainUser.avatarUrl !== null ? mainUser.avatarUrl : PROXY_URL + "/uploads/avatars/default.png";
+
+	if (!mainUser) {
+    return <div>Loading...</div>;
+	}
+
 	return (
 		<div className="flex flex-col items-center gap-20">
 			<div className="flex flex-col gap-8 items-center">

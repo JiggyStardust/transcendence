@@ -13,7 +13,7 @@ interface ApiResponse<T = any> {
 
 // Send friend request
 export const connectFriend = async (friendID: number): Promise<ApiResponse> => {
-  console.log("friendID: " + friendID);
+  // console.log("friendID: " + friendID);
   const res = await fetch(PROXY_URL + `/friends/${friendID}/connect`, {
     method: "POST",
   });
@@ -72,7 +72,7 @@ const FriendshipButton = ({ status, userID }: FriendshipButtonProps) => {
       }
       showToast(message, "success");
     } catch (err: any) {
-      console.error(err.message);
+      // console.error(err.message);
       showToast(err.message, "error");
     }
   };

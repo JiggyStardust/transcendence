@@ -41,7 +41,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       });
 
       if (!res.ok) {
-        console.error("/me failed");
+        // console.error("/me failed");
         return undefined;
       }
 
