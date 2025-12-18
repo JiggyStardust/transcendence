@@ -62,7 +62,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
    }));
  }
 
- function removePlayer(playerId: string) {
+ function removePlayer(playerId: number) {
    setGameState((prev: GameState) => ({
      ...prev,
      players: prev.players.filter((p) => p.id !== playerId),
