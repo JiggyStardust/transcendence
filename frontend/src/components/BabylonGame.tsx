@@ -12,21 +12,8 @@ export default function BabylonGame() {
   const [isLoading, setIsLoading] = useState(true);
   const [isGameOver, setIsGameOver] = useState(false);
   const initializedRef = useRef(false);
-  const { users, user } = useUser();
-  const [setMe] = useState(null);
+  const { users } = useUser();
   const navigate = useNavigate();
-
-  // Load user data once on mount
-  useEffect(() => {
-    const loadUserData = async () => {
-      if (user) {
-        setMe(user);
-      }
-    };
-    loadUserData();
-  }, [user]);
-
-
 
   useEffect(() => {
     // Check for correct number of players
