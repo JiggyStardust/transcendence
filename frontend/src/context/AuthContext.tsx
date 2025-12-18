@@ -28,7 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         setIsAuthenticated(res.ok);
       } catch (err) {
-        console.error("Error checking auth status:", err);
+        // console.error("Error checking auth status:", err);
         setIsAuthenticated(false);
       } finally {
         setLoading(false);
@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         credentials: "include",
       });
     } catch (err) {
-      console.error("Logout failed", err);
+      // console.error("Logout failed", err);
     }
     setIsAuthenticated(false);
   }

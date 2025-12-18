@@ -102,7 +102,7 @@ const storeSidePlayer = (username: string) => {
   }
 };
 
-/* Main Component */
+/**/
 
 let idCounter = 1;
 
@@ -112,7 +112,7 @@ export default function Players() {
   const [cards, setCards] = useState<PlayerCard[]>([]);
   const { showToast } = useAppToast();
   
-  /* Restore main + side players on entry                            */
+  /* Restore main + side players on entry */
   
   useEffect(() => {
     (async () => {
@@ -184,7 +184,7 @@ export default function Players() {
     const data = await res.json();
 
     if (!res.ok) {
-      console.log("response:" + data.error);
+      // console.log("response:" + data.error);
       showToast(data.error, "error");
       return;
     }

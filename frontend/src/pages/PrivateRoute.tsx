@@ -5,7 +5,7 @@ const PrivateRoute = () => {
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
-    return null; // or spinner
+    return null;
   }
 
   return isAuthenticated

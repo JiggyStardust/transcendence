@@ -16,7 +16,7 @@ export async function updateDisplayName(
   const { displayName } = request.body;
   const userID = request.user.id;
 
-  if (!displayName || !validateUsername(displayName)) {
+  if (!displayName) {
     return reply.code(400).send({ error: USERNAME_ERROR_MESSAGE });
   }
 

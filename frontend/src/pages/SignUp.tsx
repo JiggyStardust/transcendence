@@ -93,7 +93,7 @@ export default function SignUp() {
 			return (data);
 		} 
 		catch (err) {			// network error, backend doesnt work / is offline or something
-			console.error("Network error checking username:", err);
+			// console.error("Network error checking username:", err);
 			showToast("Something went wrong with username check, try again later.", "error");
 			return (null);
 		}
@@ -129,7 +129,7 @@ export default function SignUp() {
 			return;
 		}
     const data = await usernameInUse(value);
-		console.log("data from check-username:", data);
+		// console.log("data from check-username:", data);
 		if (!data.available) {
 			setUsernameStatus({type: "error", message: "Username is already in use, choose a unique one."})
 		}
