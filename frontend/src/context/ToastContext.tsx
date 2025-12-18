@@ -41,7 +41,7 @@ export function useAppToast(): ToastContextType {
   return context;
 }
 
-export function ToastList({ toasts }) {
+export function ToastList({ toasts}: {toasts: Toast[]}) {
   if (!toasts.length) return null;
 
   return (

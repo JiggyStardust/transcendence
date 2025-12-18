@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 import { PROXY_URL } from "../constants";
 

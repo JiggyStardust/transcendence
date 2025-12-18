@@ -1,6 +1,3 @@
-// @ts-nocheck
-
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { GameProvider } from './context/GameContext';
 import Landing from "./pages/Landing.tsx";

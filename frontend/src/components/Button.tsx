@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { cva } from "class-variance-authority";
 import { useNavigate } from "react-router-dom";
 

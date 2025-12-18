@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 
 export type GameType = "regular" | "multiplayer" | "tournament";
 
@@ -21,7 +21,7 @@ interface GameContextType {
   setGameType: (type: GameType) => void;
  setPlayers: (players: Player[]) => void;
  addPlayer: (player: Player) => void;
- removePlayer: (playerId: string) => void;
+ removePlayer: (playerId: number) => void;
  clearPlayers: () => void;
  setGameNumber: (gameNumber: number) => void;
  setGameWinner: (gameNumber: 1 | 2 | 3, winner: string) => void;

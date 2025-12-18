@@ -1,4 +1,3 @@
-// pages/Players.tsx
 import { useEffect, useState } from "react";
 import { FiPlus, FiXCircle } from "react-icons/fi";
 import { Button } from "../components/Button";

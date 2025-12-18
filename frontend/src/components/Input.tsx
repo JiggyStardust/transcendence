@@ -1,7 +1,4 @@
-// @ts-nocheck
-import { FiCheck } from "react-icons/fi";
-import { FiAlertOctagon } from "react-icons/fi";
-import { FiXOctagon } from "react-icons/fi";
+import { FiCheck, FiAlertOctagon, FiXOctagon } from "react-icons/fi";
 import { type Status } from "../types/types";
 
 type InputProps = {
