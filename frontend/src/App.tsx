@@ -11,7 +11,6 @@ import NavBar from "./components/NavBar.tsx";
 import PrivateRoute from "./pages/PrivateRoute.tsx";
 import Tournament from "./pages/Tournament.tsx";
 import BabylonGame from "./components/BabylonGame.tsx";
-import Profile2 from "./pages/Profile2.tsx";
 import Profile from "./pages/Profile.tsx";
 
 
@@ -27,7 +26,6 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
           <Route path="/testing" element={<Testing />} />
-          <Route path="/profile2" element={<Profile2 />} />
           <Route element={<PrivateRoute />}>
             <Route path="/players" element={<Players />} />
             <Route path="/settings" element={<Settings />} />
