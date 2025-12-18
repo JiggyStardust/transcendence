@@ -1,7 +1,7 @@
 import MatchResultPie from "../components/PieChart";
 import { useAppToast } from "../context/ToastContext";
 import { useEffect, useState } from "react";
-import { PROXY_URL } from "../constants/";
+import { PROXY_URL } from "../constants";
 import { type IMatchHistoryData } from "../types/types";
 import MatchHistoryTable from "../components/MatchHistoryTable";
 
