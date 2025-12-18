@@ -7,59 +7,60 @@ interface AuthContextType {
   login: () => void;
   logout: () => void;
   isAuthenticated: boolean;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null); // is first initialized with null
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
 
   // This check is here, so after refresh we see if we are still online in backend (have cookies/tokens)
-  // This is because we don't have online-status setup in backend yet. So we see if mainuser can fetch with /me,
+  // So we see if mainuser can fetch with /me = we still online
   // which is only possible when main user is online/has tokens set.
   useEffect(() => {
-    (async () => {
+    const checkAuth = async () => {
       try {
-        const res = await fetch(PROXY_URL + "/me", { credentials: "include" });
-        if (res.ok) {
-          setIsAuthenticated(true);
-        } else {
-          setIsAuthenticated(false);
-        }
+        const res = await fetch(PROXY_URL + "/me", {
+          credentials: "include",
+        });
+
+        setIsAuthenticated(res.ok);
       } catch (err) {
-        console.error("Error checking auth status:", err);
+        // console.error("Error checking auth status:", err);
         setIsAuthenticated(false);
+      } finally {
+        setLoading(false);
       }
-    })();
+    };
+
+    checkAuth();
   }, []);
 
 
   function login() {
-    // cookies are set in the backend, no storing tokens anymore
     setIsAuthenticated(true);
   }
 
   async function logout() {
-    // THIS WILL BE ADDED AFTER BACKEND HAS /logout ENDPOINT
-
     try {
       await fetch(PROXY_URL + "/logout", {
         method: "POST",
         credentials: "include",
       });
     } catch (err) {
-      console.error("Logout failed", err);
+      // console.error("Logout failed", err);
     }
     setIsAuthenticated(false);
   }
 
 
-  return (
-    <AuthContext.Provider value={{ login, logout, isAuthenticated }}>
-      {children}
-    </AuthContext.Provider>
-  );
-}
+return (
+  <AuthContext.Provider value={{ login, logout, isAuthenticated, loading }}>
+    {!loading && children}
+  </AuthContext.Provider>
+); }
 
 export function useAuth() {
   const context = useContext(AuthContext);

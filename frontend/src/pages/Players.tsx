@@ -7,7 +7,7 @@ import { useUser } from "../context/UserContext";
 import { useAuth } from "../context/AuthContext";
 import { useAppToast } from "../context/ToastContext";
 import type { User } from "../context/UserContext";
-import type { Status } from "../types/types";
+import type { Status } from "../types/toastTypes";
 
 type LoggedIn = {
   type: "loggedIn";
@@ -101,7 +101,7 @@ const storeSidePlayer = (username: string) => {
   }
 };
 
-/* Main Component */
+/**/
 
 let idCounter = 1;
 
@@ -111,7 +111,7 @@ export default function Players() {
   const [cards, setCards] = useState<PlayerCard[]>([]);
   const { showToast } = useAppToast();
   
-  /* Restore main + side players on entry                            */
+  /* Restore main + side players on entry */
   
   useEffect(() => {
     (async () => {
@@ -165,8 +165,6 @@ export default function Players() {
       return;
     }
 
-    //TODO: if the username who tries to log in is already in usercontext, show error (this will be handled only in the frontend)
-
     const guestList = cards
       .filter((c): c is LoggedIn => c.type === "loggedIn")
       .map(c => Number(c.id));
@@ -185,7 +183,7 @@ export default function Players() {
     const data = await res.json();
 
     if (!res.ok) {
-      console.log("response:" + data.error);
+      // console.log("response:" + data.error);
       showToast(data.error, "error");
       return;
     }

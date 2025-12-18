@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 import { PROXY_URL } from "../constants";
 
@@ -6,6 +10,7 @@ export interface User {
   username: string;
   displayName: string;
   avatarUrl: string;
+  twoFactorEnabled: boolean;
 }
 
 interface UserContextType {
@@ -39,7 +44,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       });
 
       if (!res.ok) {
-        console.error("/me failed");
+        // console.error("/me failed");
         return undefined;
       }
 
@@ -54,18 +59,19 @@ export function UserProvider({ children }: { children: ReactNode }) {
         username: data.username,
         displayName: data.displayName ?? data.username,
         avatarUrl: PROXY_URL + data.avatarURL,
-        // role: "full",
+        twoFactorEnabled: data.isTwoFAenabled,
       };
 
       setUsers((prev) => ({ ...prev, [username]: user }));
       setMainUser(user);
       return user;
     } catch (e) {
-      console.error("Error loading /me", e);
+      // console.error("Error loading /me", e);
       return undefined;
     }
     },[]
   );
+
   /****************************** */
   // Fetch /users/:username (side profiles)
   /****************************** */
@@ -78,7 +84,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       });
 
       if (!res.ok) {
-        console.error("Failed to load user", username);
+        // console.error("Failed to load user", username);
         return undefined;
       }
 
@@ -92,12 +98,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
         username: data.username,
         displayName: data.displayName ?? data.username,
         avatarUrl: PROXY_URL + data.avatarURL,
+        twoFactorEnabled: data.isTwoFAenabled,
       };
 
       setUsers((prev) => ({ ...prev, [username]: user }));
       return user;
     } catch (e) {
-      console.error("Error fetching user", username, e);
+      // console.error("Error fetching user", username, e);
       return undefined;
     }
   },[]

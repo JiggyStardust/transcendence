@@ -1,6 +1,14 @@
 import { FastifyInstance } from "fastify";
 import { FriendStatus, UserStatus } from "@prisma/client";
 
+export interface ISearchResult {
+  userID: number;
+  displayName: string;
+  avatarURL: string;
+  status: UserStatus;
+  friendshipStatus: TFriendshipStatus;
+}
+
 export interface IFriend {
   userID: number;
   username: string;
@@ -27,22 +35,14 @@ export type TSearchFriendsQuery = {
   search: string;
 };
 
-enum FriendshipStatus {
+export enum FriendshipStatus {
   DEFAULT = "DEFAULT",
   ACCEPTED = "ACCEPTED",
   PENDING_INCOMING = "PENDING_INCOMING",
   PENDING_OUTGOING = "PENDING_OUTGOING",
 }
 
-type TFriendshipStatus = FriendshipStatus;
-
-export interface ISearchResult {
-  userID: number;
-  displayName: string;
-  avatarURL: string;
-  status: UserStatus | "UNKNOWN";
-  friendshipStatus: TFriendshipStatus;
-}
+export type TFriendshipStatus = FriendshipStatus;
 
 export class FriendService {
   constructor(private fastify: FastifyInstance) {}
@@ -313,7 +313,7 @@ export class FriendService {
       }
 
       const searchRes: ISearchResult = {
-        userID: user.userID,
+        userID: user.id,
         displayName: user.displayName,
         avatarURL: user.avatarURL,
         status: friendshipStatus === FriendStatus.ACCEPTED ? user.status : "UKNOWN",
