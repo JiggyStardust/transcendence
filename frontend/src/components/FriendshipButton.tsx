@@ -1,5 +1,6 @@
 import { Button } from "./Button.tsx";
 import { PROXY_URL } from "../constants/index.ts";
+import type { FriendRelationship } from "../types/userTypes.ts";
 
 
 interface ApiResponse<T = any> {
@@ -42,7 +43,7 @@ export const deleteFriend = async (friendID: number): Promise<ApiResponse> => {
 };
 
 interface FriendshipButtonProps {
-  status: FriendshipStatus;
+  status: FriendRelationship;
   userID: number;
 }
 
@@ -51,18 +52,18 @@ const FriendshipButton = ({ status, userID }: FriendshipButtonProps) => {
   let action: (() => Promise<void>) | null = null;
 
   switch (status) {
-    case "ACCEPTED":
+    case "FRIEND":
 			label = "Friends";
       break;
 
-    case "PENDING_INCOMING":
+    case "INCOMING_REQUEST":
       label = "Accept friend request";
       action = async () => {
         await acceptFriend(userID);
       };
       break;
 
-    case "PENDING_OUTGOING":
+    case "OUTGOING_REQUEST":
       label = "Requested";
       break;
 
@@ -84,8 +85,8 @@ const FriendshipButton = ({ status, userID }: FriendshipButtonProps) => {
   };
 
   const disabled =
-    status === "ACCEPTED" ||
-    status === "PENDING_OUTGOING";
+    status === "FRIEND" ||
+    status === "OUTGOING_REQUEST";
 
   return (
     <Button size="sm" disabled={disabled} onClick={handleClick}>

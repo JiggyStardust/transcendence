@@ -5,6 +5,7 @@ import { PROXY_URL } from "../constants";
 import SearchUsers from "../components/SearchUsers.tsx";
 import { mapFriendsList } from "../../src/adapters/friendsAdapter";
 import type { UserPreview } from "../types/userTypes.ts";
+import FriendshipButton from "../components/FriendshipButton.tsx";
 
 const Stats = () => {
 	return (
@@ -16,34 +17,29 @@ const Stats = () => {
 	)
 }
 
-
-interface FriendRowProps {
-  friend: IFriend;
-}
-
-const FriendRow = ({ friend }: FriendRowProps) => {
-	const imageUrl = friend.avatarURL !== null ? "/api" + friend.avatarURL : PROXY_URL + "/uploads/avatars/default.png";
+const FriendRow = ({ friend }: { friend: UserPreview}) => {
+	const imageUrl = friend.avatarUrl !== null ? "/api" + friend.avatarUrl : PROXY_URL + "/uploads/avatars/default.png";
   return (
     <li className="flex items-center gap-4 bg-stone-800/50 dark:bg-stone-600 rounded-xl p-4">
       <img
         src={imageUrl}
-        alt={friend.username}
+        alt={friend.name}
         className="w-10 h-10 rounded-full object-cover"
       />
       <div className="flex flex-col">
         <span className="font-medium">
-          {friend.displayName || friend.username}
+          {friend.name }
         </span>
-        <span className="text-sm opacity-70">{friend.status}</span>
+        <span className="text-sm opacity-70">{friend.presence}</span>
       </div>
-			<FriendshipButton status={status} userID={friend.userID}/>
+			<FriendshipButton status={friend.relationship} userID={friend.id}/>
     </li>
   );
 };
 
 interface FriendSectionProps {
   title: string;
-  list: IFriend[];
+  list: UserPreview[];
 }
 
 const FriendSection = ({ title, list }: FriendSectionProps) => {
@@ -55,7 +51,7 @@ const FriendSection = ({ title, list }: FriendSectionProps) => {
 
       <ul className="flex flex-col gap-2">
         {list.map((friend) => (
-          <FriendRow key={friend.userID} friend={friend} />
+          <FriendRow key={friend.id} friend={friend} />
         ))}
       </ul>
     </div>
@@ -75,11 +71,22 @@ const getAllFriends = async () => {
 		const err = await res.json();
 		throw new Error(err.error || "Failed to load friends");
 	}
-	return res.json();
+
+	const list = await res.json();
+	return (mapFriendsList(list));
+	
 };
 
 const Friends = () => {
-	const [friends, setFriends] = useState<UserPreview[] | null>(null);
+	const [friends, setFriends] = useState<{
+	  accepted: UserPreview[];
+	  incoming: UserPreview[];
+	  outgoing: UserPreview[];
+	}>({
+	  accepted: [],
+	  incoming: [],
+	  outgoing: []
+	});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -87,8 +94,7 @@ const Friends = () => {
     const loadFriends = async () => {
       try {
         const res = await getAllFriends();
-				const mapped = mapFriendsList(res.data);
-        setFriends(mapped);
+        setFriends(res);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -111,7 +117,7 @@ const Friends = () => {
 	      </div>
 			)}
 
-			{!loading && !error && friends?.accepted.length === 0 && friends.pendingIncoming.length === 0 && friends.pendingOutgoing.length === 0 ? (
+			{!loading && !error && friends?.accepted.length === 0 && friends.incoming.length === 0 && friends.outgoing.length === 0 ? (
 				<div className="bg-stone-700/50 rounded-3xl p-8 w-full max-w-3xl">
 	        No friends
 	      </div>
@@ -119,8 +125,8 @@ const Friends = () => {
 				<>
 					<div className="relative flex flex-col bg-stone-700/50 dark:bg-stone-500 rounded-3xl p-8 w-2/3">
 			      <FriendSection title="Friends" list={friends.accepted} />
-			      <FriendSection title="Incoming Requests" list={friends.pendingIncoming} />
-			      <FriendSection title="Outgoing Requests" list={friends.pendingOutgoing} />
+			      <FriendSection title="Incoming Requests" list={friends.incoming} />
+			      <FriendSection title="Outgoing Requests" list={friends.outgoing} />
 					</div>
 				</>
 			)}

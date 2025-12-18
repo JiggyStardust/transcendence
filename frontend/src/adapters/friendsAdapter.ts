@@ -1,7 +1,7 @@
 import { type IListFriends } from "../../../backend/src/database/friends.ts";
 import { type UserPreview } from "../types/userTypes.ts";
 
-export function mapFriendsList(data: IListFriends): UserPreview[] {
+export function mapFriendsList(data: IListFriends) {
   const accepted: UserPreview[] = data.accepted.map(friend => ({
     id: friend.userID,
     name: friend.displayName,
@@ -26,5 +26,9 @@ export function mapFriendsList(data: IListFriends): UserPreview[] {
     relationship: "OUTGOING_REQUEST",
   }));
 
-  return [...accepted, ...incoming, ...outgoing];
+  return ({
+    accepted,
+    incoming,
+    outgoing
+  });
 }
