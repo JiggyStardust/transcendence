@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 import { PROXY_URL } from "../constants";
 
@@ -7,6 +7,7 @@ export interface User {
   username: string;
   displayName: string;
   avatarUrl: string;
+  twoFactorEnabled: boolean;
 }
 
 interface UserContextType {
@@ -55,6 +56,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         username: data.username,
         displayName: data.displayName ?? data.username,
         avatarUrl: PROXY_URL + data.avatarURL,
+        twoFactorEnabled: data.isTwoFAenabled,
       };
 
       setUsers((prev) => ({ ...prev, [username]: user }));
@@ -93,6 +95,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         username: data.username,
         displayName: data.displayName ?? data.username,
         avatarUrl: PROXY_URL + data.avatarURL,
+        twoFactorEnabled: data.isTwoFAenabled,
       };
 
       setUsers((prev) => ({ ...prev, [username]: user }));

@@ -19,6 +19,9 @@ export default defineConfig(({ mode }) => {
           rewrite: (path) => path.replace(/^\/api/, ""),
         },
       },
+      fs: {
+        allow: ['..']
+      },
     },
   };
 });

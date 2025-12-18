@@ -2,7 +2,7 @@ import MatchResultPie from "../components/PieChart";
 import { useAppToast } from "../context/ToastContext";
 import { useEffect, useState } from "react";
 import { PROXY_URL } from "../constants";
-import { type IMatchHistoryData } from "../types/types";
+import { type IMatchHistoryData } from "../types/backendTypes";
 import MatchHistoryTable from "../components/MatchHistoryTable";
 
 export default function Profile() {

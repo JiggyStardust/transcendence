@@ -7,34 +7,36 @@ interface AuthContextType {
   login: () => void;
   logout: () => void;
   isAuthenticated: boolean;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null); // is first initialized with null
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    const [loading, setLoading] = useState(true);
 
   // This check is here, so after refresh we see if we are still online in backend (have cookies/tokens)
   // So we see if mainuser can fetch with /me = we still online
   // which is only possible when main user is online/has tokens set.
   useEffect(() => {
-    (async () => {
-      if (isAuthenticated)
-      {
-        try {
-          const res = await fetch(PROXY_URL + "/me", { credentials: "include" });
-          if (res.ok) {
-            setIsAuthenticated(true);
-          } else {
-            setIsAuthenticated(false);
-          }
-        } catch (err) {
-          console.error("Error checking auth status:", err);
-          setIsAuthenticated(false);
-        }
+    const checkAuth = async () => {
+      try {
+        const res = await fetch(PROXY_URL + "/me", {
+          credentials: "include",
+        });
+
+        setIsAuthenticated(res.ok);
+      } catch (err) {
+        console.error("Error checking auth status:", err);
+        setIsAuthenticated(false);
+      } finally {
+        setLoading(false);
       }
-    })();
-  }, [isAuthenticated, setIsAuthenticated]);
+    };
+
+    checkAuth();
+  }, []);
 
 
   function login() {

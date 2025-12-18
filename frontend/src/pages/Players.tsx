@@ -1,4 +1,4 @@
-// pages/Players.tsx
+
 import { useEffect, useState } from "react";
 import { FiPlus, FiXCircle } from "react-icons/fi";
 import { Button } from "../components/Button";
@@ -8,7 +8,7 @@ import { useUser } from "../context/UserContext";
 import { useAuth } from "../context/AuthContext";
 import { useAppToast } from "../context/ToastContext";
 import type { User } from "../context/UserContext";
-import type { Status } from "../types/types";
+import type { Status } from "../types/toastTypes";
 
 type LoggedIn = {
   type: "loggedIn";
@@ -165,8 +165,6 @@ export default function Players() {
       updatePending(card.id, { statusPassword: {type: "error", message: "Password required",}, });
       return;
     }
-
-    //TODO: if the username who tries to log in is already in usercontext, show error (this will be handled only in the frontend)
 
     const guestList = cards
       .filter((c): c is LoggedIn => c.type === "loggedIn")

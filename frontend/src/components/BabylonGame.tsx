@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useEffect, useRef, useState } from 'react';
 import { useGame } from '../../src/context/GameContext';
 import { useUser } from "../context/UserContext";

@@ -1,4 +1,3 @@
-// @ts-nocheck
 
 import { useEffect, useRef } from "react";
 import { useUser } from "../context/UserContext";

@@ -1,4 +1,4 @@
-import { type IMatchHistoryData } from "../types/types";
+import { type IMatchHistoryData } from "../types/backendTypes";
 import { PROXY_URL } from "../constants";
 
 type Props = {

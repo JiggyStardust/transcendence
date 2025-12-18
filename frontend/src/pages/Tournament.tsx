@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { Button } from "../components/Button.tsx";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";

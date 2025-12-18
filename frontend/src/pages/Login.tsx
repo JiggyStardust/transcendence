@@ -6,7 +6,7 @@ import Input from "../components/Input";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useAppToast } from "../context/ToastContext";
-import { type Status } from "../types/types";
+import { type Status } from "../types/toastTypes";
 
 interface TwoFAModalProps {
   twoFACode: string;
