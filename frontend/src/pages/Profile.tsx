@@ -139,6 +139,7 @@ const [activeTab, setActiveTab] = useState("stats");
 	}, [loadMe]);
 
 	const mainUser = Object.values(users)[0];
+	const imageUrl = mainUser.avatarUrl !== null ? mainUser.avatarUrl : PROXY_URL + "/uploads/avatars/default.png";
 
 	if (!mainUser) {
     return <div>Loading...</div>;
